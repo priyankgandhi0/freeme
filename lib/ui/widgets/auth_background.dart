@@ -39,12 +39,15 @@ class AuthBackGround extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   color: backGroundWhiteColor,
-                  borderRadius: BorderRadius.circular(30),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30)),
                 ),
                 child: child!,
               ).paddingOnly(
                 top: 16.sh(),
               ),
+
             ],
           ),
         )
