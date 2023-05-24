@@ -11,8 +11,15 @@ extension extOnDouble on num {
   sw() {
     return toDouble();
   }
-}
 
+  get paddingHorizontal {
+    return EdgeInsets.symmetric(horizontal: toDouble());
+  }
+
+  get paddingVerticle {
+    return EdgeInsets.symmetric(horizontal: toDouble());
+  }
+}
 
 extension ExtOnDynamic on dynamic {
   get debugPrint {
@@ -28,7 +35,6 @@ extension ExtOnDynamic on dynamic {
     }
   }
 }
-
 
 extension extOnWidget on Widget {
   get center {
@@ -51,11 +57,23 @@ extension extOnWidget on Widget {
     );
   }
 
-
+  Widget positioned({
+    double? bottom,
+    double? top,
+    double? left,
+    double? right,
+  }) {
+    return Positioned(
+      bottom: bottom,
+      top: top,
+      left: left,
+      right: right,
+      child: this,
+    );
+  }
 }
 
-
-extension extOnString on String?{
+extension extOnString on String? {
   Widget text(
       {FontWeight? weight,
       Color? fontColor,

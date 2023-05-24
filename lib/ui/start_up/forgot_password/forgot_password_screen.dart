@@ -9,7 +9,7 @@ class ForgotPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backGroundColor,
+      backgroundColor: backGroundGreenColor,
       body: AuthBackGround(
         child: SingleChildScrollView(
           child: Column(
@@ -17,7 +17,7 @@ class ForgotPasswordScreen extends StatelessWidget {
               const Row(),
               forgotPassword
                   .text(
-                    weight: FontWeight.normal,
+                    weight: FontWeight.w500,
                     fontSize: 24,
                   )
                   .paddingOnly(
@@ -32,32 +32,23 @@ class ForgotPasswordScreen extends StatelessWidget {
                   .paddingOnly(
                     top: 8.sh(),
                   ),
-              provideYourEmail
-                  .text(
-                    weight: FontWeight.normal,
-                    fontColor: greyTextColor,
-                    fontSize: 16,
-                  )
-                  .paddingOnly(
-                    top: 8.sh(),
-                  ),
               FmTextField(
                 hint: enterEmail,
                 header: email,
+                inputType: TextInputType.emailAddress,
               ).paddingOnly(
-                left: 16.sw(),
-                right: 16.sw(),
+                left: screenHPadding16.sw(),
+                right: screenHPadding16.sw(),
                 top: 16.sh(),
                 bottom: 16.sh(),
               ),
               FmButton(
                 ontap: () {},
                 name: request,
-                fontSize: 18.sh(),
               ).paddingOnly(
                 top: 48.sh(),
-                left: 15.sw(),
-                right: 15.sw(),
+                left: screenHPadding16.sw(),
+                right: screenHPadding16.sw(),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -79,7 +70,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 ],
               ).paddingOnly(top: 24),
               const SizedBox(
-                height: 120,
+                height: 240,
               )
             ],
           ),

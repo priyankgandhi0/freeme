@@ -8,3 +8,4 @@ export '../../../utils/route_manager.dart';
 export 'package:freeme/ui/widgets/fm_textfield.dart';
 export 'package:freeme/ui/widgets/fm_button.dart';
 export 'package:freeme/ui/widgets/auth_background.dart';
+export 'package:freeme/constant/space_constant.dart';

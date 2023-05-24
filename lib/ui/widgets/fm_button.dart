@@ -2,49 +2,160 @@ import 'package:flutter/material.dart';
 import 'package:freeme/globle.dart';
 
 class FmButton extends StatelessWidget {
-  GestureTapCallback  ontap;
+  GestureTapCallback ontap;
   double? width;
   String? name;
   double? height;
-  double? fontSize;
-  double? radius;
-  Color? color;
-  Color? textColor;
   Widget? child;
+  ButtonType type;
+  Color? textColor;
+  Color? borderColor;
+  String? assetPath;
 
-  FmButton({
-    required this.ontap,
-    this.width,
-    this.name,
-    this.height = 45,
-    this.fontSize,
-    this.radius,
-    this.color,
-    super.key,
-    this.textColor,this.child
-  });
+  ///this will only work in rounded button//last one
+
+  FmButton(
+      {required this.ontap,
+      this.width,
+      this.name,
+      this.height = 54,
+      super.key,
+      this.textColor,
+      this.borderColor,
+      this.assetPath,
+      this.type = ButtonType.greenRectangle,
+      this.child});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        ontap();
-        FocusScope.of(context).unfocus();
-
-      },
-      child: Container(
-        height: height,
-        width: width,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(radius ?? 5),
-          color: color??buttonColor,
-          border: Border.all(color: Colors.black)
+    if (type == ButtonType.greenRectangle) {
+      return GestureDetector(
+        onTap: () => onTapClick(context),
+        child: Container(
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: buttonGreenColor,
+            border: Border.all(
+              color: borderColor ?? Colors.black,
+              width: 1,
+            ),
+          ),
+          child: child ??
+              (name ?? "")
+                  .text(
+                    fontSize: 18,
+                    fontColor: textColor ?? Colors.black,
+                  )
+                  .center,
         ),
-        child: child ??  (name ?? "").text(
-          fontSize: fontSize,
-          fontColor: textColor ??Colors.black,
-        ).center,
-      ),
-    );
+      );
+    } else if (type == ButtonType.greenCircular) {
+      return GestureDetector(
+        onTap: () => onTapClick(context),
+        child: Container(
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            color: buttonGreenColor,
+            border: Border.all(
+              color: Colors.black,
+              width: 2,
+            ),
+          ),
+          child: child ??
+              (name ?? "")
+                  .text(
+                    fontSize: 18,
+                    fontColor: Colors.black,
+                  )
+                  .center,
+        ),
+      );
+    } else if (type == ButtonType.yellow) {
+      return GestureDetector(
+        onTap: () => onTapClick(context),
+        child: Container(
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            color: yellowButtonColor,
+            border: Border.all(
+              color: Colors.black,
+              width: 2,
+            ),
+          ),
+          child: child ??
+              (name ?? "")
+                  .text(
+                      fontSize: 18,
+                      fontColor: Colors.black,
+                      weight: FontWeight.w500)
+                  .center,
+        ),
+      );
+    } else if (type == ButtonType.red) {
+      return GestureDetector(
+        onTap: () => onTapClick(context),
+        child: Container(
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(100),
+            color: redButtonColor,
+            border: Border.all(
+              color: Colors.black,
+              width: 2,
+            ),
+          ),
+          child: child ??
+              (name ?? "")
+                  .text(
+                      fontSize: 18,
+                      fontColor: Colors.black,
+                      weight: FontWeight.w500)
+                  .center,
+        ),
+      );
+    } else if (type == ButtonType.rounded) {
+      return assetPath != null
+          ? GestureDetector(
+              onTap: () => onTapClick(context),
+              child: Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  color: backGroundGreenColor,
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.black,
+                    width: 1,
+                  ),
+                ),
+                child: FmImage.assetImage(
+                  path: assetPath!,
+                  width: 20,
+                  height: 20,
+                ).paddingOnly(
+                  top: 14.sh(),
+                  bottom: 14.sh(),
+                  left: 14.sw(),
+                  right: 14.sw(),
+                ),
+              ),
+            )
+          : Container();
+    }
+    return Container();
+  }
+
+  onTapClick(BuildContext context) {
+    ontap();
+    FocusScope.of(context).unfocus();
   }
 }
+
+enum ButtonType { greenRectangle, greenCircular, yellow, red, rounded }

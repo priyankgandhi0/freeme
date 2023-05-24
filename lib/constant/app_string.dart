@@ -21,4 +21,5 @@ const String confirmPassword = 'Confirm Password';
 const String enterConfirmPassword = 'Enter Confirm Password';
 const String provideYourEmail = 'Provide your email to reset password';
 const String rememberPassword = 'Remember Password? ';
+const String industry = 'Industry';
 
