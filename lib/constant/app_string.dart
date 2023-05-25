@@ -18,8 +18,19 @@ const String toAccessAllFeatures = ' To access all features, create an account';
 const String firstName = 'First Name';
 const String lastName = 'Last Name';
 const String confirmPassword = 'Confirm Password';
-const String enterConfirmPassword = 'Enter Confirm Password';
+const String enterConfirmPassword = ' Re-enter Password';
 const String provideYourEmail = 'Provide your email to reset password';
 const String rememberPassword = 'Remember Password? ';
 const String industry = 'Industry';
+const String timeInfoCard = 'Timecard Info';
+const String myProfile = 'My Profile';
+const String timeCardInfo = 'Timecard Info';
+const String editTimeCardInfo = 'Edit Timecard Info';
+const String editProfile = 'Edit Profile';
+const String accountSettings = 'Account Settings';
+const String account = 'Account';
+const String save = 'Save';
+const String freeMeBeta = 'FreeMe Beta';
+const String workHistory = 'Work History';
+
 

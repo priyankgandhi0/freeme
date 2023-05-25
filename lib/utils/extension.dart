@@ -37,7 +37,7 @@ extension ExtOnDynamic on dynamic {
 }
 
 extension extOnWidget on Widget {
-  get center {
+ Widget get center {
     return Center(
       child: this,
     );
@@ -70,6 +70,10 @@ extension extOnWidget on Widget {
       right: right,
       child: this,
     );
+  }
+
+  Widget get safeArea{
+   return SafeArea(child: this);
   }
 }
 

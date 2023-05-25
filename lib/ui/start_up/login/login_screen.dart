@@ -25,7 +25,9 @@ class LoginScreen extends StatelessWidget {
                         fontSize: 24,
                       )
                       .paddingOnly(
-                        top: 40.sh(),
+                        top: 10.sh(),
+
+                        ///I have given 10 here and add 30 to singlechild scrollview so 30+10=40
                       ),
                   loginToContinue
                       .text(
@@ -83,7 +85,8 @@ class LoginScreen extends StatelessWidget {
                   ),
                   FmButton(
                     ontap: () {
-                      Get.toNamed(Routes.demoScreen);
+                     // Get.toNamed(Routes.accountScreen);
+                      Get.toNamed(Routes.workHistory);
                     },
                     name: logIn,
                   ).paddingOnly(
@@ -113,6 +116,8 @@ class LoginScreen extends StatelessWidget {
                   ).paddingOnly(top: 24),
                 ],
               ),
+            ).paddingOnly(
+              top: 30.sh(),
             ),
           ),
         );

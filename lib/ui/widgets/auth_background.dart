@@ -32,7 +32,7 @@ class AuthBackGround extends StatelessWidget {
                   topLeft: Radius.circular(30),
                   topRight: Radius.circular(30)),
             ),
-            child: child!,
+            child: child!.paddingOnly(top: 0),
           ),
         )
       ],

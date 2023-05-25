@@ -38,6 +38,8 @@ dependencies:
   get: ^4.6.5
   cached_network_image: ^3.2.3
   table_calendar: ^3.0.9
+  qr_flutter: ^4.1.0
+  dotted_border: ^2.0.0+3
 
 
 dev_dependencies:

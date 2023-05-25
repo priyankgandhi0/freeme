@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../../../globle.dart';
-import '../../widgets/auth_background.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
@@ -69,9 +67,6 @@ class ForgotPasswordScreen extends StatelessWidget {
                   })
                 ],
               ).paddingOnly(top: 24),
-              const SizedBox(
-                height: 240,
-              )
             ],
           ),
         ),
