@@ -51,14 +51,14 @@ class AccountScreen extends StatelessWidget {
             accountOptionItem(
               myProfile,
               () {
-                Get.toNamed(Routes.myProfileScreen);
 
+                Navigator.pushNamed(context, Routes.myProfileScreen);
               },
             ).paddingOnly(top: 16),
             accountOptionItem(
               accountSettings,
               () {
-                Get.toNamed(Routes.betaScreen);
+                //Get.toNamed(Routes.betaScreen);
               },
             ).paddingOnly(top: 16)
           ],

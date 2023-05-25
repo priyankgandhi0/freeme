@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freeme/ui/main/home/main_screen.dart';
 import 'package:freeme/ui/start_up/splash/splash_screen.dart';
 import 'package:freeme/utils/route_manager.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }
@@ -34,7 +35,7 @@ class HomeScreen extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'FreeMe',
       getPages: Routes.pages,
-      home: const SplashScreen(),
+      home: SplashScreen(),
     );
   }
 }

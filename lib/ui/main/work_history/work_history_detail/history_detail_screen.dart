@@ -21,6 +21,14 @@ class WorkHistoryDetailScreen extends StatelessWidget {
             fMAppBar2(
               title: "Commercial with Adam",
               description: "Week Ending 7/23/2022",
+              context: context,
+              onBackClick: () {
+                FocusScope.of(context).unfocus();
+                Get.back();
+              },
+              onTrailingClick: () {
+                Navigator.pushNamed(context, Routes.timeCardEditHistoryScreen);
+              },
             ),
             Container(
               color: Colors.white,
@@ -53,6 +61,7 @@ class WorkHistoryDetailScreen extends StatelessWidget {
                   TimeCardTabScreen(),
                   TimeCardTabScreen(),
                   TimeCardTabScreen(),
+
                 ],
               ),
             )

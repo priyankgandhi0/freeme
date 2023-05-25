@@ -22,7 +22,7 @@ class WorkHistoryScreen extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              addNewJob(),
+              addNewJob(context),
               fMExpandedView(
                 title: "Commercial With Adam",
                 description: "07/23/22",
@@ -70,7 +70,7 @@ class WorkHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget addNewJob() {
+  Widget addNewJob(BuildContext context) {
     return DottedBorder(
       color: darkGreenColor,
       strokeWidth: 1,
@@ -94,7 +94,7 @@ class WorkHistoryScreen extends StatelessWidget {
             ),
       ),
     ).onClick(() {
-      Get.toNamed(Routes.workHistoryDetail);
+      Navigator.pushNamed(context, Routes.workHistoryDetailScreen);
     }).paddingOnly(left: 16.sw(), right: 16.sw(), top: 24.sh());
   }
 

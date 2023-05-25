@@ -86,7 +86,7 @@ class LoginScreen extends StatelessWidget {
                   FmButton(
                     ontap: () {
                      // Get.toNamed(Routes.accountScreen);
-                      Get.toNamed(Routes.workHistory);
+                      Get.toNamed(Routes.mainScreen);
                     },
                     name: logIn,
                   ).paddingOnly(

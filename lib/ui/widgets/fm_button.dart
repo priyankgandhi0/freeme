@@ -45,9 +45,9 @@ class FmButton extends StatelessWidget {
           child: child ??
               (name ?? "")
                   .text(
-                    fontSize: 18,
-                    fontColor: textColor ?? Colors.black,
-                  )
+                      fontSize: 18,
+                      fontColor: textColor ?? Colors.black,
+                      weight: FontWeight.w500)
                   .center,
         ),
       );
@@ -68,9 +68,9 @@ class FmButton extends StatelessWidget {
           child: child ??
               (name ?? "")
                   .text(
-                    fontSize: 18,
-                    fontColor: Colors.black,
-                  )
+                      fontSize: 18,
+                      fontColor: Colors.black,
+                      weight: FontWeight.w500)
                   .center,
         ),
       );
@@ -148,6 +148,53 @@ class FmButton extends StatelessWidget {
               ),
             )
           : Container();
+    } else if (type == ButtonType.fullGreen) {
+      return GestureDetector(
+        onTap: () => onTapClick(context),
+        child: Container(
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: buttonGreenColor.withOpacity(0.25),
+            border: Border.all(
+              color: darkGreenColor2,
+              width: 1,
+            ),
+          ),
+          child: child ??
+              (name ?? "")
+                  .text(
+                    fontSize: 18,
+                    fontColor: darkGreenColor2,
+                  )
+                  .center,
+        ),
+      );
+    } else if (type == ButtonType.delete) {
+      return GestureDetector(
+        onTap: () => onTapClick(context),
+        child: Container(
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: Colors.white,
+            border: Border.all(
+              color: redColor,
+              width: 1,
+            ),
+          ),
+          child: child ??
+              (name ?? "")
+                  .text(
+                    fontSize: 18,
+                    fontColor: redColor,
+                weight: FontWeight.w500
+                  )
+                  .center,
+        ),
+      );
     }
     return Container();
   }
@@ -158,4 +205,12 @@ class FmButton extends StatelessWidget {
   }
 }
 
-enum ButtonType { greenRectangle, greenCircular, yellow, red, rounded }
+enum ButtonType {
+  greenRectangle,
+  greenCircular,
+  yellow,
+  red,
+  rounded,
+  fullGreen,
+  delete
+}

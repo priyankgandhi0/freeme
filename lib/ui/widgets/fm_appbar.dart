@@ -39,6 +39,7 @@ fMAppBar2({
   String? description,
   GestureTapCallback? onBackClick,
   GestureTapCallback? onTrailingClick,
+  required BuildContext context,
 }) {
   return Container(
     height: 100,
@@ -47,14 +48,26 @@ fMAppBar2({
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        FmImage.assetImage(
-          path: Assets.iconsBackIcon,
-          fit: BoxFit.fitWidth,
-          width: 20,
-          height: 20,
-        ).onClick(onBackClick ?? () {}).paddingAll(
-              screenHPadding16.sh(),
-            ),
+        onBackClick != null
+            ? FmImage.assetImage(
+                path: Assets.iconsBackIcon,
+                fit: BoxFit.fitWidth,
+                width: 20,
+                height: 20,
+              )
+                .onClick(onBackClick ??
+                    () {
+                      FocusScope.of(context).unfocus();
+                      Get.back();
+                    })
+                .paddingAll(
+                  screenHPadding16.sh(),
+                )
+            : Container(
+                width: 20,
+              ).paddingOnly(
+                right: screenWPadding16.sw(),
+              ),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -70,14 +83,20 @@ fMAppBar2({
             bottom: 16,
           ),
         ),
-        FmImage.assetImage(
-          path: Assets.iconsEdit,
-          width: 20,
-          height: 20,
-          fit: BoxFit.contain,
-        ).onClick(onTrailingClick ?? (){}).paddingOnly(
-          right: screenWPadding16.sw(),
-        )
+        onTrailingClick != null
+            ? FmImage.assetImage(
+                path: Assets.iconsEdit,
+                width: 20,
+                height: 20,
+                fit: BoxFit.contain,
+              ).onClick(onTrailingClick ?? () {}).paddingOnly(
+                  right: screenWPadding16.sw(),
+                )
+            : Container(
+                width: 20,
+              ).paddingOnly(
+                right: screenWPadding16.sw(),
+              )
       ],
     ),
   );

@@ -11,6 +11,8 @@ const Color yellowButtonColor = Color(0XFFE2D67F);
 const Color redButtonColor = Color(0XFFFF7F7F);
 const Color blueTextColor = Color(0XFF1C69FF);
 const Color borderGreyColor = Color(0XFFE2E2E2);
+const Color bottomLineGreyColor = Color(0XFFD4DBE7);
+const Color redColor = Color(0XFFFF2B2B);
 
 
 

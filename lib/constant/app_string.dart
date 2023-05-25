@@ -1,6 +1,5 @@
 const String sfPro = 'SFPro';
 
-
 const String welcomeBack = 'Welcome Back';
 const String loginToContinue = 'Log in to continue';
 const String email = 'E-mail';
@@ -32,5 +31,24 @@ const String account = 'Account';
 const String save = 'Save';
 const String freeMeBeta = 'FreeMe Beta';
 const String workHistory = 'Work History';
-
+const String duplicateTimes = 'Duplicate Times';
+const String clockIn = 'Clock In';
+const String lunchStartWrap = 'Lunch Start / Wrap';
+const String lunchEnd = 'Lunch End / Wrap';
+const String wrap = 'Wrap';
+const String secondMealStartWrap = '2nd Meal Start / Wrap';
+const String secondMealEndWrap = '2nd Meal End / Wrap';
+const String secondMealStart = '2nd Meal Start';
+const String secondMealEnd = '2nd Meal End';
+const String lunchStart = 'Lunch Start';
+const String addressLineOne = 'Address Line 1';
+const String addressLineTwo = 'Address Line 2';
+const String city = 'City';
+const String state = 'State';
+const String zip = 'Zip';
+const String country = 'Country';
+const String clockedTimes = 'Clocked Times';
+const String location2 = 'Location 2';
+const String location1 = 'Location 1';
+const String delete = 'Delete';
 

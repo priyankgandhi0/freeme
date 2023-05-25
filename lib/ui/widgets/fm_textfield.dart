@@ -151,27 +151,37 @@ class _FmTextFieldState extends State<FmTextField> {
   }
 }
 
-
-
 class FmEmptyTextField extends StatelessWidget {
-  const FmEmptyTextField({Key? key}) : super(key: key);
+  FmEmptyTextField({
+    Key? key,
+    this.hintText,
+  }) : super(key: key);
+
+  String? hintText;
 
   @override
   Widget build(BuildContext context) {
-   return const TextField(
-     style: TextStyle(
-       fontSize:  16,
-       fontWeight: FontWeight.normal,
-       fontFamily: sfPro,
-     ),
-     decoration: InputDecoration(
-       isDense: true,
-       border: InputBorder.none,
-       contentPadding: EdgeInsets.symmetric(
-         horizontal: 0,
-         vertical: 0,
-       ),
-     ),
-   );
+    return TextField(
+      style: const TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.normal,
+        fontFamily: sfPro,
+      ),
+      decoration: InputDecoration(
+        isDense: true,
+        border: InputBorder.none,
+        hintStyle: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.normal,
+          fontFamily: sfPro,
+          color: greyTextColor
+        ),
+        hintText: hintText,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 0,
+          vertical: 0,
+        ),
+      ),
+    );
   }
 }
