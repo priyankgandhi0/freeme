@@ -17,10 +17,11 @@ class MyProfileScreen extends StatelessWidget {
         appBar: fMAppBar(
           myProfile,
           onBackClick: () {
-            Get.back();
+            Navigator.pop(context);
           },
           onTrailingClick: () {
-            Get.toNamed(Routes.editProfileScreen);
+            Navigator.pushNamed(context, Routes.editProfileScreen);
+
           },
         ),
         body: Column(
@@ -85,7 +86,7 @@ class MyProfileScreen extends StatelessWidget {
         ),
       ),
       onWillPop: () async {
-        Get.back();
+
         return false;
       },
     );

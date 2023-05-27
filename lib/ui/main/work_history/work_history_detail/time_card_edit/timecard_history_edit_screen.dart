@@ -22,7 +22,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
               context: context,
               onBackClick: (){
                 FocusScope.of(context).unfocus();
-                Get.back();
+
               }
             ),
             Expanded(

@@ -14,7 +14,7 @@ class EditTimeCardScreen extends StatelessWidget {
           appBar: fMAppBar(
             editTimeCardInfo,
             onBackClick: () {
-              Get.back();
+
             },
           ),
         body: SingleChildScrollView(
@@ -29,7 +29,7 @@ class EditTimeCardScreen extends StatelessWidget {
         ),
       ),
       onWillPop: () async {
-        Get.back();
+
         return false;
       },
     );

@@ -98,7 +98,7 @@ class DemoScreen extends StatelessWidget {
         },
       ),
       onWillPop: () async {
-        Get.back();
+
         return false;
       },
     );

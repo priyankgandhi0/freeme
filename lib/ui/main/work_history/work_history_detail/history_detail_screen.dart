@@ -24,7 +24,7 @@ class WorkHistoryDetailScreen extends StatelessWidget {
               context: context,
               onBackClick: () {
                 FocusScope.of(context).unfocus();
-                Get.back();
+
               },
               onTrailingClick: () {
                 Navigator.pushNamed(context, Routes.timeCardEditHistoryScreen);
@@ -69,7 +69,7 @@ class WorkHistoryDetailScreen extends StatelessWidget {
         ),
       ),
       onWillPop: () async {
-        Get.back();
+
         return false;
       },
     );

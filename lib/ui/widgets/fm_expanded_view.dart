@@ -63,19 +63,17 @@ class _fMExpandedViewState extends State<fMExpandedView> {
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            /*FmImage.assetImage(
-                    path: ctrl.isExpanded
-                        ? Assets.iconsDownIcon
-                        : Assets.iconsForwardIcon,
-                    height: ctrl.isExpanded ? 14 : 14,
-                    width: ctrl.isExpanded ? 14 : 7,
-                  )*/
-            Icon(
-              isExpanded
-                  ? Icons.arrow_back_ios
-                  : Icons.arrow_forward_ios_rounded,
-              color: Colors.black,
-              size: 20,
+
+            isExpanded
+                ? FmImage.assetImage(
+              path: Assets.iconsDownIcon,
+              height: 20.sh(),
+              width: 15.sw(),
+            )
+                : FmImage.assetImage(
+              path: Assets.iconsForwardIcon,
+              height: 15.sh(),
+              width: 8.sw(),
             )
           ],
         ),
@@ -118,6 +116,8 @@ class _fMExpandedViewState extends State<fMExpandedView> {
           ),
         ],
       ),
-    );
+    ).onClick(() {
+      Navigator.pushNamed(context, Routes.workHistoryDetailScreen);
+    });
   }
 }

@@ -13,6 +13,7 @@ const Color blueTextColor = Color(0XFF1C69FF);
 const Color borderGreyColor = Color(0XFFE2E2E2);
 const Color bottomLineGreyColor = Color(0XFFD4DBE7);
 const Color redColor = Color(0XFFFF2B2B);
+const Color redTextColor = Color(0XFFFF4D4C);
 
 
 

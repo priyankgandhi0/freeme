@@ -15,7 +15,7 @@ class BetaScreen extends StatelessWidget {
         appBar: fMAppBar(
           freeMeBeta,
           onBackClick: () {
-            Get.back();
+
           },
         ),
         body: Column(
@@ -98,7 +98,7 @@ class BetaScreen extends StatelessWidget {
         ),
       ),
       onWillPop: () async {
-        Get.back();
+
         return false;
       },
     );

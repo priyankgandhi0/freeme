@@ -17,7 +17,7 @@ class EditProfileScreen extends StatelessWidget {
         appBar: fMAppBar(
           editProfile,
           onBackClick: () {
-            Get.back();
+
           },
         ),
         body: SingleChildScrollView(
@@ -71,7 +71,7 @@ class EditProfileScreen extends StatelessWidget {
         ),
       ),
       onWillPop: () async {
-        Get.back();
+
         return false;
       },
     );

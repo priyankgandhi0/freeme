@@ -57,8 +57,8 @@ fMAppBar2({
               )
                 .onClick(onBackClick ??
                     () {
-                      FocusScope.of(context).unfocus();
-                      Get.back();
+
+
                     })
                 .paddingAll(
                   screenHPadding16.sh(),

@@ -131,6 +131,7 @@ class _FmTextFieldState extends State<FmTextField> {
               ),
               focusedBorder: const OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.black, width: 1.0),
+
               ),
               fillColor: Colors.white,
               filled: true,
@@ -155,9 +156,11 @@ class FmEmptyTextField extends StatelessWidget {
   FmEmptyTextField({
     Key? key,
     this.hintText,
+    this.suffixIcon,
   }) : super(key: key);
 
   String? hintText;
+  Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -177,6 +180,7 @@ class FmEmptyTextField extends StatelessWidget {
           color: greyTextColor
         ),
         hintText: hintText,
+        suffixIcon: suffixIcon,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 0,
           vertical: 0,

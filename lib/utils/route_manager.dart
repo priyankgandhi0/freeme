@@ -1,8 +1,8 @@
-import 'package:freeme/ui/main/home/main_screen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 
 import '../ui/main/demo/demo_screen.dart';
+import '../ui/main/navigator/main_screen.dart';
 import '../ui/main/profile/account/account_screen.dart';
 import '../ui/main/profile/beta/beta_screen.dart';
 import '../ui/main/profile/edit_timecard/edit_timecard_screen.dart';
@@ -36,6 +36,8 @@ class Routes {
 
   static const String workHistoryDetailScreen = "/workHistoryDetailScreen";
   static const String timeCardEditHistoryScreen = "/timeCardEditHistoryScreen";
+
+  static const String addJobScreen = "/addJobScreen";
 
 
 

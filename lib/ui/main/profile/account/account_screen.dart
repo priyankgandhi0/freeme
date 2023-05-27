@@ -44,7 +44,7 @@ class AccountScreen extends StatelessWidget {
             accountOptionItem(
               timeInfoCard,
               () {
-                Get.toNamed(Routes.timeCardScreen);
+                Navigator.pushNamed(context, Routes.timeCardInfoScreen);
               },
             ).paddingOnly(top: 32),
 
@@ -65,7 +65,7 @@ class AccountScreen extends StatelessWidget {
         ).safeArea,
       ),
       onWillPop: () async {
-        Get.back();
+
         return false;
       },
     );

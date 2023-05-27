@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:freeme/ui/main/home/main_screen.dart';
 import 'package:freeme/ui/start_up/splash/splash_screen.dart';
 import 'package:freeme/utils/route_manager.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';

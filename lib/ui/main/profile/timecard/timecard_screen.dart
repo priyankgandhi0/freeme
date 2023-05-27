@@ -13,10 +13,10 @@ class TimeCardInfoScreen extends StatelessWidget {
         appBar: fMAppBar(
           timeCardInfo,
           onBackClick: () {
-            Get.back();
+
           },
           onTrailingClick: () {
-            Get.toNamed(Routes.editTimeCardScreen);
+            Navigator.pushNamed(context, Routes.editTimeCardScreen);
           },
         ),
         body: Column(
@@ -26,7 +26,7 @@ class TimeCardInfoScreen extends StatelessWidget {
         ),
       ),
       onWillPop: () async {
-        Get.back();
+
         return false;
       },
     );
