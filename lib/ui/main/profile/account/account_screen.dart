@@ -13,56 +13,58 @@ class AccountScreen extends StatelessWidget {
       child: Scaffold(
         appBar: fMAppBar(account),
         backgroundColor: backGroundWhiteColor,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                profileImage(
-                  140,
-                  140,
-                  verticlePadding: 41,horizontalPadding: 46
-                ).paddingOnly(
-                  top: 24.sh(),
-                )
-              ],
-            ),
-            "Erica Chan"
-                .text(weight: FontWeight.w500, fontSize: 20)
-                .paddingOnly(
-                  top: screenHPadding16.sh(),
-                ),
-            "IATSE Local 600".text(fontSize: 16).paddingOnly(
-                  top: screenHPadding8.sh(),
-                ),
-            "1st Assistant Camera, Director"
-                .text(fontColor: greyTextColor, fontSize: 16)
-                .paddingOnly(
-                  top: screenHPadding8.sh(),
-                ),
-            accountOptionItem(
-              timeInfoCard,
-              () {
-                Navigator.pushNamed(context, Routes.timeCardInfoScreen);
-              },
-            ).paddingOnly(top: 32),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  profileImage(
+                    140,
+                    140,
+                    verticlePadding: 41,horizontalPadding: 46
+                  ).paddingOnly(
+                    top: 24.sh(),
+                  )
+                ],
+              ),
+              "Erica Chan"
+                  .text(weight: FontWeight.w500, fontSize: 20)
+                  .paddingOnly(
+                    top: screenHPadding16.sh(),
+                  ),
+              "IATSE Local 600".text(fontSize: 16).paddingOnly(
+                    top: screenHPadding8.sh(),
+                  ),
+              "1st Assistant Camera, Director"
+                  .text(fontColor: greyTextColor, fontSize: 16)
+                  .paddingOnly(
+                    top: screenHPadding8.sh(),
+                  ),
+              accountOptionItem(
+                timeInfoCard,
+                () {
+                  Navigator.pushNamed(context, Routes.timeCardInfoScreen);
+                },
+              ).paddingOnly(top: 32),
 
-            accountOptionItem(
-              myProfile,
-              () {
+              accountOptionItem(
+                myProfile,
+                () {
 
-                Navigator.pushNamed(context, Routes.myProfileScreen);
-              },
-            ).paddingOnly(top: 16),
-            accountOptionItem(
-              accountSettings,
-              () {
-                //Get.toNamed(Routes.betaScreen);
-              },
-            ).paddingOnly(top: 16)
-          ],
-        ).safeArea,
+                  Navigator.pushNamed(context, Routes.myProfileScreen);
+                },
+              ).paddingOnly(top: 16),
+              accountOptionItem(
+                accountSettings,
+                () {
+                  Navigator.pushNamed(context, Routes.accountSettingScreen);
+                },
+              ).paddingOnly(top: 16)
+            ],
+          ).safeArea,
+        ),
       ),
       onWillPop: () async {
 

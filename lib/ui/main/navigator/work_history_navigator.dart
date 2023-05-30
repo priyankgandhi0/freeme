@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import '../../../utils/route_manager.dart';
 import '../add_job/add_job_screen.dart';
+import '../quick_entry/quick_entry_screen.dart';
+import '../time_card_edit/timecard_history_edit_screen.dart';
 import '../work_history/history/work_history_screen.dart';
 import '../work_history/work_history_detail/history_detail_screen.dart';
-import '../work_history/work_history_detail/time_card_edit/timecard_history_edit_screen.dart';
 
 ///work history navigator
 class WorkHistoryNavigator extends StatefulWidget {
@@ -34,6 +35,9 @@ class _WorkHistoryNavigatorState extends State<WorkHistoryNavigator> {
                 return TimeCardEditHistoryScreen();
               case Routes.addJobScreen:
                 return AddJobScreen();
+              case Routes.quickEntryScreen:
+                return QuickEntryScreen();
+
             }
             return Container();
           },

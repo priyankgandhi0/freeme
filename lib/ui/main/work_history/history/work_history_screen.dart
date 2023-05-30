@@ -95,6 +95,7 @@ class WorkHistoryScreen extends StatelessWidget {
       ),
     ).onClick(() {
       Navigator.pushNamed(context, Routes.addJobScreen);
+     //Navigator.pushNamed(context, Routes.quickEntryScreen);
     }).paddingOnly(left: 16.sw(), right: 16.sw(), top: 24.sh());
   }
 

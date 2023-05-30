@@ -26,6 +26,7 @@ class FmTextField extends StatefulWidget {
   TextInputAction? textInputAction;
   bool? enabled;
   bool? obSecureText;
+  Color headerColor;
 
   FmTextField(
       {super.key,
@@ -51,6 +52,7 @@ class FmTextField extends StatefulWidget {
       this.header,
       this.readOnly = false,
       this.showCurson = true,
+        this.headerColor = Colors.black,
       this.textInputAction,
       this.enabled});
 
@@ -71,7 +73,7 @@ class _FmTextFieldState extends State<FmTextField> {
                   widget.header
                       .text(
                         weight: FontWeight.normal,
-                        fontColor: Colors.black,
+                        fontColor: widget.headerColor,
                         fontSize: 16,
                       )
                       .paddingOnly(
@@ -123,15 +125,17 @@ class _FmTextFieldState extends State<FmTextField> {
                 fontSize: widget.hintSize ?? 18,
                 fontWeight: FontWeight.normal,
               ),
-              border: const OutlineInputBorder(
+              border:   OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.black, width: 1.0),
+                 borderRadius: BorderRadius.circular(widget.radius ?? 5)
               ),
-              enabledBorder: const OutlineInputBorder(
+              enabledBorder:    OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.black, width: 1.0),
+                borderRadius: BorderRadius.circular(widget.radius ?? 5)
               ),
-              focusedBorder: const OutlineInputBorder(
+              focusedBorder:   OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.black, width: 1.0),
-
+                  borderRadius: BorderRadius.circular(widget.radius ?? 5)
               ),
               fillColor: Colors.white,
               filled: true,
@@ -157,14 +161,21 @@ class FmEmptyTextField extends StatelessWidget {
     Key? key,
     this.hintText,
     this.suffixIcon,
+    this.maxLines,
+    this.textInputType
+
   }) : super(key: key);
+    TextInputType? textInputType;
 
   String? hintText;
   Widget? suffixIcon;
+  int? maxLines;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      maxLines: maxLines ?? 1,
+      keyboardType: textInputType,
       style: const TextStyle(
         fontSize: 16,
         fontWeight: FontWeight.normal,

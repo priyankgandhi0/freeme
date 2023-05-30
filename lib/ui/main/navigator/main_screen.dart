@@ -3,16 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:freeme/globle.dart';
 import 'package:freeme/ui/main/navigator/work_history_navigator.dart';
 import 'package:get/get_core/src/get_main.dart';
-
-import '../profile/account/account_screen.dart';
-import '../profile/beta/beta_screen.dart';
-import '../profile/edit_timecard/edit_timecard_screen.dart';
-import '../profile/editprofile/editprofile_screen.dart';
-import '../profile/myprofile/myprofile_screen.dart';
-import '../profile/timecard/timecard_screen.dart';
-import '../work_history/history/work_history_screen.dart';
-import '../work_history/work_history_detail/history_detail_screen.dart';
-import '../work_history/work_history_detail/time_card_edit/timecard_history_edit_screen.dart';
 import 'account_navigator.dart';
 import 'freeme_navigator.dart';
 import 'main_controller.dart';

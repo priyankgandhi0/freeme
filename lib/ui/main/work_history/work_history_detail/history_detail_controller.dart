@@ -5,12 +5,13 @@ import '../../../../globle.dart';
 class HistoryDetailController extends GetxController  with GetSingleTickerProviderStateMixin {
 
   late TabController tabController;
-  var tabIndex = 0.obs;
+  int tabIndex = 0;
   @override
   void onInit() {
     tabController = TabController(vsync: this, length: 4);
     tabController.addListener(() {
-      tabIndex.value = tabController.index;
+      tabIndex = tabController.index;
+      update();
     });
     super.onInit();
   }

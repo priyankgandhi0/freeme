@@ -3,15 +3,6 @@ import 'package:get/get_navigation/src/routes/transitions_type.dart';
 
 import '../ui/main/demo/demo_screen.dart';
 import '../ui/main/navigator/main_screen.dart';
-import '../ui/main/profile/account/account_screen.dart';
-import '../ui/main/profile/beta/beta_screen.dart';
-import '../ui/main/profile/edit_timecard/edit_timecard_screen.dart';
-import '../ui/main/profile/editprofile/editprofile_screen.dart';
-import '../ui/main/profile/myprofile/myprofile_screen.dart';
-import '../ui/main/profile/timecard/timecard_screen.dart';
-import '../ui/main/work_history/history/work_history_screen.dart';
-import '../ui/main/work_history/work_history_detail/history_detail_screen.dart';
-import '../ui/main/work_history/work_history_detail/time_card_edit/timecard_history_edit_screen.dart';
 import '../ui/start_up/forgot_password/forgot_password_screen.dart';
 import '../ui/start_up/login/login_screen.dart';
 import '../ui/start_up/register/register_screen.dart';
@@ -33,11 +24,15 @@ class Routes {
   static const String editProfileScreen = "/editProfileScreen";
   static const String timeCardInfoScreen = "/timeCardInfoScreen";
   static const String editTimeCardScreen = "/editTimeCardScreen";
+  static const String accountSettingScreen = "/accountSettingScreen";
+  static const String changePasswordScreen = "/changePasswordScreen";
 
   static const String workHistoryDetailScreen = "/workHistoryDetailScreen";
   static const String timeCardEditHistoryScreen = "/timeCardEditHistoryScreen";
 
+
   static const String addJobScreen = "/addJobScreen";
+  static const String quickEntryScreen = "/quickEntryScreen";
 
 
 
@@ -68,7 +63,6 @@ class Routes {
       page: () => DemoScreen(),
       transition: Transition.noTransition,
     ),
-
     GetPage(
       name: Routes.mainScreen,
       page: () => MainScreen(),

@@ -40,7 +40,7 @@ dependencies:
   table_calendar: ^3.0.9
   qr_flutter: ^4.1.0
   dotted_border: ^2.0.0+3
-#  flutter_time_picker_spinner: ^2.0.0
+  dropdown_button2: ^2.1.3
 
 
 

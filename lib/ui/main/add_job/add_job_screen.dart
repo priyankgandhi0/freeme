@@ -3,36 +3,38 @@ import 'package:flutter/material.dart';
 import '../../../globle.dart';
 import '../../widgets/fm_appbar.dart';
 import '../../widgets/fm_dialog.dart';
+import '../../widgets/non_tax_item_dialog.dart';
 import 'add_job_controller.dart';
 
 class AddJobScreen extends StatelessWidget {
   AddJobScreen({Key? key}) : super(key: key);
 
   final controller = Get.put(AddJobController());
+  bool isForEdit = false;
 
   @override
   Widget build(BuildContext context) {
+    Map arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    isForEdit = arguments["ForEdit"] ?? false;
+
     return WillPopScope(
       child: Scaffold(
-        appBar: fMAppBar(addJob, onBackClick: () {}),
+        appBar: fMAppBar(
+          isForEdit ? editJob : addJob,
+          onBackClick: () {},
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              FmButton(
-                ontap: () {},
-                name: autoPopulateLastEntry,
-              ).paddingOnly(
-                top: 24.sh(),
-                left: screenWPadding16.sw(),
-                right: screenWPadding16.sw(),
-              ),
+              isForEdit ? Container() : _autoPopulatedlastEntryButton(),
               _daysCard(),
               _discriptionCard(),
               _rateCard(),
               _jobClassificationCard(),
-              _taxeditemCard(),
+              _taxedItemCard(context),
               _nonTaxItemsCard(context),
-              _addJobButton()
+              isForEdit ? _saveButton() : _addJobButton()
             ],
           ),
         ),
@@ -40,6 +42,29 @@ class AddJobScreen extends StatelessWidget {
       onWillPop: () async {
         return false;
       },
+    );
+  }
+
+  Widget _autoPopulatedlastEntryButton() {
+    return FmButton(
+      ontap: () {},
+      name: autoPopulateLastEntry,
+    ).paddingOnly(
+      top: 24.sh(),
+      left: screenWPadding16.sw(),
+      right: screenWPadding16.sw(),
+    );
+  }
+
+  Widget _saveButton() {
+    return FmButton(
+      ontap: () {},
+      name: save,
+    ).paddingOnly(
+      top: screenHPadding32.sh(),
+      bottom: screenHPadding32.sh(),
+      left: screenWPadding16.sw(),
+      right: screenWPadding16.sw(),
     );
   }
 
@@ -79,11 +104,11 @@ class AddJobScreen extends StatelessWidget {
         left: screenWPadding16.sw(),
         right: screenWPadding16.sw(),
       ),
-    ).paddingOnly(
-      top: 24.sh(),
-      left: screenWPadding16.sw(),
-      right: screenWPadding16.sw(),
-    );
+    ).onClick(() {}).paddingOnly(
+          top: 24.sh(),
+          left: screenWPadding16.sw(),
+          right: screenWPadding16.sw(),
+        );
   }
 
   Widget _discriptionCard() {
@@ -216,7 +241,7 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _taxeditemCard() {
+  Widget _taxedItemCard(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -227,8 +252,39 @@ class AddJobScreen extends StatelessWidget {
             ),
           ],
         ),
-        _iconTextButton(
-          taxedItems,
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: Colors.black,
+            ),
+          ),
+          child: Column(
+            children: [
+              ListView.builder(
+                itemCount: controller.nonTaxedItem.length,
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return _taxedNonTaxedItem(
+                    controller.nonTaxedItem[index],
+                  );
+                },
+              ),
+              _iconTextButton(
+                taxedItems,
+                onclick: () {
+                  showNonTaxItems(context);
+                },
+              )
+            ],
+          ).paddingOnly(
+            top: controller.nonTaxedItem.isNotEmpty ? 0 : screenHPadding16.sh(),
+            bottom: screenHPadding16.sh(),
+            left: screenWPadding16.sw(),
+            right: screenWPadding16.sw(),
+          ),
         ).paddingOnly(
           top: screenHPadding8.sh(),
         )
@@ -240,20 +296,83 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
+  Widget _taxedNonTaxedItem(NonTaxedItem item) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Row(
+                children: [
+                  FmImage.assetImage(
+                    path: Assets.iconsMinusIcon,
+                    height: 20.sh(),
+                    width: 20.sw(),
+                  ),
+                  item.name.text(fontSize: 16).paddingOnly(
+                        left: 10.sw(),
+                      )
+                ],
+              ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  item.value.text(fontSize: 16),
+                ],
+              ),
+            )
+          ],
+        ).paddingOnly(top: 16, bottom: 16)
+      ],
+    );
+  }
+
   Widget _nonTaxItemsCard(BuildContext context) {
     return Column(
       children: [
         Row(
           children: [
-            nonTaxItem.text(
+            nonTaxItems.text(
               fontSize: 18,
               weight: FontWeight.w500,
             ),
           ],
         ),
-        _iconTextButton(addNonTaxItem, onclick: () {
-          showNonTaxItems(context);
-        }).paddingOnly(
+        Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: Colors.black,
+            ),
+          ),
+          child: Column(
+            children: [
+              ListView.builder(
+                itemCount: controller.nonTaxedItem.length,
+                shrinkWrap: true,
+                padding: EdgeInsets.zero,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return _taxedNonTaxedItem(
+                    controller.nonTaxedItem[index],
+                  );
+                },
+              ),
+              _iconTextButton(
+                addNonTaxItem,
+                onclick: () {
+                  showNonTaxItems(context);
+                },
+              )
+            ],
+          ).paddingOnly(
+            top: controller.nonTaxedItem.isNotEmpty ? 0 : screenHPadding16.sh(),
+            bottom: screenHPadding16.sh(),
+            left: screenWPadding16.sw(),
+            right: screenWPadding16.sw(),
+          ),
+        ).paddingOnly(
           top: screenHPadding8.sh(),
         )
       ],
@@ -265,37 +384,22 @@ class AddJobScreen extends StatelessWidget {
   }
 
   Widget _iconTextButton(String lable, {GestureTapCallback? onclick}) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: Colors.black,
+    return Row(
+      children: [
+        FmImage.assetImage(
+          path: Assets.iconsPlusicon,
+          height: 20.sh(),
+          width: 20.sw(),
         ),
-      ),
-      child: Row(
-        children: [
-          FmImage.assetImage(
-            path: Assets.iconsPlusicon,
-            height: 20.sh(),
-            width: 20.sw(),
-          ),
-          lable
-              .text(
-                fontSize: 16,
-              )
-              .paddingOnly(
-                left: 10,
-              ),
-        ],
-      ).paddingOnly(
-        top: screenHPadding16.sh(),
-        bottom: screenHPadding16.sh(),
-        left: screenWPadding16.sw(),
-        right: screenWPadding16.sw(),
-      ),
-    ).onClick(
-      onclick ?? () {},
-    );
+        lable
+            .text(
+              fontSize: 16,
+            )
+            .paddingOnly(
+              left: 10,
+            ),
+      ],
+    ).onClick(onclick ?? () {});
   }
 
   Widget _addJobButton() {
@@ -425,7 +529,7 @@ class AddJobScreen extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    companyAddress.text(
+                    companyAddressStar.text(
                       fontSize: 16,
                     )
                   ],
@@ -505,172 +609,7 @@ class AddJobScreen extends StatelessWidget {
     fMDialog(
       context: context,
       horizontalPadding: 16,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  "Select Time"
-                      .text(
-                        fontSize: 18,
-                        weight: FontWeight.w500,
-                      )
-                      .paddingOnly(
-                        top: screenHPadding16.sh(),
-                        bottom: screenHPadding16.sh(),
-                      ),
-                ],
-              ),
-              FmImage.assetImage(
-                path: Assets.iconsCloseIcon,
-                fit: BoxFit.fill,
-                size: 12,
-              )
-                  .onClick(
-                    () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                  )
-                  .paddingOnly(
-                    top: 22.sh(),
-                    right: 22.sw(),
-                  )
-                  .positioned(right: 0)
-            ],
-          ),
-          Container(
-            color: bottomLineGreyColor,
-            width: Get.width,
-            height: 1,
-          ),
-          Column(
-            children: [
-              Row(
-                children: [
-                  "Type".text(
-                    fontSize: 16,
-                  ),
-                ],
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    "Mileage".text(fontColor: greyTextColor, fontSize: 16),
-                    FmImage.assetImage(
-                      path: Assets.iconsDownIcon,
-                      fit: BoxFit.fill,
-                      size: 14,
-                    )
-                  ],
-                ).paddingOnly(
-                  left: screenWPadding16.sw(),
-                  right: screenWPadding16.sw(),
-                  top: screenHPadding16.sw(),
-                  bottom: screenHPadding16.sw(),
-                ),
-              ).paddingOnly(
-                top: screenHPadding8.sh(),
-              )
-            ],
-          ).paddingOnly(
-            left: screenWPadding32.sw(),
-            right: screenWPadding32.sw(),
-            top: screenHPadding16.sh(),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    "Amount".text(
-                      fontSize: 16,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: Colors.black,
-                        ),
-                      ),
-                      child: FmEmptyTextField(
-                        hintText: "\$25",
-                      ).paddingOnly(
-                        top: screenWPadding16.sw(),
-                        left: screenWPadding16.sw(),
-                        bottom: screenHPadding16.sh(),
-                      ),
-                    ).paddingOnly(
-                      top: screenHPadding8.sh(),
-                    )
-                  ],
-                ).paddingOnly(right: 16),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    per.text(
-                      fontSize: 16,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.black,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          day.text(
-                            fontSize: 16,
-                            fontColor: greyTextColor,
-                          ),
-                          FmImage.assetImage(
-                            path: Assets.iconsDownIcon,
-                            height: 15.sh(),
-                            width: 15.sw(),
-                          )
-                        ],
-                      ).paddingOnly(
-                        top: screenHPadding16.sh(),
-                        bottom: screenHPadding16.sh(),
-                        left: screenWPadding16.sw(),
-                        right: screenWPadding16.sw(),
-                      ),
-                    ).paddingOnly(
-                      top: screenHPadding8.sh(),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ).paddingOnly(
-            left: screenWPadding32.sw(),
-            right: screenWPadding32.sw(),
-            top: screenHPadding16.sh(),
-          ),
-          FmButton(
-            ontap: () {},
-            name: add,
-          ).paddingOnly(
-            top: 24.sh(),
-            bottom: 24.sh(),
-            left: screenWPadding32.sw(),
-            right: screenWPadding32.sw(),
-          )
-        ],
-      ),
+      child: NonTaxItemDialog(),
     );
   }
 }

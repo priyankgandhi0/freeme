@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:freeme/globle.dart';
 
-Future fMDialog(
-    {required BuildContext context,
-    required Widget child,
-    double? horizontalPadding}) {
+Future fMDialog({
+  required BuildContext context,
+  required Widget child,
+  double? horizontalPadding,
+  Border? border
+}) {
   return showDialog(
     context: context,
     builder: (_) => Dialog(
@@ -17,6 +19,7 @@ Future fMDialog(
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
+          border: border
         ),
         child: child,
       ),

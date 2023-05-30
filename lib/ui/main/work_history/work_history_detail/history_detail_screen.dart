@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_screen.dart';
 import 'package:freeme/ui/main/work_history/work_history_detail/timecard/time_card_screen.dart';
 
 import '../../../../globle.dart';
 import '../../../widgets/fm_appbar.dart';
 import '../../profile/timecard/timecard_screen.dart';
 import 'history_detail_controller.dart';
+import 'job_info/job_info_screen.dart';
+import 'notes/notes_screen.dart';
 
 class WorkHistoryDetailScreen extends StatelessWidget {
   WorkHistoryDetailScreen({Key? key}) : super(key: key);
@@ -24,10 +27,22 @@ class WorkHistoryDetailScreen extends StatelessWidget {
               context: context,
               onBackClick: () {
                 FocusScope.of(context).unfocus();
-
               },
               onTrailingClick: () {
-                Navigator.pushNamed(context, Routes.timeCardEditHistoryScreen);
+                if (controller.tabIndex == 1) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.timeCardEditHistoryScreen,
+                  );
+                } else if (controller.tabIndex == 2) {
+                  Navigator.pushNamed(
+                    context,
+                    Routes.addJobScreen,
+                    arguments: {
+                      "ForEdit":true
+                    }
+                  );
+                }
               },
             ),
             Container(
@@ -39,16 +54,16 @@ class WorkHistoryDetailScreen extends StatelessWidget {
                 controller: controller.tabController,
                 tabs: [
                   Tab(
-                    child: "Summary".text(fontSize: 16),
+                    child: summery.text(fontSize: 16),
                   ),
                   Tab(
-                    child: "Timecard".text(fontSize: 16),
+                    child: timecard.text(fontSize: 16),
                   ),
                   Tab(
-                    child: "Job Info".text(fontSize: 16),
+                    child: jobInfo.text(fontSize: 16),
                   ),
                   Tab(
-                    child: "Notes".text(fontSize: 16),
+                    child: notes.text(fontSize: 16),
                   ),
                 ],
               ),
@@ -57,11 +72,10 @@ class WorkHistoryDetailScreen extends StatelessWidget {
               child: TabBarView(
                 controller: controller.tabController,
                 children: [
+                  SummeryScreen(),
                   TimeCardTabScreen(),
-                  TimeCardTabScreen(),
-                  TimeCardTabScreen(),
-                  TimeCardTabScreen(),
-
+                  JobInfoScreen(),
+                  NotesScreen(),
                 ],
               ),
             )
@@ -69,7 +83,6 @@ class WorkHistoryDetailScreen extends StatelessWidget {
         ),
       ),
       onWillPop: () async {
-
         return false;
       },
     );

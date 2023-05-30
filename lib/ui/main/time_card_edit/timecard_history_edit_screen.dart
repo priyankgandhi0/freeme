@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:freeme/ui/main/work_history/work_history_detail/time_card_edit/timecard__history_edit_controller.dart';
-
+import 'package:freeme/ui/main/time_card_edit/timecard__history_edit_controller.dart';
 import '../../../../../globle.dart';
-import '../../../../widgets/fm_appbar.dart';
+import '../../widgets/fm_appbar.dart';
+
 
 class TimeCardEditHistoryScreen extends StatelessWidget {
   TimeCardEditHistoryScreen({Key? key}) : super(key: key);
