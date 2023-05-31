@@ -27,6 +27,7 @@ class WorkHistoryDetailScreen extends StatelessWidget {
               context: context,
               onBackClick: () {
                 FocusScope.of(context).unfocus();
+                Navigator.of(context).pop();
               },
               onTrailingClick: () {
                 if (controller.tabIndex == 1) {

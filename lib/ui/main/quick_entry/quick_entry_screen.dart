@@ -33,7 +33,7 @@ class QuickEntryScreen extends StatelessWidget {
             appBar: fMAppBar(
               quickEntry,
               onBackClick: () {
-                Navigator.pop(context);
+                Navigator.of(context).pop();
               },
             ),
             body: Column(

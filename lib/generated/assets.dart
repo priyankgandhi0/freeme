@@ -26,6 +26,7 @@ class Assets {
   static const String iconsSetting = 'assets/icons/setting.png';
   static const String iconsShare = 'assets/icons/share.png';
   static const String iconsTermsAndConditionIcon = 'assets/icons/terms_and_condition_icon.png';
+  static const String iconsTrueIcon = 'assets/icons/true_icon.png';
   static const String iconsUnselectedRadio = 'assets/icons/unselected_radio.png';
   static const String iconsUserIcon = 'assets/icons/user_icon.png';
 

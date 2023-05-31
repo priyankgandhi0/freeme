@@ -342,10 +342,7 @@ class JobInfoScreen extends StatelessWidget {
       right: screenWPadding16.sw(),
     );
   }
-
-  Widget _detailCard() {
-    return Container();
-  }
+ 
 
   void showDialogOnIButtonClick(BuildContext context) {
     fMDialog(

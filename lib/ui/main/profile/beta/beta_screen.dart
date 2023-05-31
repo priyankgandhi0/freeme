@@ -14,9 +14,9 @@ class BetaScreen extends StatelessWidget {
         backgroundColor: backGroundWhiteColor,
         appBar: fMAppBar(
           freeMeBeta,
-          onBackClick: () {
-
-          },
+         /* onBackClick: () {
+            Navigator.of(context).pop();
+          },*/
         ),
         body: Column(
           children: [

@@ -17,6 +17,7 @@ class WorkHistoryNavigator extends StatefulWidget {
 
 GlobalKey<NavigatorState> workHistoryNavigatorKey = GlobalKey<NavigatorState>();
 
+
 class _WorkHistoryNavigatorState extends State<WorkHistoryNavigator> {
   @override
   Widget build(BuildContext context) {

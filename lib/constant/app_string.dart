@@ -32,6 +32,7 @@ const String save = 'Save';
 const String freeMeBeta = 'FreeMe Beta';
 const String workHistory = 'Work History';
 const String duplicateTimes = 'Duplicate Times';
+const String duplicate = 'Duplicate';
 const String clockIn = 'Clock In';
 const String lunchStartWrap = 'Lunch Start / Wrap';
 const String lunchEnd = 'Lunch End / Wrap';
@@ -122,6 +123,9 @@ const String maxOutGuarHrs= "Max Out Guar. Hrs";
 const String twoFourHourClock= "24-Hour Clock";
 const String increment= "Increment";
 const String export= "Export";
+const String manualEntry= "Manual Entry";
+
+
 
 
 const String commentDescription = "Type notes you want to add to your invoice or\n timecard here";

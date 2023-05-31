@@ -17,7 +17,7 @@ class EditProfileScreen extends StatelessWidget {
         appBar: fMAppBar(
           editProfile,
           onBackClick: () {
-
+            Navigator.of(context).pop();
           },
         ),
         body: SingleChildScrollView(

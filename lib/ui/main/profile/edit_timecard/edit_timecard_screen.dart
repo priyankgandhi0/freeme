@@ -14,7 +14,7 @@ class EditTimeCardScreen extends StatelessWidget {
           appBar: fMAppBar(
             editTimeCardInfo,
             onBackClick: () {
-
+              Navigator.of(context).pop();
             },
           ),
         body: SingleChildScrollView(

@@ -18,7 +18,9 @@ class AccountSettingScreen extends StatelessWidget {
     return WillPopScope(
       child: Scaffold(
         backgroundColor: backGroundWhiteColor,
-        appBar: fMAppBar(accountSetting, onBackClick: () {}),
+        appBar: fMAppBar(accountSetting, onBackClick: () {
+          Navigator.of(context).pop();
+        }),
         body: Column(
           children: [
             _iconButton(

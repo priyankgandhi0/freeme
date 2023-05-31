@@ -2,13 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:freeme/globle.dart';
+import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_controller.dart';
 import 'package:get/get.dart';
 
 import '../../../../../constant/space_constant.dart';
 import '../../../../widgets/fm_dialog.dart';
 
 class SummeryScreen extends StatelessWidget {
-  const SummeryScreen({Key? key}) : super(key: key);
+  SummeryScreen({Key? key}) : super(key: key);
+
+  final controller = Get.put(SummeryController());
 
   @override
   Widget build(BuildContext context) {
@@ -87,9 +90,15 @@ class SummeryScreen extends StatelessWidget {
     );
   }
 
+  List<Widget> pages = [
+    SummeryDataTable(),
+    SummeryDataTable(),
+  ];
+
   Widget _summeryCard() {
     return Container(
-      height: 350,
+      height: 355,
+      width: Get.width,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
@@ -101,6 +110,18 @@ class SummeryScreen extends StatelessWidget {
           ),
         ],
       ),
+      child: Expanded(
+        child: PageView.builder(
+          controller: controller.pageController,
+          itemCount: 2,
+          onPageChanged: (int page) {
+            controller.onPageChange(page);
+          },
+          itemBuilder: (context, index) {
+            return pages[index];
+          },
+        ),
+      ),
     ).paddingOnly(
       top: screenHPadding16.sh(),
       bottom: screenHPadding16.sh(),
@@ -110,7 +131,37 @@ class SummeryScreen extends StatelessWidget {
   }
 
   Widget _indicators() {
-    return Container();
+    return GetBuilder<SummeryController>(builder: (ctrl) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ...List<Widget>.generate(
+            pages.length,
+            (index) => InkWell(
+              onTap: () {
+                controller.pageController.animateToPage(index,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeIn);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: controller.activatePage == index
+                      ? darkGreenColor
+                      : borderGreyColor,
+                ),
+                width: 6,
+                height: 6,
+              ).paddingAll(1),
+            ),
+          ).toList()
+        ],
+      ).paddingOnly(
+        top: screenHPadding8.sh(),
+        bottom: screenHPadding16.sh(),
+      );
+    });
   }
 
   Widget _grossEnrningCard() {
@@ -521,11 +572,7 @@ class SummeryScreen extends StatelessWidget {
           ),
         ),
       ],
-    ).paddingOnly(
-      left: 24.sw(),
-      right: 24.sw(),
-      top: screenHPadding16.sh()
-    );
+    ).paddingOnly(left: 24.sw(), right: 24.sw(), top: screenHPadding16.sh());
   }
 
   Widget _incrementInvoiceCard() {
@@ -598,6 +645,263 @@ class SummeryScreen extends StatelessWidget {
       left: 24.sw(),
       right: 24.sw(),
       top: screenHPadding16.sh(),
+    );
+  }
+}
+
+class SummeryDataTable extends StatelessWidget {
+  const SummeryDataTable({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DataTable(
+      columnSpacing: 10,
+      headingRowColor: MaterialStateProperty.all(darkGreenColor2),
+      border: TableBorder.all(
+        width: 1.0,
+        color: Colors.black,
+        style: BorderStyle.solid,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      clipBehavior: Clip.hardEdge,
+      headingRowHeight: 45,
+      columns: [
+        DataColumn(
+          label: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              "Date"
+                  .text(weight: FontWeight.w500, fontColor: Colors.white)
+                  .paddingOnly(bottom: 5)
+            ],
+          ),
+        ),
+        DataColumn(
+          label: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              "1x"
+                  .text(weight: FontWeight.w500, fontColor: Colors.white)
+                  .paddingOnly(bottom: 5)
+            ],
+          ),
+        ),
+        DataColumn(
+          label: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              "1.5x"
+                  .text(weight: FontWeight.w500, fontColor: Colors.white)
+                  .paddingOnly(bottom: 5)
+            ],
+          ),
+        ),
+        DataColumn(
+          label: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              "2x"
+                  .text(weight: FontWeight.w500, fontColor: Colors.white)
+                  .paddingOnly(bottom: 5)
+            ],
+          ),
+        ),
+        DataColumn(
+          label: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              "   "
+                  .text(weight: FontWeight.w500, fontColor: Colors.white)
+                  .paddingOnly(bottom: 5)
+            ],
+          ),
+        ),
+        DataColumn(
+          label: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              "MP"
+                  .text(weight: FontWeight.w500, fontColor: Colors.white)
+                  .paddingOnly(bottom: 5)
+            ],
+          ),
+        ),
+        DataColumn(
+          label: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              "Paid \nHrs"
+                  .text(weight: FontWeight.w500, fontColor: Colors.white)
+                  .paddingOnly(bottom: 5)
+            ],
+          ),
+        ),
+        DataColumn(
+          label: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              "Gross \nWages"
+                  .text(weight: FontWeight.w500, fontColor: Colors.white)
+                  .paddingOnly(bottom: 5)
+            ],
+          ),
+        ),
+      ],
+      dataRowHeight: 30,
+      rows: [
+        _dataRow(
+          date: "7/17",
+          color: rowCellGreyColor,
+        ),
+        _dataRow(
+          date: "7/18",
+        ),
+        _dataRow(
+          date: "7/19",
+          color: rowCellGreyColor,
+          oneX: '8',
+          oneFiveX: "4",
+          paidHours: "14",
+          grossWages: "\$770",
+        ),
+        _dataRow(
+          date: "7/19",
+          oneX: '8',
+          oneFiveX: "4",
+          mp: "1",
+          paidHours: "14",
+          grossWages: "\$770",
+        ),
+        _dataRow(
+          date: "7/20",
+          color: rowCellGreyColor,
+        ),
+        _dataRow(
+          date: "7/21",
+        ),
+        _dataRow(
+          date: "7/22",
+          color: rowCellGreyColor,
+        ),
+        _dataRow(
+          date: "7/23",
+        ),
+        _dataRow(
+            date: "Total",
+            oneX: "16",
+            oneFiveX: "8",
+            twoX: "    ",
+            empty: "    ",
+            mp: "1",
+            paidHours: "28",
+            grossWages: "\$1540",
+            color: darkGreenColor2.withOpacity(0.2),
+            textColor: darkGreenColor2,
+            weight: FontWeight.w500),
+      ],
+    ).paddingOnly(
+      left: screenWPadding8.sw(),
+      right: screenWPadding8.sw(),
+      top: 14.sh(),
+      bottom: 24.sh(),
+    );
+  }
+
+  DataRow _dataRow(
+      {String? date,
+      String? oneX,
+      String? oneFiveX,
+      String? twoX,
+      String? empty,
+      String? mp,
+      String? paidHours,
+      String? grossWages,
+      Color color = Colors.white,
+      Color textColor = Colors.black,
+      FontWeight weight = FontWeight.w400}) {
+    return DataRow(
+      color: MaterialStateProperty.all(color),
+      cells: [
+        DataCell(Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            date
+                .text(
+                  fontSize: 16,
+                  fontColor: textColor,
+                  weight: weight,
+                )
+                .center,
+          ],
+        )),
+        DataCell(
+          oneX
+              .text(
+                fontSize: 16,
+                fontColor: textColor,
+                weight: weight,
+              )
+              .center,
+        ),
+        DataCell(
+          oneFiveX
+              .text(
+                fontSize: 16,
+                fontColor: textColor,
+                weight: weight,
+              )
+              .center,
+        ),
+        DataCell(
+          twoX
+              .text(
+                fontSize: 16,
+                fontColor: textColor,
+                weight: weight,
+              )
+              .center,
+        ),
+        DataCell(
+          empty
+              .text(
+                fontSize: 16,
+                fontColor: textColor,
+                weight: weight,
+              )
+              .center,
+        ),
+        DataCell(
+          mp
+              .text(
+                fontSize: 16,
+                fontColor: textColor,
+                weight: weight,
+              )
+              .center,
+        ),
+        DataCell(
+          paidHours
+              .text(
+                fontSize: 16,
+                fontColor: textColor,
+                weight: weight,
+              )
+              .center,
+        ),
+        DataCell(Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            grossWages
+                .text(
+                  fontSize: 16,
+                  fontColor: textColor,
+                  weight: weight,
+                )
+                .center,
+          ],
+        )),
+      ],
     );
   }
 }

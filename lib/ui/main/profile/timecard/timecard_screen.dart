@@ -13,7 +13,7 @@ class TimeCardInfoScreen extends StatelessWidget {
         appBar: fMAppBar(
           timeCardInfo,
           onBackClick: () {
-
+            Navigator.of(context).pop();
           },
           onTrailingClick: () {
             Navigator.pushNamed(context, Routes.editTimeCardScreen);

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../globle.dart';
 import '../../../widgets/fm_appbar.dart';
+import '../../../widgets/fm_dialog.dart';
 import '../../../widgets/fm_expanded_view.dart';
 import 'work_history_controller.dart';
 
@@ -94,9 +95,87 @@ class WorkHistoryScreen extends StatelessWidget {
             ),
       ),
     ).onClick(() {
-      Navigator.pushNamed(context, Routes.addJobScreen);
-     //Navigator.pushNamed(context, Routes.quickEntryScreen);
-    }).paddingOnly(left: 16.sw(), right: 16.sw(), top: 24.sh());
+      showAddJobDialog(context);
+
+    }).paddingOnly(
+      left: 16.sw(),
+      right: 16.sw(),
+      top: 24.sh(),
+    );
   }
 
+  showAddJobDialog(BuildContext context) {
+    fMDialog(
+      context: context,
+      horizontalPadding: 48,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  addJob
+                      .text(
+                        fontSize: 18,
+                        weight: FontWeight.w500,
+                      )
+                      .paddingOnly(
+                        top: screenHPadding16.sh(),
+                        bottom: screenHPadding16.sh(),
+                      ),
+                ],
+              ),
+              FmImage.assetImage(
+                path: Assets.iconsCloseIcon,
+                fit: BoxFit.fill,
+                size: 12,
+              )
+                  .onClick(
+                    () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                  )
+                  .paddingOnly(
+                    top: 22.sh(),
+                    right: 22.sw(),
+                  )
+                  .positioned(right: 0)
+            ],
+          ),
+          Container(
+            width: Get.width,
+            height: 1,
+            color: bottomLineGreyColor,
+          ),
+          FmButton(
+            ontap: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              Navigator.pushNamed(context, Routes.addJobScreen);
+            },
+            name: manualEntry,
+            type: ButtonType.greenCircular,
+          ).paddingOnly(
+            left: 24.sw(),
+            right: 24.sw(),
+            top: 24.sw(),
+          ),
+          FmButton(
+            ontap: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              Navigator.pushNamed(context, Routes.quickEntryScreen);
+            },
+            name: quickEntry,
+            type: ButtonType.greenCircular,
+          ).paddingOnly(
+            left: 24.sw(),
+            right: 24.sw(),
+            top: screenHPadding16.sh(),
+            bottom: 24.sw(),
+          )
+        ],
+      ),
+    );
+  }
 }

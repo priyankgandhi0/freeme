@@ -17,7 +17,7 @@ class MyProfileScreen extends StatelessWidget {
         appBar: fMAppBar(
           myProfile,
           onBackClick: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop();
           },
           onTrailingClick: () {
             Navigator.pushNamed(context, Routes.editProfileScreen);

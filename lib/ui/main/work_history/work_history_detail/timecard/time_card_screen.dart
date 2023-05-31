@@ -3,18 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:freeme/ui/widgets/flutter_time_picker_spinner.dart';
 import 'package:freeme/utils/extension.dart';
 import 'package:get/get.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../../constant/app_string.dart';
 import '../../../../../constant/space_constant.dart';
 import '../../../../../generated/assets.dart';
 import '../../../../../theme/app_colors.dart';
 import '../../../../../utils/route_manager.dart';
+import '../../../../widgets/app_calender.dart';
 import '../../../../widgets/fm_button.dart';
 import '../../../../widgets/fm_dialog.dart';
 import '../../../../widgets/fm_image.dart';
+import '../../../profile/timecard/timecard_controller.dart';
 
 class TimeCardTabScreen extends StatelessWidget {
-  const TimeCardTabScreen({Key? key}) : super(key: key);
+  TimeCardTabScreen({Key? key}) : super(key: key);
+
+  final controller = Get.put(TimeCardController());
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +28,7 @@ class TimeCardTabScreen extends StatelessWidget {
         children: [
           _timeAddressCard(),
           dataTableCard(),
-          _duplicateTimeButton().paddingOnly(bottom: 124.sh()),
+          _duplicateTimeButton(context).paddingOnly(bottom: 124.sh()),
           /* Expanded(
           child: Container(),
         ),*/
@@ -243,15 +248,81 @@ class TimeCardTabScreen extends StatelessWidget {
     );
   }
 
-  Widget _duplicateTimeButton() {
+  Widget _duplicateTimeButton(BuildContext context) {
     return FmButton(
       ontap: () {
-        //Get.toNamed(Routes.workHistory);
+        showDuplicateTimeDialog(context);
       },
       name: duplicateTimes,
       type: ButtonType.fullGreen,
     ).paddingOnly(
       top: screenHPadding16.sh(),
+      left: screenWPadding16.sw(),
+      right: screenWPadding16.sw(),
+    );
+  }
+
+  showDuplicateTimeDialog(BuildContext context) {
+    fMDialog(
+      context: context,
+      horizontalPadding: 16,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  duplicateTimes
+                      .text(
+                        fontSize: 18,
+                        weight: FontWeight.w500,
+                      )
+                      .paddingOnly(
+                        top: screenHPadding16.sh(),
+                        bottom: screenHPadding16.sh(),
+                      ),
+                ],
+              ),
+              FmImage.assetImage(
+                path: Assets.iconsCloseIcon,
+                fit: BoxFit.fill,
+                size: 12,
+              )
+                  .onClick(
+                    () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                  )
+                  .paddingOnly(
+                    top: 22.sh(),
+                    right: 22.sw(),
+                  )
+                  .positioned(right: 0)
+            ],
+          ),
+          Container(
+            width: Get.width,
+            height: 1,
+            color: bottomLineGreyColor,
+          ),
+          _horizontalCalender(),
+          _duplicateDialogButton(context)
+        ],
+      ),
+    );
+  }
+
+  Widget _duplicateDialogButton(BuildContext context) {
+    return FmButton(
+      ontap: () {
+        Navigator.of(context, rootNavigator: true).pop();
+      },
+      name: duplicate,
+    ).paddingOnly(
+       top: screenHPadding8.sh(),
+      bottom: 24.sh(),
       left: screenWPadding16.sw(),
       right: screenWPadding16.sw(),
     );
@@ -379,6 +450,23 @@ class TimeCardTabScreen extends StatelessWidget {
       left: screenHPadding16.sw(),
       right: screenHPadding16.sw(),
       top: screenHPadding16.sh(),
+    );
+  }
+
+  Widget _horizontalCalender() {
+    return GetBuilder<TimeCardController>(
+      builder: (ctrl) {
+        return WeeklyCalender(
+          currentDay: ctrl.currentDay,
+          focusDay: ctrl.focusedDay,
+          onDaySelected: (selectedDay, focusDay) {
+            ctrl.onDaySelect(selectedDay, focusDay);
+          },
+          onMonthChange: (date) {},
+          selectedDays: ctrl.selectedDays,
+          calenderFormat: CalendarFormat.week,
+        ).paddingAll(10);
+      },
     );
   }
 }

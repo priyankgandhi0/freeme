@@ -1,4 +1,6 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:freeme/ui/main/add_job/menu_items.dart';
 
 import '../../../globle.dart';
 import '../../widgets/fm_appbar.dart';
@@ -22,13 +24,15 @@ class AddJobScreen extends StatelessWidget {
       child: Scaffold(
         appBar: fMAppBar(
           isForEdit ? editJob : addJob,
-          onBackClick: () {},
+          onBackClick: () {
+            Navigator.of(context).pop();
+          },
         ),
         body: SingleChildScrollView(
           child: Column(
             children: [
               isForEdit ? Container() : _autoPopulatedlastEntryButton(),
-              _daysCard(),
+              _daysDropdownButton(),
               _discriptionCard(),
               _rateCard(),
               _jobClassificationCard(),
@@ -68,11 +72,48 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
+  Widget _daysDropdownButton() {
+    return DropdownButtonHideUnderline(
+      child: DropdownButton2(
+        customButton: _daysCard(),
+        items: [
+          ...MenuItems.firstItems.map(
+            (item) => DropdownMenuItem<MenuItems>(
+              value: item,
+              child: MenuItems.buildItem(item),
+            ),
+          ),
+        ],
+        onChanged: (value) {},
+        dropdownStyleData: DropdownStyleData(
+          width: Get.width / 2,
+          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+          ),
+          maxHeight: 400,
+          elevation: 3,
+          offset: Offset(Get.width - (33 + (Get.width / 2)), 8),
+          scrollPadding: const EdgeInsets.all(4),
+          scrollbarTheme: const ScrollbarThemeData(
+            radius: Radius.circular(50),
+          ),
+        ),
+        menuItemStyleData: MenuItemStyleData(
+          padding: EdgeInsets.zero,height: 50
+
+        ),
+      ),
+    );
+  }
+
   Widget _daysCard() {
     return Container(
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.black),
-          borderRadius: BorderRadius.circular(10)),
+        border: Border.all(color: Colors.black),
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -104,11 +145,11 @@ class AddJobScreen extends StatelessWidget {
         left: screenWPadding16.sw(),
         right: screenWPadding16.sw(),
       ),
-    ).onClick(() {}).paddingOnly(
-          top: 24.sh(),
-          left: screenWPadding16.sw(),
-          right: screenWPadding16.sw(),
-        );
+    ).paddingOnly(
+      top: 24.sh(),
+      left: screenWPadding16.sw(),
+      right: screenWPadding16.sw(),
+    );
   }
 
   Widget _discriptionCard() {
@@ -612,4 +653,6 @@ class AddJobScreen extends StatelessWidget {
       child: NonTaxItemDialog(),
     );
   }
+
+  void showHoursDropDown() {}
 }

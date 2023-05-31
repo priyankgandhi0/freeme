@@ -17,7 +17,9 @@ class ChangePasswordScreen extends StatelessWidget {
     return WillPopScope(
       child: Scaffold(
         backgroundColor: backGroundWhiteColor,
-        appBar: fMAppBar(changePassword, onBackClick: () {}),
+        appBar: fMAppBar(changePassword, onBackClick: () {
+          Navigator.of(context).pop();
+        }),
         body: Column(
           children: [
             FmTextField(
