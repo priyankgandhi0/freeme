@@ -26,7 +26,9 @@ class RegisterScreen extends StatelessWidget {
                       fontSize: 24,
                     )
                     .paddingOnly(
-                      top: 10.sh(),///I have given 10 here and add 30 to singlechild scrollview so 30+10=40
+                      top: 10.sh(),
+
+                      ///I have given 10 here and add 30 to singlechild scrollview so 30+10=40
                     ),
                 toAccessAllFeatures
                     .text(
@@ -143,10 +145,10 @@ class RegisterScreen extends StatelessWidget {
                       Get.offAllNamed(Routes.login);
                     }),
                   ],
-                ).paddingOnly(top: 24),
+                ).paddingOnly(top: 24.sh(), bottom: 35.sh()),
               ],
             ),
-          ).paddingOnly(top: 30),
+          ).paddingOnly(top: 30.sh()),
         ),
       );
     });

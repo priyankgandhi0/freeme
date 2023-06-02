@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:freeme/globle.dart';
 
+import '../../../widgets/dropdown.dart';
 import '../quick_entry_controller.dart';
 
 class AdditionalInfoPage extends StatelessWidget {
@@ -10,30 +11,32 @@ class AdditionalInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            additionalInfo.text(weight: FontWeight.w500, fontSize: 18)
-          ],
-        ).paddingOnly(
-          left: screenWPadding16.sw(),
-        ),
-        _type(),
-        _unionOrNonUnion(),
-        Row(
-          children: [
-            network.text(
-              weight: FontWeight.w500,
-              fontSize: 18,
-            ),
-          ],
-        ).paddingOnly(left: screenWPadding16.sw(), top: 24.sh()),
-        _recommendedBy(),
-        _hiredBy(),
-        _backNextButton(),
-      ],
-    );
+    return GetBuilder<QuickEntryController>(builder: (ctrl) {
+      return Column(
+        children: [
+          Row(
+            children: [
+              additionalInfo.text(weight: FontWeight.w500, fontSize: 18)
+            ],
+          ).paddingOnly(
+            left: screenWPadding16.sw(),
+          ),
+          _type(context),
+          _unionOrNonUnion(),
+          Row(
+            children: [
+              network.text(
+                weight: FontWeight.w500,
+                fontSize: 18,
+              ),
+            ],
+          ).paddingOnly(left: screenWPadding16.sw(), top: 24.sh()),
+          _recommendedBy(),
+          _hiredBy(),
+          _backNextButton(),
+        ],
+      );
+    });
   }
 
   Widget _unionOrNonUnion() {
@@ -178,45 +181,53 @@ class AdditionalInfoPage extends StatelessWidget {
     );
   }
 
-  Widget _type() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        type.text(
-          fontSize: 16,
-        ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.black,
+  Widget _type(BuildContext context) {
+    return fmDropDown(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                type.text(
+                  fontSize: 16,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.black,
+                    ),
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      "Commercial".text(
+                        fontSize: 16,
+                        fontColor: greyTextColor,
+                      ),
+                      FmImage.assetImage(
+                        path: Assets.iconsDownIcon,
+                        height: 15.sh(),
+                        width: 15.sw(),
+                      )
+                    ],
+                  ).paddingOnly(
+                    top: 13.sh(),
+                    bottom: 13.sh(),
+                    left: screenWPadding16.sw(),
+                    right: screenWPadding16.sw(),
+                  ),
+                ).paddingOnly(
+                  top: screenHPadding8.sh(),
+                )
+              ],
             ),
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              "Commercial".text(
-                fontSize: 16,
-                fontColor: greyTextColor,
-              ),
-              FmImage.assetImage(
-                path: Assets.iconsDownIcon,
-                height: 15.sh(),
-                width: 15.sw(),
-              )
-            ],
-          ).paddingOnly(
-            top: 13.sh(),
-            bottom: 13.sh(),
-            left: screenWPadding16.sw(),
-            right: screenWPadding16.sw(),
-          ),
-        ).paddingOnly(
-          top: screenHPadding8.sh(),
-        )
-      ],
-    ).paddingOnly(
+            onDropDownTap: (item) {
+              controller.onTypeDropDownTap(item);
+            },
+            items: controller.typeByList,
+            context: context,
+            width: 210)
+        .paddingOnly(
       left: screenWPadding16.sw(),
       right: screenWPadding16.sw(),
       top: screenHPadding16.sw(),

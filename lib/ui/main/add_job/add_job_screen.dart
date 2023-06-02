@@ -1,11 +1,12 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:freeme/ui/main/add_job/menu_items.dart';
 
 import '../../../globle.dart';
+import '../../widgets/dropdown.dart';
 import '../../widgets/fm_appbar.dart';
 import '../../widgets/fm_dialog.dart';
 import '../../widgets/non_tax_item_dialog.dart';
+import '../../widgets/tax_item_dialog.dart';
 import 'add_job_controller.dart';
 
 class AddJobScreen extends StatelessWidget {
@@ -29,17 +30,21 @@ class AddJobScreen extends StatelessWidget {
           },
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              isForEdit ? Container() : _autoPopulatedlastEntryButton(),
-              _daysDropdownButton(),
-              _discriptionCard(),
-              _rateCard(),
-              _jobClassificationCard(),
-              _taxedItemCard(context),
-              _nonTaxItemsCard(context),
-              isForEdit ? _saveButton() : _addJobButton()
-            ],
+          child: GetBuilder<AddJobController>(
+            builder: (ctrl) {
+              return Column(
+                children: [
+                  isForEdit ? Container() : _autoPopulatedlastEntryButton(),
+                  _daysDropdownButton(context),
+                  _discriptionCard(),
+                  _rateCard(context),
+                  _jobClassificationCard(context),
+                  _taxedItemCard(context),
+                  _nonTaxItemsCard(context),
+                  isForEdit ? _saveButton() : _addJobButton()
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -72,39 +77,14 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _daysDropdownButton() {
-    return DropdownButtonHideUnderline(
-      child: DropdownButton2(
-        customButton: _daysCard(),
-        items: [
-          ...MenuItems.firstItems.map(
-            (item) => DropdownMenuItem<MenuItems>(
-              value: item,
-              child: MenuItems.buildItem(item),
-            ),
-          ),
-        ],
-        onChanged: (value) {},
-        dropdownStyleData: DropdownStyleData(
-          width: Get.width / 2,
-          padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-          ),
-          maxHeight: 400,
-          elevation: 3,
-          offset: Offset(Get.width - (33 + (Get.width / 2)), 8),
-          scrollPadding: const EdgeInsets.all(4),
-          scrollbarTheme: const ScrollbarThemeData(
-            radius: Radius.circular(50),
-          ),
-        ),
-        menuItemStyleData: MenuItemStyleData(
-          padding: EdgeInsets.zero,height: 50
-
-        ),
-      ),
+  Widget _daysDropdownButton(BuildContext context) {
+    return fmDropDown(
+      child: _daysCard(),
+      onDropDownTap: (item) {
+        _onDropDownTap(item);
+      },
+      items: controller.firstItems,
+      context: context,
     );
   }
 
@@ -182,7 +162,7 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _rateCard() {
+  Widget _rateCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -200,26 +180,61 @@ class AddJobScreen extends StatelessWidget {
         children: [
           _detailItemWithDropDown("Rate*",
               hint: "\$750", showDownIcon: false, labelColor: redTextColor),
-          _detailItemWithDropDown(
-            per,
-            hint: "10 Hours",
+          fmDropDown(
+            child: _detailItemWithDropDown(
+              per,
+              hint: "10 Hours",
+            ),
+            onDropDownTap: (item) {
+              _onPerHourDropDownTap(item);
+            },
+            items: controller.perHoursList,
+            context: context,
           ),
-          _detailItemWithDropDown(
-            guarHours,
-            hint: "10 Hours",
+          fmDropDown(
+            child: _detailItemWithDropDown(
+              guarHours,
+              hint: "10 Hours",
+            ),
+            onDropDownTap: (item) {
+              _onPerGuaranteedHourDropDownTap(item);
+            },
+            items: controller.guaranteedHoursList,
+            context: context,
           ),
-          _detailItemWithDropDown(
-            w21099,
-            hint: "Not Sure",
+          fmDropDown(
+            child: _detailItemWithDropDown(
+              w21099,
+              hint: "Not Sure",
+            ),
+            onDropDownTap: (item) {
+              _onw21099DropDownTap(item);
+            },
+            items: controller.w21099List,
+            context: context,
           ),
-          _detailItemWithDropDown(
-            paidBy,
-            hint: "Ep Services",
-          ),
-          _detailItemWithDropDown(
-            terms,
-            hint: "Net 15",
-          ),
+          fmDropDown(
+              child: _detailItemWithDropDown(
+                paidBy,
+                hint: "Ep Services",
+              ),
+              onDropDownTap: (item) {
+                _onPaidByDropDownTap(item);
+              },
+              items: controller.paidByList,
+              context: context,
+              width: 250),
+          fmDropDown(
+              child: _detailItemWithDropDown(
+                terms,
+                hint: "Net 15",
+              ),
+              onDropDownTap: (item) {
+                _onTermDropDownTap(item);
+              },
+              items: controller.termsList,
+              context: context,
+              width: 250),
         ],
       ),
     ).paddingOnly(
@@ -229,7 +244,7 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _jobClassificationCard() {
+  Widget _jobClassificationCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -245,25 +260,42 @@ class AddJobScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _detailItemWithDropDown(jobClassification,
-              hint: "Camera/1st Assist...",
-              showDownIcon: true,
-              labelColor: redTextColor,
-              customSuffix: FmImage.assetImage(
-                path: Assets.iconsForwardIcon,
-                height: 15.sh(),
-                width: 15.sw(),
-                color: Colors.black,
-              ).paddingOnly(
-                right: screenWPadding16.sw(),
-              )),
           _detailItemWithDropDown(
-            type,
-            hint: "Commercial",
+            jobClassification,
+            hint: "Camera/1st Assist...",
+            showDownIcon: true,
+            labelColor: redTextColor,
+            customSuffix: FmImage.assetImage(
+              path: Assets.iconsForwardIcon,
+              height: 15.sh(),
+              width: 15.sw(),
+              color: Colors.black,
+            ).paddingOnly(
+              right: screenWPadding16.sw(),
+            ),
           ),
-          _detailItemWithDropDown(
-            unionNonUnion,
-            hint: "Non-Union",
+          fmDropDown(
+            child: _detailItemWithDropDown(
+              type,
+              hint: "Commercial",
+            ),
+            onDropDownTap: (item) {
+              _onTypeDropDownTap(item);
+            },
+            items: controller.typeList,
+            context: context,
+            width: 210,
+          ),
+          fmDropDown(
+            child: _detailItemWithDropDown(
+              unionNonUnion,
+              hint: "Non-Union",
+            ),
+            onDropDownTap: (item) {
+              _onUnionNonUnionDropDownTap(item);
+            },
+            items: controller.unionNonUnionList,
+            context: context,
           ),
           _detailItemWithDropDown(
             recommendedBy,
@@ -316,7 +348,7 @@ class AddJobScreen extends StatelessWidget {
               _iconTextButton(
                 taxedItems,
                 onclick: () {
-                  showNonTaxItems(context);
+                  showTaxedItems(context);
                 },
               )
             ],
@@ -655,4 +687,132 @@ class AddJobScreen extends StatelessWidget {
   }
 
   void showHoursDropDown() {}
+
+  void _onDropDownTap(MenuItem item) {
+    for (int i = 0; i < controller.firstItems.length; i++) {
+      if (controller.firstItems[i].text == item.text) {
+        if (controller.firstItems[i].isSelected) {
+          controller.firstItems[i].isSelected = false;
+        } else {
+          controller.firstItems[i].isSelected = true;
+        }
+      } else {
+        controller.firstItems[i].isSelected = false;
+      }
+    }
+    controller.update();
+  }
+
+  void _onPerHourDropDownTap(MenuItem item) {
+    for (int i = 0; i < controller.perHoursList.length; i++) {
+      if (controller.perHoursList[i].text == item.text) {
+        if (controller.perHoursList[i].isSelected) {
+          controller.perHoursList[i].isSelected = false;
+        } else {
+          controller.perHoursList[i].isSelected = true;
+        }
+      } else {
+        controller.perHoursList[i].isSelected = false;
+      }
+    }
+    controller.update();
+  }
+
+  void _onPerGuaranteedHourDropDownTap(MenuItem item) {
+    for (int i = 0; i < controller.guaranteedHoursList.length; i++) {
+      if (controller.guaranteedHoursList[i].text == item.text) {
+        if (controller.guaranteedHoursList[i].isSelected) {
+          controller.guaranteedHoursList[i].isSelected = false;
+        } else {
+          controller.guaranteedHoursList[i].isSelected = true;
+        }
+      } else {
+        controller.guaranteedHoursList[i].isSelected = false;
+      }
+    }
+    controller.update();
+  }
+
+  void _onw21099DropDownTap(MenuItem item) {
+    for (int i = 0; i < controller.w21099List.length; i++) {
+      if (controller.w21099List[i].text == item.text) {
+        if (controller.w21099List[i].isSelected) {
+          controller.w21099List[i].isSelected = false;
+        } else {
+          controller.w21099List[i].isSelected = true;
+        }
+      } else {
+        controller.w21099List[i].isSelected = false;
+      }
+    }
+    controller.update();
+  }
+
+  void _onPaidByDropDownTap(MenuItem item) {
+    for (int i = 0; i < controller.paidByList.length; i++) {
+      if (controller.paidByList[i].text == item.text) {
+        if (controller.paidByList[i].isSelected) {
+          controller.paidByList[i].isSelected = false;
+        } else {
+          controller.paidByList[i].isSelected = true;
+        }
+      } else {
+        controller.paidByList[i].isSelected = false;
+      }
+    }
+    controller.update();
+  }
+
+  void _onTermDropDownTap(MenuItem item) {
+    for (int i = 0; i < controller.termsList.length; i++) {
+      if (controller.termsList[i].text == item.text) {
+        if (controller.termsList[i].isSelected) {
+          controller.termsList[i].isSelected = false;
+        } else {
+          controller.termsList[i].isSelected = true;
+        }
+      } else {
+        controller.termsList[i].isSelected = false;
+      }
+    }
+    controller.update();
+  }
+
+  void _onTypeDropDownTap(MenuItem item) {
+    for (int i = 0; i < controller.typeList.length; i++) {
+      if (controller.typeList[i].text == item.text) {
+        if (controller.typeList[i].isSelected) {
+          controller.typeList[i].isSelected = false;
+        } else {
+          controller.typeList[i].isSelected = true;
+        }
+      } else {
+        controller.typeList[i].isSelected = false;
+      }
+    }
+    controller.update();
+  }
+
+  void _onUnionNonUnionDropDownTap(MenuItem item) {
+    for (int i = 0; i < controller.unionNonUnionList.length; i++) {
+      if (controller.unionNonUnionList[i].text == item.text) {
+        if (controller.unionNonUnionList[i].isSelected) {
+          controller.unionNonUnionList[i].isSelected = false;
+        } else {
+          controller.unionNonUnionList[i].isSelected = true;
+        }
+      } else {
+        controller.unionNonUnionList[i].isSelected = false;
+      }
+    }
+    controller.update();
+  }
+
+  void showTaxedItems(BuildContext context) {
+    fMDialog(
+      context: context,
+      horizontalPadding: 16,
+      child: TaxItemDialog(),
+    );
+  }
 }

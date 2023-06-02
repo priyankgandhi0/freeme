@@ -22,17 +22,36 @@ class AuthBackGround extends StatelessWidget {
           left: 124.sw(),
           right: 124.sw(),
           top: 80.sh(),
-          bottom: 40.sh(),
+          bottom: 30.sh(),
         ),
         Expanded(
-          child: Container(
-            decoration: BoxDecoration(
-              color: backGroundWhiteColor,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30)),
-            ),
-            child: child!.paddingOnly(top: 0),
+          child: Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: backGroundWhiteColor.withOpacity(0.5),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(30),
+                      topRight: Radius.circular(30),
+                    )
+                ),
+              ).paddingOnly(
+                left: 20.sw(),
+                right: 20.sw(),
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: backGroundWhiteColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                  ),
+                ),
+                child: Column(children: [
+                  Expanded(child: child!.paddingOnly(top: 0))
+                ],),
+              ).paddingOnly(top: 16)
+            ],
           ),
         )
       ],

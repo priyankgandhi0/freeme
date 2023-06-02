@@ -110,17 +110,15 @@ class SummeryScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: Expanded(
-        child: PageView.builder(
-          controller: controller.pageController,
-          itemCount: 2,
-          onPageChanged: (int page) {
-            controller.onPageChange(page);
-          },
-          itemBuilder: (context, index) {
-            return pages[index];
-          },
-        ),
+      child: PageView.builder(
+        controller: controller.pageController,
+        itemCount: 2,
+        onPageChanged: (int page) {
+          controller.onPageChange(page);
+        },
+        itemBuilder: (context, index) {
+          return pages[index];
+        },
       ),
     ).paddingOnly(
       top: screenHPadding16.sh(),
