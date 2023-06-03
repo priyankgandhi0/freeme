@@ -3,7 +3,6 @@ import 'package:freeme/ui/main/time_card_edit/timecard__history_edit_controller.
 import '../../../../../globle.dart';
 import '../../widgets/fm_appbar.dart';
 
-
 class TimeCardEditHistoryScreen extends StatelessWidget {
   TimeCardEditHistoryScreen({Key? key}) : super(key: key);
 
@@ -17,14 +16,13 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
         body: Column(
           children: [
             fMAppBar2(
-              title: "Commercial with Adam",
-              description: "Week Ending 7/23/2022",
-              context: context,
-              onBackClick: (){
-                FocusScope.of(context).unfocus();
-                Navigator.of(context).pop();
-              }
-            ),
+                title: "Commercial with Adam",
+                description: "Week Ending 7/23/2022",
+                context: context,
+                onBackClick: () {
+                  FocusScope.of(context).unfocus();
+                  Navigator.of(context).pop();
+                }),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -53,21 +51,18 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
       children: [
         Expanded(
           child: FmButton(
-            ontap: () {
-
-            },
+            ontap: () {},
             name: delete,
             type: ButtonType.delete,
           ),
         ),
-        SizedBox(width: 16,),
+        SizedBox(
+          width: 16,
+        ),
         Expanded(
           child: FmButton(
-            ontap: () {
-
-            },
+            ontap: () {},
             name: save,
-
           ),
         )
       ],
@@ -197,7 +192,10 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: _addressItem(zip),
+                    child: _addressItem(
+                      zip,
+                      inputType: TextInputType.number,
+                    ),
                   ),
                 ],
               ),
@@ -252,7 +250,12 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                   Expanded(
                     child: _addressItem(state, showRightBorder: true),
                   ),
-                  Expanded(child: _addressItem(zip)),
+                  Expanded(
+                    child: _addressItem(
+                      zip,
+                      inputType: TextInputType.number,
+                    ),
+                  ),
                 ],
               ),
               Row(
@@ -285,11 +288,10 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _addressItem(
-    String hint, {
-    bool showRightBorder = false,
-    bool showBottomBorder = true,
-  }) {
+  Widget _addressItem(String hint,
+      {bool showRightBorder = false,
+      bool showBottomBorder = true,
+      TextInputType? inputType}) {
     return Container(
       width: Get.width,
       decoration: BoxDecoration(
@@ -304,6 +306,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
       ),
       child: FmEmptyTextField(
         hintText: hint,
+        textInputType: inputType,
       ).paddingOnly(
         left: screenWPadding16.sw(),
         top: screenHPadding16.sh(),

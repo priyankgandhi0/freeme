@@ -123,6 +123,7 @@ class TimeCardTabScreen extends StatelessWidget {
   showSelectTimeDialog(BuildContext context) {
     fMDialog(
       context: context,
+      horizontalPadding: screenWPadding64.sw(),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -147,13 +148,15 @@ class TimeCardTabScreen extends StatelessWidget {
                 fit: BoxFit.fill,
                 size: 12,
               )
-                  .onClick(
+                  .onTap(
                     () {
                       Navigator.of(context, rootNavigator: true).pop();
                     },
                   )
                   .paddingOnly(
                     top: 20.sh(),
+                    bottom: 20.sh(),
+                    left: 20.sh(),
                     right: screenWPadding16.sw(),
                   )
                   .positioned(right: 0)
@@ -182,7 +185,7 @@ class TimeCardTabScreen extends StatelessWidget {
           ),
 
           ///clock in
-          /*FmButton(
+          FmButton(
             ontap: () {},
             name: clockIn,
             type: ButtonType.greenCircular,
@@ -191,7 +194,7 @@ class TimeCardTabScreen extends StatelessWidget {
             right: screenWPadding32.sw(),
             bottom: 24.sh(),
             top: 24.sh(),
-          ),*/
+          ),
 
           ///lunch start
           /* FmButton(
@@ -282,6 +285,7 @@ class TimeCardTabScreen extends StatelessWidget {
                       .paddingOnly(
                         top: screenHPadding16.sh(),
                         bottom: screenHPadding16.sh(),
+
                       ),
                 ],
               ),
@@ -290,15 +294,18 @@ class TimeCardTabScreen extends StatelessWidget {
                 fit: BoxFit.fill,
                 size: 12,
               )
-                  .onClick(
-                    () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                  )
+
                   .paddingOnly(
-                    top: 22.sh(),
-                    right: 22.sw(),
-                  )
+
+                top: 22.sh(),
+                right: 22.sw(),
+                left: 22.sw(),
+                bottom: 22.sw(),
+                  ).onTap(
+                    () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+              )
                   .positioned(right: 0)
             ],
           ),
@@ -321,7 +328,7 @@ class TimeCardTabScreen extends StatelessWidget {
       },
       name: duplicate,
     ).paddingOnly(
-       top: screenHPadding8.sh(),
+      top: screenHPadding8.sh(),
       bottom: 24.sh(),
       left: screenWPadding16.sw(),
       right: screenWPadding16.sw(),
@@ -336,6 +343,7 @@ class TimeCardTabScreen extends StatelessWidget {
           color: Colors.black,
           width: 1,
         ),
+        color: Colors.white
       ),
       child: Row(
         children: [
@@ -384,6 +392,7 @@ class TimeCardTabScreen extends StatelessWidget {
   dataTableCard() {
     return Container(
       decoration: BoxDecoration(
+          color: Colors.white,
           border: Border.all(color: Colors.black, width: 1),
           borderRadius: BorderRadius.circular(10)),
       child: Column(

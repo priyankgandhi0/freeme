@@ -37,17 +37,16 @@ class NonTaxItemDialog extends StatelessWidget {
                   path: Assets.iconsCloseIcon,
                   fit: BoxFit.fill,
                   size: 12,
-                )
-                    .onClick(
-                      () {
-                        Navigator.of(context, rootNavigator: true).pop();
-                      },
-                    )
-                    .paddingOnly(
-                      top: 22.sh(),
-                      right: 22.sw(),
-                    )
-                    .positioned(right: 0)
+                ).paddingOnly(
+                  top: 22.sh(),
+                  right: 22.sw(),
+                  left: 22.sw(),
+                  bottom: 22.sw(),
+                ).onTap(
+                  () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                ).positioned(right: 0)
               ],
             ),
             Container(
@@ -55,6 +54,7 @@ class NonTaxItemDialog extends StatelessWidget {
               width: Get.width,
               height: 1,
             ),
+
             Column(
               children: [
                 Row(
@@ -121,6 +121,7 @@ class NonTaxItemDialog extends StatelessWidget {
                         ),
                         child: FmEmptyTextField(
                           hintText: "\$25",
+                          textInputType: TextInputType.number,
                         ).paddingOnly(
                           top: screenWPadding16.sw(),
                           left: screenWPadding16.sw(),
@@ -194,7 +195,6 @@ class NonTaxItemDialog extends StatelessWidget {
 }
 
 class NonTaxItemDialogController extends GetxController {
-
   List<MenuItem> typeList = [
     MenuItem(text: "Mileage", isSelected: true),
     MenuItem(text: "Box Kit", isSelected: false),

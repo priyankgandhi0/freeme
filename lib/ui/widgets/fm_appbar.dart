@@ -17,7 +17,7 @@ fMAppBar(
         ? FmImage.assetImage(
             path: Assets.iconsBackIcon,
             fit: BoxFit.fitWidth,
-          ).onClick(onBackClick).paddingAll(
+          ).onTap(onBackClick).paddingAll(
               screenHPadding16.sh(),
             )
         : null,
@@ -26,7 +26,7 @@ fMAppBar(
           ? FmImage.assetImage(
               path: Assets.iconsEdit,
               fit: BoxFit.fitWidth,
-            ).onClick(onTrailingClick).paddingAll(
+            ).onTap(onTrailingClick).paddingAll(
                 screenWPadding16.sw(),
               )
           : Container()
@@ -49,20 +49,19 @@ fMAppBar2({
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         onBackClick != null
-            ? FmImage.assetImage(
-                path: Assets.iconsBackIcon,
-                fit: BoxFit.fitWidth,
-                width: 20,
-                height: 20,
-              )
-                .onClick(onBackClick ??
-                    () {
-
-
-                    })
-                .paddingAll(
-                  screenHPadding16.sh(),
-                )
+            ? Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FmImage.assetImage(
+                    path: Assets.iconsBackIcon,
+                    fit: BoxFit.fitWidth,
+                    width: 20,
+                    height: 20,
+                  ).onTap(onBackClick ?? () {}).paddingAll(
+                        screenHPadding16.sh(),
+                      ),
+                ],
+              ).safeArea
             : Container(
                 width: 20,
               ).paddingOnly(
@@ -89,7 +88,7 @@ fMAppBar2({
                 width: 20,
                 height: 20,
                 fit: BoxFit.contain,
-              ).onClick(onTrailingClick ?? () {}).paddingOnly(
+              ).onTap(onTrailingClick ?? () {}).paddingOnly(
                   right: screenWPadding16.sw(),
                 )
             : Container(

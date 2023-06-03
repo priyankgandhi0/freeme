@@ -78,21 +78,21 @@ class MainScreen extends StatelessWidget {
             title: workHistory,
             asset: Assets.iconsHistory,
             color: ctrl.selectedIndex == 0 ? darkGreenColor2 : null,
-          ).onClick(() {
+          ).onTap(() {
             controller.updateSelectedIndex(0);
           }),
           bottomItem(
             title: freeMeBeta,
             asset: Assets.iconsBeta,
             color: ctrl.selectedIndex == 1 ? darkGreenColor2 : null,
-          ).onClick(() {
+          ).onTap(() {
             controller.updateSelectedIndex(1);
           }),
           bottomItem(
             title: account,
             asset: Assets.iconsSetting,
             color: ctrl.selectedIndex == 2 ? darkGreenColor2 : null,
-          ).onClick(() {
+          ).onTap(() {
             controller.updateSelectedIndex(2);
           }),
         ],
@@ -100,8 +100,11 @@ class MainScreen extends StatelessWidget {
     );
   }
 
-  Widget bottomItem(
-      {required String title, required String asset, Color? color}) {
+  Widget bottomItem({
+    required String title,
+    required String asset,
+    Color? color,
+  }) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

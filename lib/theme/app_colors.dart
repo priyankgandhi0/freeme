@@ -15,6 +15,7 @@ const Color bottomLineGreyColor = Color(0XFFD4DBE7);
 const Color redColor = Color(0XFFFF2B2B);
 const Color redTextColor = Color(0XFFFF4D4C);
 const Color rowCellGreyColor = Color(0XFFF8F8F8);
+const Color greenSwitchColor = Color(0XFF3ECFAB);
 
 
 

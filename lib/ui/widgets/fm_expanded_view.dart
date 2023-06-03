@@ -31,10 +31,9 @@ class _fMExpandedViewState extends State<fMExpandedView> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.white
-      ),
+          border: Border.all(color: Colors.black),
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white),
       child: ExpansionTile(
         title: Row(
           children: [
@@ -43,19 +42,19 @@ class _fMExpandedViewState extends State<fMExpandedView> {
               children: [
                 widget.title
                     .text(
-                  fontSize: 16,
-                  weight: FontWeight.w600,
-                )
+                      fontSize: 16,
+                      weight: FontWeight.w600,
+                    )
                     .paddingOnly(top: 16),
                 widget.description
                     .text(
-                  fontSize: 14,
-                  fontColor: greyTextColor,
-                )
+                      fontSize: 14,
+                      fontColor: greyTextColor,
+                    )
                     .paddingOnly(
-                  top: 8,
-                  bottom: 16,
-                ),
+                      top: 8,
+                      bottom: 16,
+                    ),
               ],
             )
           ],
@@ -63,18 +62,17 @@ class _fMExpandedViewState extends State<fMExpandedView> {
         trailing: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-
             isExpanded
                 ? FmImage.assetImage(
-              path: Assets.iconsDownIcon,
-              height: 20.sh(),
-              width: 15.sw(),
-            )
+                    path: Assets.iconsDownIcon,
+                    height: 20.sh(),
+                    width: 15.sw(),
+                  )
                 : FmImage.assetImage(
-              path: Assets.iconsForwardIcon,
-              height: 15.sh(),
-              width: 8.sw(),
-            )
+                    path: Assets.iconsForwardIcon,
+                    height: 15.sh(),
+                    width: 8.sw(),
+                  )
           ],
         ),
         onExpansionChanged: (value) {
@@ -82,13 +80,14 @@ class _fMExpandedViewState extends State<fMExpandedView> {
           expansionChange(value);
         },
         children: [
-          (widget.childList ?? []).isNotEmpty?Container(
-            width: Get.width,
-            height: 1,
-            color: Colors.black,
-          ):Container(),
-          ...(widget.childList ?? []).map((e) =>
-              expandedChildItem(e)).toList()
+          (widget.childList ?? []).isNotEmpty
+              ? Container(
+                  width: Get.width,
+                  height: 1,
+                  color: Colors.black,
+                )
+              : Container(),
+          ...(widget.childList ?? []).map((e) => expandedChildItem(e)).toList()
         ],
       ),
     ).paddingOnly(
@@ -109,14 +108,19 @@ class _fMExpandedViewState extends State<fMExpandedView> {
       ),
       child: Row(
         children: [
-          name.text(fontSize: 16, weight: FontWeight.w500).paddingOnly(
-            left: screenWPadding16.sw(),
-            top: screenHPadding16.sw(),
-            bottom: screenHPadding16.sw(),
-          ),
+          name
+              .text(
+                fontSize: 16,
+                weight: FontWeight.w500,
+              )
+              .paddingOnly(
+                left: screenWPadding16.sw(),
+                top: screenHPadding16.sw(),
+                bottom: screenHPadding16.sw(),
+              ),
         ],
       ),
-    ).onClick(() {
+    ).onTap(() {
       Navigator.pushNamed(context, Routes.workHistoryDetailScreen);
     });
   }

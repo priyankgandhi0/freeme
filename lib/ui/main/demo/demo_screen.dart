@@ -214,7 +214,7 @@ class DemoScreen extends StatelessWidget {
                     bottom: 12.sh(),
                   ),
                 ).center,
-              ).onClick(onCameraClick).positioned(
+              ).onTap(onCameraClick).positioned(
                   right: 0,
                   bottom: 0,
                 )

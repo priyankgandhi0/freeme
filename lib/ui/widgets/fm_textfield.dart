@@ -162,18 +162,18 @@ class FmEmptyTextField extends StatelessWidget {
     this.hintText,
     this.suffixIcon,
     this.maxLines,
-    this.textInputType
-
+    this.textInputType,this.controller,
   }) : super(key: key);
     TextInputType? textInputType;
 
   String? hintText;
   Widget? suffixIcon;
   int? maxLines;
-
+TextEditingController? controller;
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: controller,
       maxLines: maxLines ?? 1,
       keyboardType: textInputType,
       style: const TextStyle(

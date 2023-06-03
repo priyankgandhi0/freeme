@@ -230,7 +230,7 @@ class _WeeklyCalenderState extends State<WeeklyCalender> {
       calendarFormat: widget.calenderFormat ?? CalendarFormat.month,
       daysOfWeekVisible: true,
       sixWeekMonthsEnforced: false,
-      rowHeight: 75,
+      rowHeight: 82,
       daysOfWeekHeight:10,
       onCalendarCreated: (controller) {
         pageController = controller;
@@ -389,7 +389,7 @@ class _WeeklyCalenderState extends State<WeeklyCalender> {
           height: 15.sh(),
           width: 15.sw(),
           color: darkGreenColor2,
-        ).onClick(
+        ).onTap(
           () {
             pageController.previousPage(
                 duration: const Duration(milliseconds: 500),
@@ -404,7 +404,7 @@ class _WeeklyCalenderState extends State<WeeklyCalender> {
           height: 15.sh(),
           width: 15.sw(),
           color: darkGreenColor2,
-        ).onClick(() {
+        ).onTap(() {
           pageController.nextPage(
               duration: const Duration(milliseconds: 500),
               curve: Curves.easeOut);

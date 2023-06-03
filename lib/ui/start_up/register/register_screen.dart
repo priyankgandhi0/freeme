@@ -4,6 +4,7 @@ import 'package:freeme/globle.dart';
 import 'package:freeme/ui/start_up/register/register_controller.dart';
 
 import '../../widgets/auth_background.dart';
+import '../../widgets/fm_expanded_view.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({Key? key}) : super(key: key);
@@ -39,7 +40,7 @@ class RegisterScreen extends StatelessWidget {
                     .paddingOnly(
                       top: 8.sh(),
                     ),
-                industryDropDown(),
+                industryDropDown(context),
                 Row(
                   children: [
                     Expanded(
@@ -87,7 +88,7 @@ class RegisterScreen extends StatelessWidget {
                         : Assets.iconsEyeClosed,
                     width: 22,
                     height: 19,
-                  ).onClick(() {
+                  ).onTap(() {
                     ctrl.showHidePassword();
                   }).paddingOnly(
                     right: 17.sw(),
@@ -109,7 +110,7 @@ class RegisterScreen extends StatelessWidget {
                               : Assets.iconsEyeClosed,
                           width: 22,
                           height: 19,
-                        ).onClick(() {
+                        ).onTap(() {
                           ctrl.showHideConfirmPassword();
                         }).paddingOnly(right: 17.sw()))
                     .paddingOnly(
@@ -119,7 +120,9 @@ class RegisterScreen extends StatelessWidget {
                   bottom: 8.sh(),
                 ),
                 FmButton(
-                  ontap: () {},
+                  ontap: () {
+                    Get.offAllNamed(Routes.login);
+                  },
                   name: signUp,
                 ).paddingOnly(
                   top: 48.sh(),
@@ -141,7 +144,7 @@ class RegisterScreen extends StatelessWidget {
                       underLine: true,
                       fontSize: 16,
                     )
-                        .onClick(() {
+                        .onTap(() {
                       Get.offAllNamed(Routes.login);
                     }),
                   ],
@@ -154,8 +157,82 @@ class RegisterScreen extends StatelessWidget {
     });
   }
 
-  Widget industryDropDown() {
+  Widget industryDropDown(BuildContext context) {
     return Column(
+      children: [
+        Row(
+          children: [
+            "Industry".text(fontSize: 16).paddingOnly(
+                  left: screenWPadding16.sw(),
+                ),
+          ],
+        ),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+            borderRadius: BorderRadius.circular(5),
+            color: Colors.white,
+          ),
+          child: GetBuilder<RegisterController>(
+            builder: (ctrl) {
+              return ListTileTheme(
+                dense: true,
+                key: UniqueKey(),
+                horizontalTitleGap: 0.0,
+                minLeadingWidth: 0,
+                child: ExpansionTile(
+                  childrenPadding: EdgeInsets.zero,
+                  title: "Film Industry".text(
+                    fontSize: 16,
+                  ),
+                  initiallyExpanded: ctrl.isShowExpanded,
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      controller.isExpanded
+                          ? FmImage.assetImage(
+                              path: Assets.iconsDownIcon,
+                              height: 20.sh(),
+                              width: 15.sw(),
+                            )
+                          : FmImage.assetImage(
+                              path: Assets.iconsForwardIcon,
+                              height: 15.sh(),
+                              width: 8.sw(),
+                            )
+                    ],
+                  ),
+                  onExpansionChanged: (value) {
+                    value.debugPrint;
+                    // controller.expansionChange(value);
+                  },
+                  children: [
+                    Container(
+                      width: Get.width,
+                      height: 1,
+                      color: Colors.black,
+                    ),
+                    expandedChildItem("Film Industry", context).onClick(() {
+                      ctrl.isShowExpanded = false;
+                      ctrl.update();
+                    }),
+                    expandedChildItem("Other", context).onTap(() {
+                      ctrl.isShowExpanded = false;
+                      ctrl.update();
+                    })
+                  ],
+                ),
+              );
+            },
+          ),
+        ).paddingOnly(
+            left: screenHPadding16.sw(),
+            right: screenHPadding16.sw(),
+            top: screenHPadding8.sh())
+      ],
+    );
+
+    /* return Column(
       children: [
         Row(
           children: [
@@ -204,6 +281,32 @@ class RegisterScreen extends StatelessWidget {
     ).paddingOnly(
       left: screenHPadding16.sw(),
       right: screenHPadding16.sw(),
+    );*/
+  }
+
+  Widget expandedChildItem(String name, BuildContext context) {
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: borderGreyColor,
+            width: 1,
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          name
+              .text(
+                fontSize: 16,
+              )
+              .paddingOnly(
+                left: screenWPadding16.sw(),
+                top: screenHPadding16.sw(),
+                bottom: screenHPadding16.sw(),
+              ),
+        ],
+      ),
     );
   }
 }

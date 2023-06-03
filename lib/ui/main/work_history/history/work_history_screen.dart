@@ -21,13 +21,14 @@ class WorkHistoryScreen extends StatelessWidget {
           workHistory,
         ),
         body: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
           child: Column(
             children: [
               addNewJob(context),
               fMExpandedView(
                 title: "Commercial With Adam",
                 description: "07/23/22",
-              ).onClick(() {}).paddingOnly(
+              ).onTap(() {}).paddingOnly(
                     top: 24.sh(),
                   ),
               fMExpandedView(
@@ -47,7 +48,6 @@ class WorkHistoryScreen extends StatelessWidget {
               ).paddingOnly(
                 top: screenHPadding16.sh(),
               ),
-
               fMExpandedView(
                 title: "FB Girlswirl",
                 description: "06/11/22",
@@ -60,10 +60,11 @@ class WorkHistoryScreen extends StatelessWidget {
               ).paddingOnly(
                 top: screenHPadding16.sh(),
               ),
+
               //expandableItem(),
             ],
-          ),
-        ).safeArea,
+          ).safeArea,
+        ),
       ),
       onWillPop: () async {
         return false;
@@ -72,35 +73,32 @@ class WorkHistoryScreen extends StatelessWidget {
   }
 
   Widget addNewJob(BuildContext context) {
-    return DottedBorder(
-      color: darkGreenColor,
-      strokeWidth: 1,
-      dashPattern: const [
-        6,
-        3,
-      ],
-      borderType: BorderType.RRect,
-      radius: Radius.circular(10),
-      child: SizedBox(
-        width: Get.width,
-        child: "Add New Job"
-            .text(
-                fontSize: 18,
-                fontColor: darkGreenColor,
-                weight: FontWeight.w500)
-            .center
-            .paddingOnly(
-              top: 16.sh(),
-              bottom: 16.sh(),
-            ),
-      ),
-    ).onClick(() {
-      showAddJobDialog(context);
-
-    }).paddingOnly(
-      left: 16.sw(),
-      right: 16.sw(),
-      top: 24.sh(),
+    return Container(
+      child: DottedBorder(
+        color: darkGreenColor,
+        strokeWidth: 1,
+        dashPattern: const [
+          6,
+          3,
+        ],
+        borderType: BorderType.RRect,
+        radius: Radius.circular(10),
+        child: SizedBox(
+          width: Get.width,
+          child: "Add New Job"
+              .text(
+                  fontSize: 18,
+                  fontColor: darkGreenColor,
+                  weight: FontWeight.w500)
+              .center
+              .paddingOnly(
+                top: 16.sh(),
+                bottom: 16.sh(),
+              ),
+        ),
+      ).onTap(() {
+        showAddJobDialog(context);
+      }).paddingOnly(left: 16.sw(), right: 16.sw(), top: 24.sh(), bottom: 10),
     );
   }
 
@@ -132,16 +130,17 @@ class WorkHistoryScreen extends StatelessWidget {
                 fit: BoxFit.fill,
                 size: 12,
               )
-                  .onClick(
-                    () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                  )
                   .paddingOnly(
-                    top: 22.sh(),
-                    right: 22.sw(),
-                  )
-                  .positioned(right: 0)
+                top: 22.sh(),
+                right: 22.sw(),
+                left: 22.sw(),
+                bottom: 22.sw(),
+              )
+                  .onTap(
+                () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+              ).positioned(right: 0)
             ],
           ),
           Container(

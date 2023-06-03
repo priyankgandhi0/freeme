@@ -8,6 +8,7 @@ import '../quick_entry_controller.dart';
 
 class TaxedItemPage extends StatelessWidget {
   TaxedItemPage({Key? key}) : super(key: key);
+
   final controller = Get.find<QuickEntryController>();
 
   @override
@@ -29,17 +30,20 @@ class TaxedItemPage extends StatelessWidget {
               "Non-Tax Items".text(fontSize: 18),
             ],
           ).paddingOnly(
-              left: screenWPadding16.sw(),
-              bottom: screenHPadding8.sh(),
-              top: screenHPadding16.sh()),
+            left: screenWPadding16.sw(),
+            bottom: screenHPadding8.sh(),
+            top: screenHPadding16.sh(),
+          ),
           _nonTaxedItems(context),
           FmButton(
             ontap: () {},
             name: finish,
-          ).paddingOnly(
-            left: screenWPadding16.sw(),
-            right: screenWPadding16.sw(),
-          ).paddingOnly(top: 60)
+          )
+              .paddingOnly(
+                left: screenWPadding16.sw(),
+                right: screenWPadding16.sw(),
+              )
+              .paddingOnly(top: 60)
         ],
       ),
     );
@@ -52,6 +56,7 @@ class TaxedItemPage extends StatelessWidget {
       child: NonTaxItemDialog(),
     );
   }
+
   void showTaxedItems(BuildContext context) {
     fMDialog(
       context: context,
@@ -102,7 +107,7 @@ class TaxedItemPage extends StatelessWidget {
                     left: 10,
                   ),
             ],
-          ).onClick(() {
+          ).onTap(() {
             showNonTaxItems(context);
           }).paddingOnly(
             left: screenWPadding16.sw(),
@@ -156,7 +161,7 @@ class TaxedItemPage extends StatelessWidget {
                     left: 10,
                   ),
             ],
-          ).onClick(() {
+          ).onTap(() {
             showTaxedItems(context);
           }).paddingOnly(
             left: screenWPadding16.sw(),
@@ -167,8 +172,6 @@ class TaxedItemPage extends StatelessWidget {
       ),
     ).paddingOnly(left: screenWPadding16.sw(), right: screenWPadding16.sw());
   }
-
-
 
   Widget _childItem(
     String type,
@@ -201,7 +204,7 @@ class TaxedItemPage extends StatelessWidget {
             ? Container(
                 width: Get.width,
                 height: 1,
-                color: Colors.black,
+                color: borderGreyColor,
               )
             : Container()
       ],

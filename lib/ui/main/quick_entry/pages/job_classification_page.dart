@@ -10,23 +10,25 @@ class JobClassificationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            "Job Classification"
-                .text(
-                  fontSize: 18,weight: FontWeight.w500
-                )
-                .paddingOnly(
-                  left: screenWPadding16.sw(),
-                ),
-          ],
-        ),
-        _department(),
-        _position(),
-        _backNextButton()
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              "Job Classification"
+                  .text(
+                    fontSize: 18,weight: FontWeight.w500
+                  )
+                  .paddingOnly(
+                    left: screenWPadding16.sw(),
+                  ),
+            ],
+          ),
+          _department(),
+          _position(),
+          _backNextButton()
+        ],
+      ),
     );
   }
 
@@ -61,7 +63,7 @@ class JobClassificationPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        position.text(fontSize: 16, fontColor: redColor),
+        positionStar.text(fontSize: 16, fontColor: redColor),
         Container(
           decoration: BoxDecoration(
               border: Border.all(

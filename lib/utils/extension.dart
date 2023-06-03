@@ -43,14 +43,15 @@ extension extOnWidget on Widget {
     );
   }
 
-  Widget onClick(GestureTapCallback ontap) {
+  Widget onTap(GestureTapCallback ontap) {
     return InkWell(
+      overlayColor: MaterialStateProperty.all(Colors.transparent),
       onTap: ontap,
       child: this,
     );
   }
 
-  Widget onTap(GestureTapCallback ontap) {
+  Widget onClick(GestureTapCallback ontap) {
     return GestureDetector(
       onTap: ontap,
       child: this,

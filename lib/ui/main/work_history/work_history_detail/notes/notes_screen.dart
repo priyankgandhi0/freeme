@@ -39,7 +39,7 @@ class NotesScreen extends StatelessWidget {
                     Expanded(
                       child: FmEmptyTextField(
                         hintText: "Click anywhere to start taking notes!",
-                        maxLines: 22,
+                        maxLines: 18,
                         textInputType: TextInputType.multiline,
                       ).paddingOnly(
                         left: screenWPadding16.sw(),

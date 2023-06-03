@@ -58,7 +58,7 @@ class LoginScreen extends StatelessWidget {
                           : Assets.iconsEyeClosed,
                       width: 22,
                       height: 19,
-                    ).onClick(() {
+                    ).onTap(() {
                       ctrl.showHidePassword();
                     }).paddingOnly(
                       right: 17.sw(),
@@ -109,7 +109,7 @@ class LoginScreen extends StatelessWidget {
                         fontSize: 16,
                         underLine: true,
                       )
-                          .onClick(() {
+                          .onTap(() {
                         Get.toNamed(Routes.register);
                       }),
                     ],

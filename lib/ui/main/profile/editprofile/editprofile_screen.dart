@@ -37,41 +37,39 @@ class EditProfileScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              nameCard("Jane", "Doe").paddingOnly(top: screenHPadding32.sh()),
+              nameCard().paddingOnly(top: screenHPadding32.sh()),
               contentCard("Add Phone", ["1-000-000-0000"], onAddClick: () {})
                   .paddingOnly(top: screenHPadding16.sh()),
-              contentCard("Add E-mail", ["Work_email@gmail.com"],
+              contentCard(addEmail, ["Work_email@gmail.com"],
                       onAddClick: () {})
                   .paddingOnly(top: screenHPadding16.sh()),
-              contentCard("Union", ["lATSE Local 600"], onAddClick: () {})
+              contentCard(union, ["lATSE Local 600"], onAddClick: () {})
                   .paddingOnly(top: screenHPadding16.sh()),
-              contentCard("Primary Position", ["Camera / 1st Assist..."],
+              contentCard(primaryPosition, ["Camera / 1st Assist..."],
                       onAddClick: () {})
                   .paddingOnly(top: screenHPadding16.sh()),
-              contentCard("Add Address", [], onAddClick: () {})
+              contentCard(addAddress, [], onAddClick: () {})
                   .paddingOnly(top: screenHPadding16.sh()),
-              contentCard("Add Website", [], onAddClick: () {})
+              contentCard(addWebsite, [], onAddClick: () {})
                   .paddingOnly(top: screenHPadding16.sh()),
-              contentCard("Add Social Media", [], onAddClick: () {})
+              contentCard(addSocialMedia, [], onAddClick: () {})
                   .paddingOnly(top: screenHPadding16.sh()),
-              contentCard("Add Birthday", [], onAddClick: () {})
+              contentCard(addBirthday, [], onAddClick: () {})
                   .paddingOnly(top: screenHPadding16.sh()),
               aboutMeCard("Likes to play golf, pool, games"),
               FmButton(
                 ontap: () {},
                 name: save,
               ).paddingOnly(
-                left: screenWPadding16.sw(),
-                right: screenWPadding16.sw(),
-                bottom: screenHPadding16.sw(),
-                top: screenHPadding32.sh()
-              )
+                  left: screenWPadding16.sw(),
+                  right: screenWPadding16.sw(),
+                  bottom: screenHPadding16.sw(),
+                  top: screenHPadding32.sh())
             ],
           ),
         ),
       ),
       onWillPop: () async {
-
         return false;
       },
     );
@@ -142,7 +140,7 @@ class EditProfileScreen extends StatelessWidget {
                     top: screenHPadding16,
                     bottom: screenHPadding16,
                   )
-                  .onClick(
+                  .onTap(
                     onRemoveClick ?? () {},
                   );
             },
@@ -167,7 +165,7 @@ class EditProfileScreen extends StatelessWidget {
                 top: screenHPadding16,
                 bottom: screenHPadding16,
               )
-              .onClick(
+              .onTap(
                 onAddClick ?? () {},
               )
         ],
@@ -178,7 +176,7 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget nameCard(String firstName, String lastName) {
+  Widget nameCard( ) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -198,7 +196,7 @@ class EditProfileScreen extends StatelessWidget {
               Expanded(
                 child: Row(
                   children: [
-                    "First Name".text(
+                    firstName.text(
                       fontSize: 16,
                       fontColor: greyTextColor,
                     )
@@ -206,8 +204,9 @@ class EditProfileScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: Row(
-                  children: [firstName.text(fontSize: 16)],
+                child: FmEmptyTextField(
+                  controller: controller.firstNameController,
+                  hintText: enterFirstName,
                 ),
               ),
             ],
@@ -220,7 +219,7 @@ class EditProfileScreen extends StatelessWidget {
               Expanded(
                 child: Row(
                   children: [
-                    "Last Name".text(
+                    lastName.text(
                       fontSize: 16,
                       fontColor: greyTextColor,
                     )
@@ -228,10 +227,9 @@ class EditProfileScreen extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: Row(
-                  children: [
-                    lastName.text(fontSize: 16),
-                  ],
+                child: FmEmptyTextField(
+                  hintText: enterLastName,
+                  controller: controller.lastNameController,
                 ),
               ),
             ],
@@ -275,15 +273,9 @@ class EditProfileScreen extends StatelessWidget {
                   ),
             ],
           ),
-          Row(
-            children: [
-              value.text(
-                fontSize: 16,
-              )
-            ],
-          ).paddingOnly(
-            top: screenHPadding8.sh(),
-            bottom: screenHPadding16.sh(),
+          FmEmptyTextField(
+            hintText: enterAboutMe,
+            maxLines: 3,
           )
         ],
       ).paddingOnly(

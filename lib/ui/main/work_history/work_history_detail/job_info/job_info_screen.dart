@@ -57,7 +57,9 @@ class JobInfoScreen extends StatelessWidget {
           ],
         ),
         Container(
+
           decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: Colors.black),
           ),
@@ -119,7 +121,9 @@ class JobInfoScreen extends StatelessWidget {
           bottom: screenHPadding8.sh(),
         ),
         Container(
+
           decoration: BoxDecoration(
+              color: Colors.white,
               border: Border.all(
                 color: Colors.black,
               ),
@@ -146,7 +150,10 @@ class JobInfoScreen extends StatelessWidget {
 
   Widget _jobClassificationCard() {
     return Container(
+
       decoration: BoxDecoration(
+
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.black),
       ),
@@ -199,7 +206,9 @@ class JobInfoScreen extends StatelessWidget {
 
   Widget _rateCard(BuildContext context) {
     return Container(
+
       decoration: BoxDecoration(
+          color: Colors.white,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.black)),
       child: Column(
@@ -253,9 +262,12 @@ class JobInfoScreen extends StatelessWidget {
 
   Widget _descriptionCard() {
     return Container(
+
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.black)),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Colors.black),
+      ),
       child: Column(
         children: [
           detailItem(
@@ -327,7 +339,7 @@ class JobInfoScreen extends StatelessWidget {
                       path: Assets.iconsErrorIcon,
                       height: 15.sh(),
                       width: 15.sw(),
-                    ).onClick(onIbuttonClick).paddingOnly(
+                    ).onTap(onIbuttonClick).paddingOnly(
                           left: 10.sw(),
                         )
                   ],
@@ -342,7 +354,6 @@ class JobInfoScreen extends StatelessWidget {
       right: screenWPadding16.sw(),
     );
   }
- 
 
   void showDialogOnIButtonClick(BuildContext context) {
     fMDialog(

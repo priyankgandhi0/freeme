@@ -182,6 +182,7 @@ class JobDetailPage extends StatelessWidget {
                 expandedChildItem(
                   label: zip,
                   hint: "91506",
+                  inputType: TextInputType.number
                 ),
                 expandedChildItem(
                   label: country,
@@ -196,23 +197,27 @@ class JobDetailPage extends StatelessWidget {
     );
   }
 
-  Widget expandedChildItem({
-    String? label,
-    String? hint,
-    bool showBorder = true,
-  }) {
+  Widget expandedChildItem(
+      {String? label,
+      String? hint,
+      bool showBorder = true,
+      TextInputType? inputType}) {
     return _detailItem(
       label ?? "",
       hint: hint,
+      type: inputType,
       showBorder: showBorder,
     );
   }
 
-  Widget _detailItem(String lable,
-      {bool showBorder = true,
-      String? hint,
-      double? leftPadding,
-      double? rightPadding}) {
+  Widget _detailItem(
+    String lable, {
+    bool showBorder = true,
+    String? hint,
+    double? leftPadding,
+    double? rightPadding,
+    TextInputType? type,
+  }) {
     return Container(
       decoration: BoxDecoration(
         border: showBorder
@@ -241,6 +246,7 @@ class JobDetailPage extends StatelessWidget {
           Expanded(
             child: FmEmptyTextField(
               hintText: hint,
+              textInputType: type,
             ),
           )
         ],

@@ -17,11 +17,13 @@ class TimeCardController extends GetxController{
 
   void onDaySelect(DateTime selectedDay, DateTime focusDay) {
     focusedDay = focusDay;
-    if (selectedDays.contains(selectedDay)) {
+    /*if (selectedDays.contains(selectedDay)) {
       selectedDays.remove(selectedDay);
     } else {
       selectedDays.add(selectedDay);
-    }
+    }*/
+    selectedDays.clear();
+    selectedDays.add(selectedDay);
     currentDay = focusDay;
     update();
   }

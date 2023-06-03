@@ -62,7 +62,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                     underLine: true,
                     fontSize: 16,
                   )
-                      .onClick(() {
+                      .onTap(() {
                     Get.offAllNamed(Routes.login);
                   })
                 ],

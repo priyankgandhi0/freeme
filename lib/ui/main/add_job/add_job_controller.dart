@@ -1,3 +1,8 @@
+import 'dart:collection';
+
+import 'package:table_calendar/table_calendar.dart';
+
+import '../../../calender_demo/utils.dart';
 import '../../../globle.dart';
 import '../../widgets/dropdown.dart';
 
@@ -11,23 +16,15 @@ class AddJobController extends GetxController {
 
   var nonTaxedItem = [
     NonTaxedItem("Monitor", "\$250 / Day"),
+
   ];
 
-  List<MenuItem> firstItems = [
-    MenuItem(text: "None", isSelected: true),
-    MenuItem(text: "05 Hours", isSelected: false),
-    MenuItem(text: "06 Hours", isSelected: false),
-    MenuItem(text: "07 Hours", isSelected: false),
-    MenuItem(text: "08 Hours", isSelected: false),
-    MenuItem(text: "09 Hours", isSelected: false),
-    MenuItem(text: "10 Hours", isSelected: false),
-    MenuItem(text: "11 Hours", isSelected: false),
-    MenuItem(text: "12 Hours", isSelected: false),
-    MenuItem(text: "13 Hours", isSelected: false),
-    MenuItem(text: "14 Hours", isSelected: false),
-    MenuItem(text: "15 Hours", isSelected: false),
-    MenuItem(text: "16 Hours", isSelected: false),
+  var taxedItem = [
+    NonTaxedItem("Monitor", "\$250 / Day"),
+
   ];
+
+
 
   List<MenuItem> perHoursList = [
     MenuItem(text: "10 hours", isSelected: true),
@@ -85,6 +82,27 @@ class AddJobController extends GetxController {
     MenuItem(text: "Yes", isSelected: false),
     MenuItem(text: "No", isSelected: false),
   ];
+
+
+  var focusedDay = DateTime.now();
+
+  DateTime currentDay = DateTime.now();
+
+  final Set<DateTime> selectedDays = LinkedHashSet<DateTime>(
+    equals: isSameDay,
+    hashCode: getHashCode,
+  );
+
+  void onDaySelect(DateTime selectedDay, DateTime focusDay) {
+    focusedDay = focusDay;
+    if (selectedDays.contains(selectedDay)) {
+      selectedDays.remove(selectedDay);
+    } else {
+      selectedDays.add(selectedDay);
+    }
+    currentDay = focusDay;
+    update(["DaysDialogController"]);
+  }
 }
 
 class NonTaxedItem {

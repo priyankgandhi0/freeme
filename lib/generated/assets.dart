@@ -19,6 +19,7 @@ class Assets {
   static const String iconsForwardIcon = 'assets/icons/forward_icon.png';
   static const String iconsHistory = 'assets/icons/history.png';
   static const String iconsLink = 'assets/icons/link.png';
+  static const String iconsLogout = 'assets/icons/logout.png';
   static const String iconsMinusIcon = 'assets/icons/minus_icon.png';
   static const String iconsPlusicon = 'assets/icons/plusicon.png';
   static const String iconsPrivacyPolicyIcon = 'assets/icons/privacy_policy_icon.png';

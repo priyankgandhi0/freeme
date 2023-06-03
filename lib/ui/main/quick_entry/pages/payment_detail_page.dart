@@ -10,27 +10,29 @@ class PaymentDetailPage extends StatelessWidget {
   final controller = Get.find<QuickEntryController>();
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            "Payment Details"
-                .text(
-                  fontSize: 18,
-                  weight: FontWeight.w500,
-                )
-                .paddingOnly(
-                  left: screenWPadding16.sw(),
-                ),
-          ],
-        ),
-        _rateAndOther(),
-        _guaranteedHours(),
-        _w2Or1099(),
-        _paidBy(),
-        _terms(),
-        _backNextButton()
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Row(
+            children: [
+              "Payment Details"
+                  .text(
+                    fontSize: 18,
+                    weight: FontWeight.w500,
+                  )
+                  .paddingOnly(
+                    left: screenWPadding16.sw(),
+                  ),
+            ],
+          ),
+          _rateAndOther(),
+          _guaranteedHours(),
+          _w2Or1099(),
+          _paidBy(),
+          _terms(),
+          _backNextButton()
+        ],
+      ),
     );
   }
 

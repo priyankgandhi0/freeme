@@ -12,29 +12,31 @@ class AdditionalInfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<QuickEntryController>(builder: (ctrl) {
-      return Column(
-        children: [
-          Row(
-            children: [
-              additionalInfo.text(weight: FontWeight.w500, fontSize: 18)
-            ],
-          ).paddingOnly(
-            left: screenWPadding16.sw(),
-          ),
-          _type(context),
-          _unionOrNonUnion(),
-          Row(
-            children: [
-              network.text(
-                weight: FontWeight.w500,
-                fontSize: 18,
-              ),
-            ],
-          ).paddingOnly(left: screenWPadding16.sw(), top: 24.sh()),
-          _recommendedBy(),
-          _hiredBy(),
-          _backNextButton(),
-        ],
+      return SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                additionalInfo.text(weight: FontWeight.w500, fontSize: 18)
+              ],
+            ).paddingOnly(
+              left: screenWPadding16.sw(),
+            ),
+            _type(context),
+            _unionOrNonUnion(),
+            Row(
+              children: [
+                network.text(
+                  weight: FontWeight.w500,
+                  fontSize: 18,
+                ),
+              ],
+            ).paddingOnly(left: screenWPadding16.sw(), top: 24.sh()),
+            _recommendedBy(),
+            _hiredBy(),
+            _backNextButton(),
+          ],
+        ),
       );
     });
   }

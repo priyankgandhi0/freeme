@@ -27,6 +27,7 @@ const String timeCardInfo = 'Timecard Info';
 const String editTimeCardInfo = 'Edit Timecard Info';
 const String editProfile = 'Edit Profile';
 const String accountSettings = 'Account Settings';
+const String logout = 'Logout';
 const String account = 'Account';
 const String save = 'Save';
 const String freeMeBeta = 'FreeMe Beta';
@@ -61,6 +62,7 @@ const String taxedItems = "Taxed Items";
 const String nonTaxItem = "Non-Tax Item";
 const String nonTaxItems = "Non-Tax Items";
 const String addNonTaxItem = "Add Non-Tax Item";
+const String addTaxedItem = "Add Taxed Item";
 const String description = "Description";
 const String descriptionStar = "Description*";
 const String title = "Title";
@@ -93,6 +95,7 @@ const String entertainmentPartners = "Entertainment Partners";
 const String department = "Department*";
 const String camera = "Camera";
 const String position = "Position";
+const String positionStar = "Position*";
 const String additionalInfo = "Additional Info";
 const String network = "Network";
 const String hiredBy = "Hired by";
@@ -124,6 +127,19 @@ const String twoFourHourClock= "24-Hour Clock";
 const String increment= "Increment";
 const String export= "Export";
 const String manualEntry= "Manual Entry";
+const String enterFirstName= "Enter First Name";
+const String enterLastName= "Enter Last Name";
+const String addEmail= "Add E-mail";
+const String union= "Union";
+const String primaryPosition= "Primary Position";
+const String addAddress= "Add Address";
+const String addWebsite= "Add Website";
+const String addSocialMedia= "Add Social Media";
+const String addBirthday= "Add Birthday";
+const String enterAboutMe= "Enter About me";
+const String somethingWentWrong= "Something went wrong";
+const String select= "Select";
+
 
 
 

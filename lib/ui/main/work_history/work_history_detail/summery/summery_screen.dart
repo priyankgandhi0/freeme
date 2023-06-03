@@ -311,15 +311,17 @@ class SummeryScreen extends StatelessWidget {
                 fit: BoxFit.fill,
                 size: 12,
               )
-                  .onClick(
-                    () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                  )
+
                   .paddingOnly(
                     top: 20.sh(),
                     right: screenWPadding16.sw(),
-                  )
+                    left: 20.sw(),
+                    bottom: 20.sw(),
+                  ) .onTap(
+                    () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+              )
                   .positioned(right: 0)
             ],
           ),
@@ -394,13 +396,14 @@ class SummeryScreen extends StatelessWidget {
           Expanded(
             child: Container(),
           ),
-          Theme(
-            data: ThemeData(
-              useMaterial3: true,
-            ),
-            child: Switch(
-              value: true,
-              onChanged: (value) {},
+          SizedBox(
+            height: 30,
+            child: FittedBox(
+              child: CupertinoSwitch(
+                value: true,
+                activeColor: greenSwitchColor,
+                onChanged: (bool value) {},
+              ),
             ),
           )
         ],
@@ -425,9 +428,15 @@ class SummeryScreen extends StatelessWidget {
           Expanded(
             child: Container(),
           ),
-          CupertinoSwitch(
-            value: true,
-            onChanged: (bool value) {},
+          SizedBox(
+            height: 30,
+            child: FittedBox(
+              child: CupertinoSwitch(
+                value: true,
+                activeColor: greenSwitchColor,
+                onChanged: (bool value) {},
+              ),
+            ),
           )
         ],
       ).paddingOnly(
@@ -488,15 +497,17 @@ class SummeryScreen extends StatelessWidget {
                 fit: BoxFit.fill,
                 size: 12,
               )
-                  .onClick(
-                    () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                  )
+
                   .paddingOnly(
                     top: 20.sh(),
                     right: screenWPadding16.sw(),
-                  )
+                    left: screenWPadding16.sw(),
+                    bottom: screenWPadding16.sw(),
+                  ).onTap(
+                    () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+              )
                   .positioned(right: 0)
             ],
           ),
@@ -623,13 +634,14 @@ class SummeryScreen extends StatelessWidget {
           Expanded(
             child: Container(),
           ),
-          Theme(
-            data: ThemeData(
-              useMaterial3: true,
-            ),
-            child: Switch(
-              value: true,
-              onChanged: (value) {},
+          SizedBox(
+            height: 30,
+            child: FittedBox(
+              child: CupertinoSwitch(
+                value: true,
+                activeColor: greenSwitchColor,
+                onChanged: (bool value) {},
+              ),
             ),
           )
         ],

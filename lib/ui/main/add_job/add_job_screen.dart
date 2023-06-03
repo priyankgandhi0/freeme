@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 import '../../../globle.dart';
+import '../../widgets/app_calender.dart';
 import '../../widgets/dropdown.dart';
 import '../../widgets/fm_appbar.dart';
 import '../../widgets/fm_dialog.dart';
@@ -35,7 +36,7 @@ class AddJobScreen extends StatelessWidget {
               return Column(
                 children: [
                   isForEdit ? Container() : _autoPopulatedlastEntryButton(),
-                  _daysDropdownButton(context),
+                  _daysDropdownButton(context, ctrl),
                   _discriptionCard(),
                   _rateCard(context),
                   _jobClassificationCard(context),
@@ -77,14 +78,78 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _daysDropdownButton(BuildContext context) {
-    return fmDropDown(
-      child: _daysCard(),
-      onDropDownTap: (item) {
-        _onDropDownTap(item);
-      },
-      items: controller.firstItems,
+  Widget _daysDropdownButton(BuildContext context, AddJobController ctrl) {
+    return _daysCard().onClick(() {
+      showCalenderDropDown(context, ctrl);
+    });
+  }
+
+  showCalenderDropDown(BuildContext context, AddJobController ctrl) {
+    fMDialog(
       context: context,
+      horizontalPadding: 16,
+      child: GetBuilder<AddJobController>(
+        id: "DaysDialogController",
+        builder: (ctrl) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      selectDays.text(
+                        fontSize: 18,
+                        weight: FontWeight.w500,
+                      ),
+                    ],
+                  ),
+                  FmImage.assetImage(
+                    path: Assets.iconsCloseIcon,
+                    fit: BoxFit.fill,
+                    size: 12,
+                  )
+                      .paddingOnly(
+                    top: 16.sh(),
+                    right: 22.sw(),
+                    left: 22.sw(),
+                    bottom: 16.sw(),
+                  )
+                      .onTap(
+                    () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                  ).positioned(right: 0)
+                ],
+              ),
+              Container(
+                color: bottomLineGreyColor,
+                width: Get.width,
+                height: 1,
+              ),
+              AppCalender(
+                currentDay: ctrl.currentDay,
+                focusDay: ctrl.focusedDay,
+                onDaySelected: (selectedDay, focusDay) {
+                  ctrl.onDaySelect(selectedDay, focusDay);
+                },
+                onMonthChange: (date) {},
+                selectedDays: ctrl.selectedDays,
+              ).paddingOnly(
+                top: screenHPadding16.sh(),
+                bottom: screenHPadding16.sh(),
+                left: screenWPadding16.sw(),
+                right: screenWPadding16.sw(),
+              ),
+              FmButton(
+                ontap: () {},
+                name: select,
+              ).paddingAll(10)
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -92,6 +157,7 @@ class AddJobScreen extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Row(
@@ -148,7 +214,8 @@ class AddJobScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _detailItem(description, hint: "Commercial with Joey"),
+          _detailItem(descriptionStar,
+              hint: "Commercial with Joey", color: redTextColor),
           _detailItem(title, hint: "Commercial#1234"),
           _detailItem(producer, hint: "Full Name"),
           _detailItem(prodCompany, hint: "Company, LLC"),
@@ -327,6 +394,7 @@ class AddJobScreen extends StatelessWidget {
         ),
         Container(
           decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
               color: Colors.black,
@@ -335,28 +403,30 @@ class AddJobScreen extends StatelessWidget {
           child: Column(
             children: [
               ListView.builder(
-                itemCount: controller.nonTaxedItem.length,
+                itemCount: controller.taxedItem.length,
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return _taxedNonTaxedItem(
-                    controller.nonTaxedItem[index],
+                    controller.taxedItem[index],
                   );
                 },
               ),
               _iconTextButton(
-                taxedItems,
+                addTaxedItem,
                 onclick: () {
                   showTaxedItems(context);
                 },
+              ).paddingOnly(
+                top: /*controller.nonTaxedItem.isNotEmpty ? 0 :*/
+                screenHPadding16.sh(),
+                left: screenWPadding16.sw(),
+                right: screenWPadding16.sw(),
               )
             ],
           ).paddingOnly(
-            top: controller.nonTaxedItem.isNotEmpty ? 0 : screenHPadding16.sh(),
             bottom: screenHPadding16.sh(),
-            left: screenWPadding16.sw(),
-            right: screenWPadding16.sw(),
           ),
         ).paddingOnly(
           top: screenHPadding8.sh(),
@@ -396,7 +466,17 @@ class AddJobScreen extends StatelessWidget {
               ),
             )
           ],
-        ).paddingOnly(top: 16, bottom: 16)
+        ).paddingOnly(
+          top: screenHPadding16.sh(),
+          bottom: screenHPadding16.sh(),
+          left: screenWPadding16.sw(),
+          right: screenWPadding16.sw(),
+        ),
+        Container(
+          height: 1,
+          width: Get.width,
+          color: borderGreyColor,
+        )
       ],
     );
   }
@@ -414,6 +494,7 @@ class AddJobScreen extends StatelessWidget {
         ),
         Container(
           decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
               color: Colors.black,
@@ -437,13 +518,15 @@ class AddJobScreen extends StatelessWidget {
                 onclick: () {
                   showNonTaxItems(context);
                 },
+              ).paddingOnly(
+                top: /*controller.nonTaxedItem.isNotEmpty ? 0 :*/
+                    screenHPadding16.sh(),
+                left: screenWPadding16.sw(),
+                right: screenWPadding16.sw(),
               )
             ],
           ).paddingOnly(
-            top: controller.nonTaxedItem.isNotEmpty ? 0 : screenHPadding16.sh(),
             bottom: screenHPadding16.sh(),
-            left: screenWPadding16.sw(),
-            right: screenWPadding16.sw(),
           ),
         ).paddingOnly(
           top: screenHPadding8.sh(),
@@ -472,7 +555,7 @@ class AddJobScreen extends StatelessWidget {
               left: 10,
             ),
       ],
-    ).onClick(onclick ?? () {});
+    ).onTap(onclick ?? () {});
   }
 
   Widget _addJobButton() {
@@ -487,11 +570,15 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _detailItem(String lable,
-      {bool showBorder = true,
-      String? hint,
-      double? leftPadding,
-      double? rightPadding}) {
+  Widget _detailItem(
+    String lable, {
+    bool showBorder = true,
+    String? hint,
+    double? leftPadding,
+    double? rightPadding,
+    Color? color = Colors.black,
+    TextInputType? textInputType,
+  }) {
     return Container(
       decoration: BoxDecoration(
         border: showBorder
@@ -510,7 +597,7 @@ class AddJobScreen extends StatelessWidget {
               children: [
                 lable
                     .text(
-                      fontColor: Colors.black,
+                      fontColor: color,
                       fontSize: 16,
                     )
                     .paddingOnly(left: 20.sw())
@@ -520,6 +607,7 @@ class AddJobScreen extends StatelessWidget {
           Expanded(
             child: FmEmptyTextField(
               hintText: hint,
+              textInputType: textInputType,
             ),
           )
         ],
@@ -651,9 +739,7 @@ class AddJobScreen extends StatelessWidget {
                 hint: "CA",
               ),
               expandedChildItem(
-                label: zip,
-                hint: "91506",
-              ),
+                  label: zip, hint: "91506", inputType: TextInputType.number),
               expandedChildItem(
                 label: country,
                 hint: "United States",
@@ -664,18 +750,17 @@ class AddJobScreen extends StatelessWidget {
         });
   }
 
-  Widget expandedChildItem({
-    String? label,
-    String? hint,
-    bool showBorder = true,
-  }) {
-    return _detailItem(
-      label ?? "",
-      hint: hint,
-      showBorder: showBorder,
-      leftPadding: screenWPadding16.sw(),
-      rightPadding: screenWPadding16.sw(),
-    );
+  Widget expandedChildItem(
+      {String? label,
+      String? hint,
+      bool showBorder = true,
+      TextInputType? inputType}) {
+    return _detailItem(label ?? "",
+        hint: hint,
+        showBorder: showBorder,
+        leftPadding: screenWPadding16.sw(),
+        rightPadding: screenWPadding16.sw(),
+        textInputType: inputType);
   }
 
   void showNonTaxItems(BuildContext context) {
@@ -687,21 +772,6 @@ class AddJobScreen extends StatelessWidget {
   }
 
   void showHoursDropDown() {}
-
-  void _onDropDownTap(MenuItem item) {
-    for (int i = 0; i < controller.firstItems.length; i++) {
-      if (controller.firstItems[i].text == item.text) {
-        if (controller.firstItems[i].isSelected) {
-          controller.firstItems[i].isSelected = false;
-        } else {
-          controller.firstItems[i].isSelected = true;
-        }
-      } else {
-        controller.firstItems[i].isSelected = false;
-      }
-    }
-    controller.update();
-  }
 
   void _onPerHourDropDownTap(MenuItem item) {
     for (int i = 0; i < controller.perHoursList.length; i++) {

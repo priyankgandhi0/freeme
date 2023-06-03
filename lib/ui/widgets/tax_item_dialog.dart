@@ -35,17 +35,16 @@ class TaxItemDialog extends StatelessWidget {
                   path: Assets.iconsCloseIcon,
                   fit: BoxFit.fill,
                   size: 12,
-                )
-                    .onClick(
+                ).paddingOnly(
+                  top: 22.sh(),
+                  right: 22.sw(),
+                  left: 22.sw(),
+                  bottom: 22.sw(),
+                ).onTap(
                       () {
-                        Navigator.of(context, rootNavigator: true).pop();
-                      },
-                    )
-                    .paddingOnly(
-                      top: 22.sh(),
-                      right: 22.sw(),
-                    )
-                    .positioned(right: 0)
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                ).positioned(right: 0)
               ],
             ),
             Container(
@@ -118,6 +117,7 @@ class TaxItemDialog extends StatelessWidget {
                         ),
                         child: FmEmptyTextField(
                           hintText: "\$25",
+                          textInputType: TextInputType.number,
                         ).paddingOnly(
                           top: screenWPadding16.sw(),
                           left: screenWPadding16.sw(),

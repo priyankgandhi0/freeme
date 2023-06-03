@@ -26,7 +26,7 @@ class AccountSettingScreen extends StatelessWidget {
             _iconButton(
                     buttonName: "Change Password",
                     path: Assets.iconsEyeClosedGreen)
-                .onClick(
+                .onTap(
               () {
                 Navigator.pushNamed(context, Routes.changePasswordScreen);
               },
@@ -37,6 +37,11 @@ class AccountSettingScreen extends StatelessWidget {
             _iconButton(
                 buttonName: "Terms and Condition",
                 path: Assets.iconsTermsAndConditionIcon),
+            _iconButton(
+                buttonName: "Log Out",
+                path: Assets.iconsLogout).onTap(() {
+              Get.offAllNamed(Routes.login);
+            }),
           ],
         ),
       ),

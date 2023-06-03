@@ -61,7 +61,14 @@ class AccountScreen extends StatelessWidget {
                 () {
                   Navigator.pushNamed(context, Routes.accountSettingScreen);
                 },
-              ).paddingOnly(top: 16)
+              ).paddingOnly(top: 16),
+
+           /*   accountOptionItem(
+                logout,
+                    () {
+                      Get.offAllNamed(Routes.login);
+                },
+              ).paddingOnly(top: 16)*/
             ],
           ).safeArea,
         ),
@@ -98,7 +105,7 @@ class AccountScreen extends StatelessWidget {
             right: screenWPadding16.sw(),
           )
         ],
-      ).onClick(onclick).paddingOnly(
+      ).onTap(onclick).paddingOnly(
             top: screenHPadding16.sh(),
             bottom: screenHPadding16.sh(),
           ),
