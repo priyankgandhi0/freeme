@@ -10,7 +10,7 @@ class AppUtils{
   static Map<String, String> requestHeader(bool passAuthToken) {
     return {
       RequestHeaderKey.contentType: 'application/json',
-      RequestHeaderKey.appSecret: 'YUR@#@INVTD232#\$',
+      RequestHeaderKey.appSecret: 'freeme123',
       RequestHeaderKey.appTrackVersion: 'v1',
       RequestHeaderKey.appDeviceType: Platform.isIOS ? 'iOS' : 'android',
       RequestHeaderKey.appStoreVersion: box.read(AppConstant.appStoreVersion) ?? '',

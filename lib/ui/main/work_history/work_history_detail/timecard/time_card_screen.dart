@@ -430,24 +430,12 @@ class TimeCardTabScreen extends StatelessWidget {
             ),
           ),
           ListView.builder(
-            itemCount: 5,
+            itemCount: controller.dayTypeList.length,
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              return Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    "Call Time:".text(fontSize: 16),
-                    "--:-- AM/PM".text(fontSize: 16),
-                  ],
-                ).paddingOnly(
-                  top: screenHPadding16.sh(),
-                  left: screenWPadding16.sw(),
-                  right: screenWPadding16.sw(),
-                ),
-              );
+              return dayTypeListItem(controller.dayTypeList[index]);
             },
           ),
           SizedBox(
@@ -476,6 +464,21 @@ class TimeCardTabScreen extends StatelessWidget {
           calenderFormat: CalendarFormat.week,
         ).paddingAll(10);
       },
+    );
+  }
+
+  Widget dayTypeListItem(DayType data){
+   return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          data.dayType.text(fontSize: 16), data.shootDay.text(fontSize: 16),
+        ],
+      ).paddingOnly(
+        top: screenHPadding16.sh(),
+        left: screenWPadding16.sw(),
+        right: screenWPadding16.sw(),
+      ),
     );
   }
 }

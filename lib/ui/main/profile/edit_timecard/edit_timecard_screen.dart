@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 
 import '../../../../globle.dart';
+import '../../../widgets/dropdown.dart';
 import '../../../widgets/fm_appbar.dart';
+import 'edit_timecard_controller.dart';
 
 class EditTimeCardScreen extends StatelessWidget {
-  const EditTimeCardScreen({Key? key}) : super(key: key);
+  EditTimeCardScreen({Key? key}) : super(key: key);
+
+  final controller = Get.put(EditTimeCardController());
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       child: Scaffold(
         backgroundColor: backGroundWhiteColor,
-          appBar: fMAppBar(
-            editTimeCardInfo,
-            onBackClick: () {
-              Navigator.of(context).pop();
-            },
-          ),
+        appBar: fMAppBar(
+          editTimeCardInfo,
+          onBackClick: () {
+            Navigator.of(context).pop();
+          },
+        ),
         body: SingleChildScrollView(
           child: Column(
             children: [
-              _userPersonalDetail(),
+              _userPersonalDetail(context),
               _userAdressDetail(),
               _genderDetail(),
               _saveButton()
@@ -29,7 +33,6 @@ class EditTimeCardScreen extends StatelessWidget {
         ),
       ),
       onWillPop: () async {
-
         return false;
       },
     );
@@ -37,19 +40,16 @@ class EditTimeCardScreen extends StatelessWidget {
 
   Widget _saveButton() {
     return FmButton(
-      ontap: () {
-
-      },
+      ontap: () {},
       name: save,
     ).paddingOnly(
-      top: screenHPadding32.sh(),
-      bottom: screenHPadding32.sh(),
-      left: screenWPadding16.sw(),
-      right: screenWPadding16.sw()
-    );
+        top: screenHPadding32.sh(),
+        bottom: screenHPadding32.sh(),
+        left: screenWPadding16.sw(),
+        right: screenWPadding16.sw());
   }
 
-  Widget _userPersonalDetail() {
+  Widget _userPersonalDetail(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -65,13 +65,14 @@ class EditTimeCardScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _detailItem("First Name"),
+          _detailItem("First Name", controller: controller.firstNameController),
           _detailItem("Middle"),
-          _detailItem("Last Name"),
-          _detailItem("Union"),
-          _detailItem("Social Security"),
+          _detailItem("Last Name", controller: controller.lastNameController),
+          _unionDropDown("Union", context),
+          _detailItem("Social Security",
+              controller: controller.socialSecurityController),
           _detailItem("Phone Number"),
-          _detailItem("E-mail"),
+          _detailItem("E-mail",showBorder: false),
         ],
       ),
     ).paddingOnly(
@@ -102,7 +103,7 @@ class EditTimeCardScreen extends StatelessWidget {
           _detailItem("City"),
           _detailItem("State"),
           _detailItem("Zip"),
-          _detailItem("Country"),
+          _detailItem("Country",showBorder: false),
         ],
       ),
     ).paddingOnly(
@@ -129,7 +130,7 @@ class EditTimeCardScreen extends StatelessWidget {
       child: Column(
         children: [
           _detailItem("Gender"),
-          _detailItem("Loan Out"),
+          _detailItem("Loan Out",showBorder: false),
         ],
       ),
     ).paddingOnly(
@@ -139,8 +140,49 @@ class EditTimeCardScreen extends StatelessWidget {
     );
   }
 
-  Widget _detailItem(
-    String lable, {
+  Widget _detailItem(String lable,
+      {bool showBorder = true, TextEditingController? controller}) {
+    return Container(
+      decoration: BoxDecoration(
+        border: showBorder
+            ? const Border(
+                bottom: BorderSide(
+                  color: borderGreyColor,
+                  width: 1,
+                ),
+              )
+            : null,
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Row(
+              children: [
+                lable
+                    .text(
+                      fontColor: greyTextColor,
+                      fontSize: 16,
+                    )
+                    .paddingOnly(left: 20.sw())
+              ],
+            ),
+          ),
+          Expanded(
+            child: FmEmptyTextField(
+              controller: controller,
+            ),
+          )
+        ],
+      ).paddingOnly(
+        top: screenHPadding16.sh(),
+        bottom: 16.sh(),
+      ),
+    );
+  }
+
+  Widget _unionDropDown(
+    String lable,
+    BuildContext context, {
     bool showBorder = true,
   }) {
     return Container(
@@ -168,8 +210,26 @@ class EditTimeCardScreen extends StatelessWidget {
               ],
             ),
           ),
-           Expanded(
-            child: FmEmptyTextField(),
+          Expanded(
+            child: fmDropDown(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  FmImage.assetImage(
+                    path: Assets.iconsDownIcon,
+                    height: 15.sh(),
+                    width: 15.sw(),
+                  )
+                ],
+              ).paddingOnly(
+                right: screenWPadding16.sw(),
+              ),
+              onDropDownTap: (item) {
+                // _onUnionNonUnionDropDownTap(item);
+              },
+              items: controller.unionNonUnionList,
+              context: context,
+            ),
           )
         ],
       ).paddingOnly(
@@ -178,4 +238,15 @@ class EditTimeCardScreen extends StatelessWidget {
       ),
     );
   }
+
+/* _unionDropDown(BuildContext context) {
+    return fmDropDown(
+      child: Container(),
+      onDropDownTap: (item) {
+        // _onUnionNonUnionDropDownTap(item);
+      },
+      items: controller.unionNonUnionList,
+      context: context,
+    );
+  }*/
 }

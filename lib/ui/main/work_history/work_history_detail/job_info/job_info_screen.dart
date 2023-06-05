@@ -301,7 +301,7 @@ class JobInfoScreen extends StatelessWidget {
           ),
           detailItem(
             title: companyAddress,
-            desc: "1234 Street Dr.Apt 111Los Angeles, CA 91506 United States ",
+            desc: "1234 Street Dr\n.Apt 111\nLos Angeles, CA 91506\nUnited States ",
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding16.sh(),

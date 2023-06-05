@@ -91,8 +91,8 @@ class SummeryScreen extends StatelessWidget {
   }
 
   List<Widget> pages = [
-    SummeryDataTable(),
-    SummeryDataTable(),
+    SummeryDataTableFirst(),
+    SummeryDataTableSecond(),
   ];
 
   Widget _summeryCard() {
@@ -311,18 +311,17 @@ class SummeryScreen extends StatelessWidget {
                 fit: BoxFit.fill,
                 size: 12,
               )
-
                   .paddingOnly(
-                    top: 20.sh(),
-                    right: screenWPadding16.sw(),
-                    left: 20.sw(),
-                    bottom: 20.sw(),
-                  ) .onTap(
-                    () {
+                top: 20.sh(),
+                right: screenWPadding16.sw(),
+                left: 20.sw(),
+                bottom: 20.sw(),
+              )
+                  .onTap(
+                () {
                   Navigator.of(context, rootNavigator: true).pop();
                 },
-              )
-                  .positioned(right: 0)
+              ).positioned(right: 0)
             ],
           ),
           Container(
@@ -361,6 +360,9 @@ class SummeryScreen extends StatelessWidget {
             child: Row(
               children: [
                 "Tenths".text(),
+                SizedBox(
+                  width: 38,
+                ),
                 FmImage.assetImage(
                   path: Assets.iconsDownIcon,
                   height: 15.sh(),
@@ -497,18 +499,17 @@ class SummeryScreen extends StatelessWidget {
                 fit: BoxFit.fill,
                 size: 12,
               )
-
                   .paddingOnly(
-                    top: 20.sh(),
-                    right: screenWPadding16.sw(),
-                    left: screenWPadding16.sw(),
-                    bottom: screenWPadding16.sw(),
-                  ).onTap(
-                    () {
+                top: 20.sh(),
+                right: screenWPadding16.sw(),
+                left: screenWPadding16.sw(),
+                bottom: screenWPadding16.sw(),
+              )
+                  .onTap(
+                () {
                   Navigator.of(context, rootNavigator: true).pop();
                 },
-              )
-                  .positioned(right: 0)
+              ).positioned(right: 0)
             ],
           ),
           Container(
@@ -659,13 +660,14 @@ class SummeryScreen extends StatelessWidget {
   }
 }
 
-class SummeryDataTable extends StatelessWidget {
-  const SummeryDataTable({Key? key}) : super(key: key);
+class SummeryDataTableSecond extends StatelessWidget {
+  const SummeryDataTableSecond({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return DataTable(
       columnSpacing: 10,
+      horizontalMargin: 15,
       headingRowColor: MaterialStateProperty.all(darkGreenColor2),
       border: TableBorder.all(
         width: 1.0,
@@ -750,7 +752,7 @@ class SummeryDataTable extends StatelessWidget {
           label: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              "Gross \nWages"
+              "  Gross\n  Wages"
                   .text(weight: FontWeight.w500, fontColor: Colors.white)
                   .paddingOnly(bottom: 5)
             ],
@@ -911,6 +913,264 @@ class SummeryDataTable extends StatelessWidget {
                 .center,
           ],
         )),
+      ],
+    );
+  }
+}
+
+class SummeryDataTableFirst extends StatelessWidget {
+  const SummeryDataTableFirst({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        DataTable(
+          columnSpacing: 15,
+          horizontalMargin: 15,
+          headingRowColor: MaterialStateProperty.all(darkGreenColor2),
+          border: TableBorder.all(
+            width: 1.0,
+            color: Colors.black,
+            style: BorderStyle.solid,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          clipBehavior: Clip.hardEdge,
+          headingRowHeight: 43,
+          columns: [
+            DataColumn(
+              label: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  "Date"
+                      .text(weight: FontWeight.w500, fontColor: Colors.white)
+                      .paddingOnly(bottom: 5)
+                ],
+              ),
+            ),
+            DataColumn(
+              label: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  "Call"
+                      .text(weight: FontWeight.w500, fontColor: Colors.white)
+                      .paddingOnly(bottom: 5)
+                ],
+              ),
+            ),
+            DataColumn(
+              label: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  "Out"
+                      .text(weight: FontWeight.w500, fontColor: Colors.white)
+                      .paddingOnly(bottom: 5)
+                ],
+              ),
+            ),
+            DataColumn(
+              label: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  "In"
+                      .text(weight: FontWeight.w500, fontColor: Colors.white)
+                      .paddingOnly(bottom: 5)
+                ],
+              ),
+            ),
+            DataColumn(
+              label: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  "Out"
+                      .text(weight: FontWeight.w500, fontColor: Colors.white)
+                      .paddingOnly(bottom: 5)
+                ],
+              ),
+            ),
+            DataColumn(
+              label: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  "In"
+                      .text(weight: FontWeight.w500, fontColor: Colors.white)
+                      .paddingOnly(bottom: 5)
+                ],
+              ),
+            ),
+            DataColumn(
+              label: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  "Wrap"
+                      .text(weight: FontWeight.w500, fontColor: Colors.white)
+                      .paddingOnly(bottom: 5)
+                ],
+              ),
+            ),
+          ],
+          dataRowHeight: 32,
+          rows: [
+            _dataRow(
+              date: "7/17",
+              color: rowCellGreyColor,
+            ),
+            _dataRow(
+              date: "7/18",
+            ),
+            _dataRow(
+              date: "7/19",
+              color: rowCellGreyColor,
+              call: "9.0",
+              outOne: '15.0',
+              inOne: '15.5',
+              outTwo: '',
+              inTwo: '',
+              wrap: '21.5',
+            ),
+            _dataRow(
+              date: "7/20",
+              call: "9.0",
+              outOne: '15.5',
+              inOne: '16',
+              outTwo: '',
+              inTwo: '',
+              wrap: '22',
+            ),
+            _dataRow(
+              date: "7/21",
+              color: rowCellGreyColor,
+            ),
+            _dataRow(
+              date: "7/22",
+            ),
+            _dataRow(
+              date: "7/23",
+              color: rowCellGreyColor,
+            ),
+          ],
+        ).paddingOnly(
+          left: screenWPadding8.sw(),
+          right: screenWPadding8.sw(),
+          top: 14.sh(),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            "View:".text(fontSize: 20, weight: FontWeight.w500),
+            SizedBox(
+              width: 12,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(
+                  color: Colors.black,
+                ),
+              ),
+              child: Row(
+                children: [
+                  "Tenths".text(fontSize: 16),
+                  const SizedBox(
+                    width: 38,
+                  ),
+                  FmImage.assetImage(
+                    path: Assets.iconsDownIcon,
+                    height: 15.sh(),
+                    width: 15.sw(),
+                  )
+                ],
+              ).paddingOnly(left: 10, top: 5, bottom: 5, right: 10),
+            )
+          ],
+        ).paddingOnly(
+          top: screenHPadding16.sh(),
+          right: screenWPadding8.sw(),
+        )
+      ],
+    );
+  }
+
+  DataRow _dataRow(
+      {String? date,
+      String? call,
+      String? outOne,
+      String? inOne,
+      String? outTwo,
+      String? inTwo,
+      String? wrap,
+      Color color = Colors.white,
+      Color textColor = Colors.black,
+      FontWeight weight = FontWeight.w400}) {
+    return DataRow(
+      color: MaterialStateProperty.all(color),
+      cells: [
+        DataCell(Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            date
+                .text(
+                  fontSize: 16,
+                  fontColor: textColor,
+                  weight: weight,
+                )
+                .center,
+          ],
+        )),
+        DataCell(
+          call
+              .text(
+                fontSize: 16,
+                fontColor: textColor,
+                weight: weight,
+              )
+              .center,
+        ),
+        DataCell(
+          outOne
+              .text(
+                fontSize: 16,
+                fontColor: textColor,
+                weight: weight,
+              )
+              .center,
+        ),
+        DataCell(
+          inOne
+              .text(
+                fontSize: 16,
+                fontColor: textColor,
+                weight: weight,
+              )
+              .center,
+        ),
+        DataCell(
+          outTwo
+              .text(
+                fontSize: 16,
+                fontColor: textColor,
+                weight: weight,
+              )
+              .center,
+        ),
+        DataCell(
+          inTwo
+              .text(
+                fontSize: 16,
+                fontColor: textColor,
+                weight: weight,
+              )
+              .center,
+        ),
+        DataCell(
+          wrap
+              .text(
+                fontSize: 16,
+                fontColor: textColor,
+                weight: weight,
+              )
+              .center,
+        ),
       ],
     );
   }

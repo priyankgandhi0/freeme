@@ -86,6 +86,7 @@ extension extOnString on String? {
       bool underLine = false}) {
     return Text(
       this ?? "",
+      textAlign: TextAlign.left,
       style: TextStyle(
         color: fontColor ?? Colors.black,
         fontSize: fontSize ?? 14,

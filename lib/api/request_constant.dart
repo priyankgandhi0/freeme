@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
 class AppUrls {
-  static const String _devBaseURL = "http://146.190.158.193/YurInvtd/dev";
-  static const String _liveBaseURL = "https://app.yurinvtd.com/YurInvtd/live";
+  static const String _devBaseURL = "http://codonnier.tech/naitik/free_me_app/dev";
+  static const String _liveBaseURL = "http://codonnier.tech/naitik/free_me_app/dev";
 
   static const String baseUrl =
       '${kDebugMode ? _devBaseURL : _liveBaseURL}/Service.php?';
@@ -14,7 +14,7 @@ class AppUrls {
 }
 
 class MethodNames {
-  static const login = 'login';
+  static const login = 'userLogin';
 
 }
 

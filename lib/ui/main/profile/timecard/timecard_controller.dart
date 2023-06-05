@@ -27,4 +27,21 @@ class TimeCardController extends GetxController{
     currentDay = focusDay;
     update();
   }
+
+
+  var dayTypeList = [
+    DayType("Call Time:","8:00 AM"),
+    DayType("1st Meal Start:","2:00 PM"),
+    DayType("1st Meal End:","2:45 PM"),
+    DayType("2nd Meal Start:","--:-- AM/PM"),
+    DayType("2nd Meal End:","--:-- AM/PM"),
+    DayType("Wrap:","--:-- AM/PM"),
+  ];
+}
+
+class DayType {
+  String? dayType;
+  String? shootDay;
+
+  DayType(this.dayType, this.shootDay);
 }
