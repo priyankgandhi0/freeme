@@ -12,6 +12,21 @@ import '../utils/app_utils.dart';
 import 'response_item.dart';
 
 class BaseApiHelper {
+  static Future<ResponseItem> getRequest({
+    required String requestUrl,
+    required Map<String, dynamic> queryParam,
+    required bool passAuthToken,
+  }) async {
+    dio = Dio();
+    return await dio
+        .get(
+          requestUrl,
+          queryParameters: queryParam,
+          options: Options(headers: AppUtils.requestHeader(passAuthToken)),
+        )
+        .then((value) => onValue(value))
+        .onError((error, stackTrace) => onError(error));
+  }
 
   static Future<ResponseItem> postRequest({
     required String requestUrl,
@@ -69,15 +84,20 @@ class BaseApiHelper {
           box.erase();
           box.write(AppConstant.isTutorialDone, true);
           await AppUtils.putAppDeviceInfo();
-          await getx.Get.offNamedUntil(Routes.login, (route) => false, arguments: false);
+          await getx.Get.offNamedUntil(Routes.login, (route) => false,
+              arguments: false);
         }
       }
     } else {
       message = AppConstant.errorText;
     }
-    ResponseItem result =
-        ResponseItem(data: data, message: message, status: status);
+    ResponseItem result = ResponseItem(
+      data: data,
+      message: message,
+      status: status,
+    );
     result.wholeData = response.data;
+    result.isEmailSent = responseData.isEmailSent;
 
     return result;
   }
@@ -94,5 +114,4 @@ class BaseApiHelper {
     }
     return ResponseItem(data: null, message: message, status: status);
   }
-
 }

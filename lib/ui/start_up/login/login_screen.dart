@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:freeme/globle.dart';
 
+import '../../widgets/fm_loading.dart';
 import 'login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -12,53 +13,59 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<LoginController>(
       builder: (ctrl) {
-        return Scaffold(
-          backgroundColor: backGroundGreenColor,
-          body: AuthBackGround(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const Row(),
-                  welcomeBack
-                      .text(
-                        weight: FontWeight.w500,
-                        fontSize: 24,
-                      )
-                      .paddingOnly(
-                        top: 10.sh(),
+        return Stack(
+          children: [
+            Scaffold(
+              backgroundColor: backGroundGreenColor,
+              body: AuthBackGround(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const Row(),
+                      welcomeBack
+                          .text(
+                            weight: FontWeight.w500,
+                            fontSize: 24,
+                          )
+                          .paddingOnly(
+                            top: 10.sh(),
 
-                        ///I have given 10 here and add 30 to singlechild scrollview so 30+10=40
-                      ),
-                  loginToContinue
-                      .text(
-                          weight: FontWeight.normal,
-                          fontColor: greyTextColor,
-                          fontSize: 18)
-                      .paddingOnly(
-                        top: 8.sh(),
-                      ),
-                  _emailField(),
-                  _passwordField(ctrl),
-                  _forgotPassword(),
-                  _loginButton(),
-                  _signUpButton()
-                ],
+                            ///I have given 10 here and add 30 to singlechild scrollview so 30+10=40
+                          ),
+                      loginToContinue
+                          .text(
+                              weight: FontWeight.normal,
+                              fontColor: greyTextColor,
+                              fontSize: 18)
+                          .paddingOnly(
+                            top: 8.sh(),
+                          ),
+                      _emailField(ctrl),
+                      _passwordField(ctrl),
+                      _forgotPassword(),
+                      _loginButton(context),
+                      _signUpButton()
+                    ],
+                  ),
+                ).paddingOnly(
+                  top: 30.sh(),
+                ),
               ),
-            ).paddingOnly(
-              top: 30.sh(),
             ),
-          ),
+            ctrl.isLoading ? LoadingStack(() {}) : Container()
+          ],
         );
       },
     );
   }
 
-  _emailField() {
+  _emailField(LoginController ctrl) {
     return FmTextField(
       hint: enterEmail,
       header: email,
-      controller: controller.emailController,
+      controller: ctrl.emailController,
       inputType: TextInputType.emailAddress,
+      error: ctrl.emailError,
     ).paddingOnly(
       left: screenHPadding16.sw(),
       right: screenHPadding16.sw(),
@@ -74,6 +81,7 @@ class LoginScreen extends StatelessWidget {
       inputType: TextInputType.visiblePassword,
       controller: controller.passwordController,
       obSecureText: !ctrl.showPassword,
+      error: ctrl.passwordError,
       sufixIcon: FmImage.assetImage(
         path: ctrl.showPassword ? Assets.iconsEyeOpened : Assets.iconsEyeClosed,
         width: 22,
@@ -108,10 +116,10 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  _loginButton() {
+  _loginButton(BuildContext context) {
     return FmButton(
       ontap: () {
-        controller.performLogin();
+        controller.performLogin(context);
       },
       name: logIn,
     ).paddingOnly(

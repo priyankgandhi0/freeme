@@ -12,92 +12,86 @@ class MyProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      child: Scaffold(
-        backgroundColor: backGroundWhiteColor,
-        appBar: fMAppBar(
-          myProfile,
-          onBackClick: () {
-            Navigator.of(context).pop();
-          },
-          onTrailingClick: () {
-            Navigator.pushNamed(context, Routes.editProfileScreen);
+      child: GetBuilder<MyProfileController>(
 
-          },
-        ),
-        body: Column(
-          children: [
-            Row(
-              children: [
-                profileImage(
-                  103,
-                  103,
-                  horizontalPadding: 36,
-                  verticlePadding: 34,
-                ).paddingOnly(
-                  top: 24.sh(),
-                  left: screenWPadding16.sw(),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          builder: (ctrl) {
+            return Scaffold(
+              backgroundColor: backGroundWhiteColor,
+              appBar: fMAppBar(
+                myProfile,
+                onBackClick: () {
+                  Navigator.of(context).pop();
+                },
+                onTrailingClick: () {
+                  Navigator.pushNamed(context, Routes.editProfileScreen);
+                },
+              ),
+              body: SingleChildScrollView(
+                child: Column(
                   children: [
-                    "Erica Chan"
-                        .text(
-                          fontSize: 20,
-                          weight: FontWeight.w500,
+                    Row(
+                      children: [
+                        profileImage(
+                          103,
+                          103,
+                          horizontalPadding: 36,
+                          verticlePadding: 34,
+                        ).paddingOnly(
+                          top: 24.sh(),
+                          left: screenWPadding16.sw(),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            "${ctrl.userModel?.firstName ?? ""} ${ctrl.userModel?.lastName ?? ""}"
+                                .text(
+                                  fontSize: 20,
+                                  weight: FontWeight.w500,
+                                )
+                                .paddingOnly(top: 16),
+                            "IATSE Local 600"
+                                .text(
+                                  fontSize: 16,
+                                )
+                                .paddingOnly(top: 8),
+                            (ctrl.userModel?.primaryPosition ?? "")
+                                .text(
+                                  fontSize: 16,
+                                  fontColor: greyTextColor,
+                                )
+                                .paddingOnly(top: 8),
+                          ],
+                        ).paddingOnly(
+                          left: 24.sw(),
                         )
+                      ],
+                    ),
+                    contentCard("Mobile", (ctrl.userModel?.mobile ?? "-"),
+                            textColor: blueTextColor)
+                        .paddingOnly(top: 32),
+                    contentCard("E-mail", (ctrl.userModel?.email ?? "-"),
+                            textColor: blueTextColor)
                         .paddingOnly(top: 16),
-                    "IATSE Local 600"
-                        .text(
-                          fontSize: 16,
-                        )
-                        .paddingOnly(top: 8),
-                    "1st Assistant Camera, Director"
-                        .text(
-                          fontSize: 16,
-                          fontColor: greyTextColor,
-                        )
-                        .paddingOnly(top: 8),
+                    contentCard("Website", (ctrl.userModel?.website ?? "-"),
+                            textColor: blueTextColor)
+                        .paddingOnly(top: 16),
+                    contentCard(
+                      "About Me",
+                      (ctrl.userModel?.about ?? "-"),
+                    ).paddingOnly(top: 16),
                   ],
-                ).paddingOnly(
-                  left: 24.sw(),
-                )
-              ],
-            ),
-            contentCard(
-              "Mobile",
-              "1-213-000-0000",
-              textColor: blueTextColor
-            ).paddingOnly(top: 32),
-            contentCard(
-              "E-mail",
-              "work_email@gmail.com",
-                textColor: blueTextColor
-            ).paddingOnly(top: 16),
-            contentCard(
-              "Website",
-              "www.my_website.com",
-                textColor: blueTextColor
-            ).paddingOnly(top: 16),
-            contentCard(
-              "About Me",
-              "Likes to play golf, pool, games",
-            ).paddingOnly(top: 16),
-          ],
-        ),
-      ),
+                ),
+              ),
+            );
+          }),
       onWillPop: () async {
-
         return false;
       },
     );
   }
 
-  Widget contentCard(
-    String title,
-    String value,{
-      Color? textColor = Colors.black
-  }
-  ) {
+  Widget contentCard(String title, String value,
+      {Color? textColor = Colors.black}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,

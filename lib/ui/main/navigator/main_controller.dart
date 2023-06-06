@@ -7,4 +7,16 @@ class HomeController extends GetxController{
      selectedIndex = index;
      update();
   }
+
+  bool isLoading = false;
+
+  startLoading() {
+    isLoading = true;
+    update();
+  }
+
+  stopLoading() {
+    isLoading = false;
+    update();
+  }
 }

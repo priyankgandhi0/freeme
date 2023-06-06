@@ -15,6 +15,13 @@ class AppUrls {
 
 class MethodNames {
   static const login = 'userLogin';
+  static const userRegistration = 'userRegistration';
+  static const forgotPassword = 'forgotPassword';
+  static const changePasswordWithVerifyCode = 'changePasswordWithVerifyCode';
+  static const getAllIndustries = 'getAllIndustries';
+  static const logout = 'logout';
+  static const myProfile = 'myProfile';
+  static const editProfile = 'editProfile';
 
 }
 

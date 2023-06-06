@@ -13,32 +13,23 @@ import '../constant/app_string.dart';
 
 late Dio dio;
 late GetStorage box;
-
-RxDouble downloadProgress = 0.0.obs;
-RxBool isDownloadRunning = false.obs;
-RxInt isUploadRunning = 0.obs;
-GlobalKey<NavigatorState> myGalleryNavigatorKey = GlobalKey<NavigatorState>();
-GlobalKey<NavigatorState> homeNavigatorKey = GlobalKey<NavigatorState>();
-GlobalKey<NavigatorState> subsNavigatorKey = GlobalKey<NavigatorState>();
-Map<String, dynamic> downloadTaskId = {};
-List<Map<String, dynamic>> videoLinkList = [];
-
 bool forceLogout = false;
-
-
-
 
 
 class AppConstant {
   AppConstant._();
 
+  static const isLogin = 'isLogin';
+  static const userProfile = 'userProfile';
+
+
   static const deviceInfoBox = 'deviceInfoBox';
   static const userLoginData = 'userLoginData';
   static const userToken = 'userToken';
-  static const userProfile = 'userProfile';
+
   static const isTutorialDone = 'isTutorialDone';
   static const isWelcomeDialogDone = 'isWelcomeDialogDone';
-  static const isLogin = 'isLogin';
+
   static const isSocialLogin = 'isSocialLogin';
   static const appStoreVersion = 'App-Store-Version';
   static const appDeviceModel = 'App-Device-Model';

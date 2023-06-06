@@ -20,54 +20,60 @@ class EditProfileScreen extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  profileImage(
-                    150,
-                    150,
-                    horizontalPadding: 52,
-                    verticlePadding: 49,
-                    onCameraClick: () {},
-                  ).paddingOnly(
-                    top: 24.sh(),
-                  ),
-                ],
-              ),
-              nameCard().paddingOnly(top: screenHPadding32.sh()),
-              contentCard("Add Phone", ["1-000-000-0000"], onAddClick: () {})
-                  .paddingOnly(top: screenHPadding16.sh()),
-              contentCard(addEmail, ["Work_email@gmail.com"],
-                      onAddClick: () {})
-                  .paddingOnly(top: screenHPadding16.sh()),
-              contentCard(union, ["lATSE Local 600"], onAddClick: () {})
-                  .paddingOnly(top: screenHPadding16.sh()),
-              contentCard(primaryPosition, ["Camera / 1st Assist..."],
-                      onAddClick: () {})
-                  .paddingOnly(top: screenHPadding16.sh()),
-              contentCard(addAddress, [], onAddClick: () {})
-                  .paddingOnly(top: screenHPadding16.sh()),
-              contentCard(addWebsite, [], onAddClick: () {})
-                  .paddingOnly(top: screenHPadding16.sh()),
-              contentCard(addSocialMedia, [], onAddClick: () {})
-                  .paddingOnly(top: screenHPadding16.sh()),
-              contentCard(addBirthday, [], onAddClick: () {})
-                  .paddingOnly(top: screenHPadding16.sh()),
-              aboutMeCard("Likes to play golf, pool, games"),
-              FmButton(
-                ontap: () {},
-                name: save,
-              ).paddingOnly(
-                  left: screenWPadding16.sw(),
-                  right: screenWPadding16.sw(),
-                  bottom: screenHPadding16.sw(),
-                  top: screenHPadding32.sh())
-            ],
-          ),
-        ),
+        body: GetBuilder<EditProfileController>(builder: (ctrl) {
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    profileImage(
+                      150,
+                      150,
+                      horizontalPadding: 52,
+                      verticlePadding: 49,
+                      onCameraClick: () {
+                          controller.pickImage();
+                      },
+                    ).paddingOnly(
+                      top: 24.sh(),
+                    ),
+                  ],
+                ),
+                nameCard().paddingOnly(top: screenHPadding32.sh()),
+                contentCard("Add Phone", ["1-000-000-0000"], onAddClick: () {})
+                    .paddingOnly(top: screenHPadding16.sh()),
+                contentCard(addEmail, ["Work_email@gmail.com"],
+                        onAddClick: () {})
+                    .paddingOnly(top: screenHPadding16.sh()),
+                contentCard(union, ["lATSE Local 600"], onAddClick: () {})
+                    .paddingOnly(top: screenHPadding16.sh()),
+                contentCard(primaryPosition, ["Camera / 1st Assist..."],
+                        onAddClick: () {})
+                    .paddingOnly(top: screenHPadding16.sh()),
+                contentCard(addAddress, [], onAddClick: () {})
+                    .paddingOnly(top: screenHPadding16.sh()),
+                contentCard(addWebsite, [], onAddClick: () {})
+                    .paddingOnly(top: screenHPadding16.sh()),
+                contentCard(addSocialMedia, [], onAddClick: () {})
+                    .paddingOnly(top: screenHPadding16.sh()),
+                contentCard(addBirthday, [], onAddClick: () {})
+                    .paddingOnly(top: screenHPadding16.sh()),
+                aboutMeCard("Likes to play golf, pool, games"),
+                FmButton(
+                  ontap: () {
+                    ctrl.performSaveButton(context);
+                  },
+                  name: save,
+                ).paddingOnly(
+                    left: screenWPadding16.sw(),
+                    right: screenWPadding16.sw(),
+                    bottom: screenHPadding16.sw(),
+                    top: screenHPadding32.sh())
+              ],
+            ),
+          );
+        }),
       ),
       onWillPop: () async {
         return false;
@@ -176,7 +182,7 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget nameCard( ) {
+  Widget nameCard() {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,

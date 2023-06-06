@@ -52,7 +52,7 @@ class FmTextField extends StatefulWidget {
       this.header,
       this.readOnly = false,
       this.showCurson = true,
-        this.headerColor = Colors.black,
+      this.headerColor = Colors.black,
       this.textInputAction,
       this.enabled});
 
@@ -110,14 +110,14 @@ class _FmTextFieldState extends State<FmTextField> {
             ),
             controller: widget.controller,
             decoration: InputDecoration(
-              errorText: widget.error,
+              //errorText: widget.error,
               counterText: "",
-              errorStyle: const TextStyle(
+              /* errorStyle: const TextStyle(
                 color: Colors.red,
                 fontFamily: sfPro,
                 fontSize: 14,
                 fontWeight: FontWeight.normal,
-              ),
+              ),*/
               hintText: widget.hint,
               hintStyle: TextStyle(
                 color: widget.hintColor ?? greyTextColor,
@@ -125,18 +125,15 @@ class _FmTextFieldState extends State<FmTextField> {
                 fontSize: widget.hintSize ?? 18,
                 fontWeight: FontWeight.normal,
               ),
-              border:   OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black, width: 1.0),
-                 borderRadius: BorderRadius.circular(widget.radius ?? 5)
-              ),
-              enabledBorder:    OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black, width: 1.0),
-                borderRadius: BorderRadius.circular(widget.radius ?? 5)
-              ),
-              focusedBorder:   OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black, width: 1.0),
-                  borderRadius: BorderRadius.circular(widget.radius ?? 5)
-              ),
+              border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 1.0),
+                  borderRadius: BorderRadius.circular(widget.radius ?? 5)),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 1.0),
+                  borderRadius: BorderRadius.circular(widget.radius ?? 5)),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 1.0),
+                  borderRadius: BorderRadius.circular(widget.radius ?? 5)),
               fillColor: Colors.white,
               filled: true,
               isDense: true,
@@ -150,7 +147,14 @@ class _FmTextFieldState extends State<FmTextField> {
                   const BoxConstraints(minWidth: 0, minHeight: 0),
             ),
           ),
-        )
+        ),
+        widget.error != null
+            ? Row(
+                children: [
+                  widget.error.text(fontColor: redColor),
+                ],
+              )
+            : Container()
       ],
     );
   }
@@ -162,14 +166,16 @@ class FmEmptyTextField extends StatelessWidget {
     this.hintText,
     this.suffixIcon,
     this.maxLines,
-    this.textInputType,this.controller,
+    this.textInputType,
+    this.controller,
   }) : super(key: key);
-    TextInputType? textInputType;
+  TextInputType? textInputType;
 
   String? hintText;
   Widget? suffixIcon;
   int? maxLines;
-TextEditingController? controller;
+  TextEditingController? controller;
+
   @override
   Widget build(BuildContext context) {
     return TextField(
@@ -185,11 +191,10 @@ TextEditingController? controller;
         isDense: true,
         border: InputBorder.none,
         hintStyle: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.normal,
-          fontFamily: sfPro,
-          color: greyTextColor
-        ),
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+            fontFamily: sfPro,
+            color: greyTextColor),
         hintText: hintText,
         suffixIcon: suffixIcon,
         contentPadding: const EdgeInsets.symmetric(

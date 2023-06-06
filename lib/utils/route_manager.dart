@@ -5,6 +5,7 @@ import '../ui/main/demo/demo_screen.dart';
 import '../ui/main/navigator/main_screen.dart';
 import '../ui/start_up/forgot_password/forgot_password_screen.dart';
 import '../ui/start_up/login/login_screen.dart';
+import '../ui/start_up/new_password/new_password_screeen.dart';
 import '../ui/start_up/register/register_screen.dart';
 import '../ui/start_up/splash/splash_screen.dart';
 
@@ -13,11 +14,11 @@ class Routes {
   static const String login = "/login";
   static const String register = "/register";
   static const String forgotPassword = "/forgetPassoword";
+  static const String newPassword = "/newPassword";
   static const String demoScreen = "/demoScreen";
   static const String mainScreen = "/mainScreen";
   static const String timeCardScreen = "/timeCardScreen";
   static const String timeCardEdit = "/timeCardEdit";
-
 
   ///navigator keys
   static const String myProfileScreen = "/myProfileScreen";
@@ -30,12 +31,8 @@ class Routes {
   static const String workHistoryDetailScreen = "/workHistoryDetailScreen";
   static const String timeCardEditHistoryScreen = "/timeCardEditHistoryScreen";
 
-
   static const String addJobScreen = "/addJobScreen";
   static const String quickEntryScreen = "/quickEntryScreen";
-
-
-
 
   static List<GetPage> pages = [
     GetPage(
@@ -55,7 +52,12 @@ class Routes {
     ),
     GetPage(
       name: Routes.forgotPassword,
-      page: () => const ForgotPasswordScreen(),
+      page: () => ForgotPasswordScreen(),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: Routes.newPassword,
+      page: () => NewPasswordScreen(),
       transition: Transition.noTransition,
     ),
     GetPage(
@@ -68,6 +70,5 @@ class Routes {
       page: () => MainScreen(),
       transition: Transition.noTransition,
     ),
-
   ];
 }

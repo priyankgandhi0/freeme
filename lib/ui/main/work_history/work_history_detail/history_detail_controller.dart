@@ -6,6 +6,7 @@ class HistoryDetailController extends GetxController  with GetSingleTickerProvid
 
   late TabController tabController;
   int tabIndex = 0;
+
   @override
   void onInit() {
     tabController = TabController(vsync: this, length: 4);

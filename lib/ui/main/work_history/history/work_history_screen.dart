@@ -43,13 +43,13 @@ class WorkHistoryScreen extends StatelessWidget {
                 top: screenHPadding16.sh(),
               ),
               fMExpandedView(
-                title: "John Clay JLO",
+                title: "John JLO",
                 description: "07/02/22",
               ).paddingOnly(
                 top: screenHPadding16.sh(),
               ),
               fMExpandedView(
-                title: "FB Girlswirl",
+                title: "Girlswirl",
                 description: "06/11/22",
               ).paddingOnly(
                 top: screenHPadding16.sh(),

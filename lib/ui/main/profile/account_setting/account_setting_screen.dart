@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freeme/ui/widgets/fm_dialog.dart';
 import 'package:freeme/utils/extension.dart';
 import 'package:get/get.dart';
 
@@ -8,10 +9,14 @@ import '../../../../generated/assets.dart';
 import '../../../../theme/app_colors.dart';
 import '../../../../utils/route_manager.dart';
 import '../../../widgets/fm_appbar.dart';
+import '../../../widgets/fm_button.dart';
 import '../../../widgets/fm_image.dart';
+import 'account_setting_controller.dart';
 
 class AccountSettingScreen extends StatelessWidget {
-  const AccountSettingScreen({Key? key}) : super(key: key);
+  AccountSettingScreen({Key? key}) : super(key: key);
+
+  final controller = Get.put(AccountSettingController());
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +29,7 @@ class AccountSettingScreen extends StatelessWidget {
         body: Column(
           children: [
             _iconButton(
-                    buttonName: "Change Password",
+                    buttonName: changePassword,
                     path: Assets.iconsEyeClosedGreen)
                 .onTap(
               () {
@@ -32,15 +37,12 @@ class AccountSettingScreen extends StatelessWidget {
               },
             ),
             _iconButton(
-                buttonName: "Privacy Policy",
-                path: Assets.iconsPrivacyPolicyIcon),
+                buttonName: privacyPolicy, path: Assets.iconsPrivacyPolicyIcon),
             _iconButton(
-                buttonName: "Terms and Condition",
+                buttonName: termsAndCondition,
                 path: Assets.iconsTermsAndConditionIcon),
-            _iconButton(
-                buttonName: "Log Out",
-                path: Assets.iconsLogout).onTap(() {
-              Get.offAllNamed(Routes.login);
+            _iconButton(buttonName: logout, path: Assets.iconsLogout).onTap(() {
+              openLogoutDialog(context);
             }),
           ],
         ),
@@ -108,6 +110,87 @@ class AccountSettingScreen extends StatelessWidget {
       left: screenWPadding16.sw(),
       right: screenWPadding16.sw(),
       top: screenHPadding16.sh(),
+    );
+  }
+
+  void openLogoutDialog(BuildContext context) {
+    fMDialog(
+      context: context,
+      horizontalPadding: screenWPadding32.sw(),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  logout
+                      .text(
+                        fontSize: 18,
+                        weight: FontWeight.w500,
+                      )
+                      .paddingOnly(
+                        top: screenHPadding16.sh(),
+                        bottom: screenHPadding8.sh(),
+                      ),
+                ],
+              ),
+              FmImage.assetImage(
+                path: Assets.iconsCloseIcon,
+                fit: BoxFit.fill,
+                size: 12,
+              )
+                  .paddingOnly(
+                top: 20.sh(),
+                right: screenWPadding16.sw(),
+                left: screenWPadding16.sw(),
+                bottom: screenWPadding16.sw(),
+              )
+                  .onTap(
+                () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+              ).positioned(right: 0)
+            ],
+          ),
+          Container(
+            color: bottomLineGreyColor,
+            width: Get.width,
+            height: 1,
+          ),
+          areYouSureYouWantLogout
+              .text(fontSize: 18, weight: FontWeight.w500)
+              .paddingOnly(
+                left: 16,
+                right: 16,
+                top: 32,
+                bottom: 32,
+              ),
+          Row(
+            children: [
+              Expanded(
+                  child: FmButton(
+                ontap: () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                name: cancel,
+              ).paddingAll(8)),
+              Expanded(
+                child: FmButton(
+                  ontap: () {
+                    Navigator.of(context, rootNavigator: true).pop();
+                     controller.performLogout(context);
+                  },
+                  name: logout,
+                ).paddingAll(8),
+              )
+            ],
+          ).paddingOnly(
+            bottom: 24.sw(),
+          )
+        ],
+      ),
     );
   }
 }

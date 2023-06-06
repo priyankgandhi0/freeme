@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../../generated/assets.dart';
 import '../../../theme/app_colors.dart';
+import '../../../utils/app_constant.dart';
 import '../../../utils/route_manager.dart';
 import '../../widgets/fm_image.dart';
 
@@ -14,12 +15,7 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Timer(const Duration(seconds: 2), () async {
-      try {
-        Get.offAllNamed(Routes.login);
-      } on Exception catch (_) {}
-    });
-
+    setUpTimer();
     return Scaffold(
       backgroundColor: backGroundGreenColor,
       body: Column(
@@ -35,5 +31,14 @@ class SplashScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+  Future<void> setUpTimer() async {
+    Timer(const Duration(seconds: 2), () async {
+      if (box.read(AppConstant.isLogin) ?? false) {
+        Get.offAllNamed(Routes.mainScreen);
+      } else {
+        Get.offAllNamed(Routes.login);
+      }
+    });
   }
 }

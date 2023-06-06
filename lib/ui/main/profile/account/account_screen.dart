@@ -3,78 +3,71 @@ import 'package:freeme/globle.dart';
 
 import '../../../widgets/fm_appbar.dart';
 import '../../../widgets/profile_image.dart';
+import 'account_controller.dart';
 
 class AccountScreen extends StatelessWidget {
-  const AccountScreen({Key? key}) : super(key: key);
+  AccountScreen({Key? key}) : super(key: key);
+
+  final controller = Get.put(AccountController());
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      child: Scaffold(
-        appBar: fMAppBar(account),
-        backgroundColor: backGroundWhiteColor,
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  profileImage(
-                    140,
-                    140,
-                    verticlePadding: 41,horizontalPadding: 46
-                  ).paddingOnly(
-                    top: 24.sh(),
-                  )
-                ],
-              ),
-              "Erica Chan"
-                  .text(weight: FontWeight.w500, fontSize: 20)
-                  .paddingOnly(
-                    top: screenHPadding16.sh(),
-                  ),
-              "IATSE Local 600".text(fontSize: 16).paddingOnly(
-                    top: screenHPadding8.sh(),
-                  ),
-              "1st Assistant Camera, Director"
-                  .text(fontColor: greyTextColor, fontSize: 16)
-                  .paddingOnly(
-                    top: screenHPadding8.sh(),
-                  ),
-              accountOptionItem(
-                timeInfoCard,
-                () {
-                  Navigator.pushNamed(context, Routes.timeCardInfoScreen);
-                },
-              ).paddingOnly(top: 32),
-
-              accountOptionItem(
-                myProfile,
-                () {
-
-                  Navigator.pushNamed(context, Routes.myProfileScreen);
-                },
-              ).paddingOnly(top: 16),
-              accountOptionItem(
-                accountSettings,
-                () {
-                  Navigator.pushNamed(context, Routes.accountSettingScreen);
-                },
-              ).paddingOnly(top: 16),
-
-           /*   accountOptionItem(
-                logout,
-                    () {
-                      Get.offAllNamed(Routes.login);
-                },
-              ).paddingOnly(top: 16)*/
-            ],
-          ).safeArea,
-        ),
-      ),
+      child: GetBuilder<AccountController>(builder: (ctrl) {
+        return Scaffold(
+          appBar: fMAppBar(account),
+          backgroundColor: backGroundWhiteColor,
+          body: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    profileImage(140, 140,
+                            verticlePadding: 41, horizontalPadding: 46)
+                        .paddingOnly(
+                      top: 24.sh(),
+                    )
+                  ],
+                ),
+                "${ctrl.userModel?.firstName ?? ""} ${ctrl.userModel?.lastName ?? ""}"
+                    .text(weight: FontWeight.w500, fontSize: 20)
+                    .paddingOnly(
+                      top: screenHPadding16.sh(),
+                    ),
+                "IATSE Local 600".text(fontSize: 16).paddingOnly(
+                      top: screenHPadding8.sh(),
+                    ),
+                "${ctrl.userModel?.primaryPosition ?? ""}"
+                    .text(fontColor: greyTextColor, fontSize: 16)
+                    .paddingOnly(
+                      top: screenHPadding8.sh(),
+                    ),
+                accountOptionItem(
+                  timeInfoCard,
+                  () {
+                    Navigator.pushNamed(context, Routes.timeCardInfoScreen);
+                  },
+                ).paddingOnly(top: 32),
+                accountOptionItem(
+                  myProfile,
+                  () {
+                    Navigator.pushNamed(context, Routes.myProfileScreen);
+                  },
+                ).paddingOnly(top: 16),
+                accountOptionItem(
+                  accountSettings,
+                  () {
+                    Navigator.pushNamed(context, Routes.accountSettingScreen);
+                  },
+                ).paddingOnly(top: 16),
+              ],
+            ).safeArea,
+          ),
+        );
+      }),
       onWillPop: () async {
-
         return false;
       },
     );

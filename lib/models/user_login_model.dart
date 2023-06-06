@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-UserLoginModel userLoginModelFromJson(String str) => UserLoginModel.fromJson(json.decode(str));
-String userLoginModelToJson(UserLoginModel data) => json.encode(data.toJson());
-class UserLoginModel {
-  UserLoginModel({
+
+
+class UserModel {
+  UserModel({
       num? userId, 
       String? userToken, 
       String? firstName, 
@@ -74,7 +74,7 @@ class UserLoginModel {
     _loanOut = loanOut;
 }
 
-  UserLoginModel.fromJson(dynamic json) {
+  UserModel.fromJson(dynamic json) {
     _userId = json['user_id'];
     _userToken = json['user_token'];
     _firstName = json['first_name'];

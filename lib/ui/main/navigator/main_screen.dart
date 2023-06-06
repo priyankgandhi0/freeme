@@ -34,19 +34,24 @@ class MainScreen extends StatelessWidget {
     return WillPopScope(
       child: GetBuilder<HomeController>(
         builder: (ctrl) {
-          return Scaffold(
-            bottomNavigationBar: bottomNavigationBar(ctrl),
-            body: SafeArea(
-              top: false,
-              child: IndexedStack(
-                index: ctrl.selectedIndex,
-                children: const <Widget>[
-                  WorkHistoryNavigator(),
-                  FreeMeNavigator(),
-                  AccountNavigator(),
-                ],
+          return Stack(
+            children: [
+              Scaffold(
+                bottomNavigationBar: bottomNavigationBar(ctrl),
+                body: SafeArea(
+                  top: false,
+                  child: IndexedStack(
+                    index: ctrl.selectedIndex,
+                    children: const <Widget>[
+                      WorkHistoryNavigator(),
+                      FreeMeNavigator(),
+                      AccountNavigator(),
+                    ],
+                  ),
+                ),
               ),
-            ),
+              ctrl.isLoading ? LoadingStack(() {}) : Container()
+            ],
           );
         },
       ),
