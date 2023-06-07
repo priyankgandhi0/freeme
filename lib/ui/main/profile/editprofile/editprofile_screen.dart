@@ -33,7 +33,7 @@ class EditProfileScreen extends StatelessWidget {
                       horizontalPadding: 52,
                       verticlePadding: 49,
                       onCameraClick: () {
-                          controller.pickImage();
+                        controller.pickImage();
                       },
                     ).paddingOnly(
                       top: 24.sh(),
@@ -41,25 +41,71 @@ class EditProfileScreen extends StatelessWidget {
                   ],
                 ),
                 nameCard().paddingOnly(top: screenHPadding32.sh()),
-                contentCard("Add Phone", ["1-000-000-0000"], onAddClick: () {})
-                    .paddingOnly(top: screenHPadding16.sh()),
-                contentCard(addEmail, ["Work_email@gmail.com"],
-                        onAddClick: () {})
-                    .paddingOnly(top: screenHPadding16.sh()),
-                contentCard(union, ["lATSE Local 600"], onAddClick: () {})
-                    .paddingOnly(top: screenHPadding16.sh()),
-                contentCard(primaryPosition, ["Camera / 1st Assist..."],
-                        onAddClick: () {})
-                    .paddingOnly(top: screenHPadding16.sh()),
-                contentCard(addAddress, [], onAddClick: () {})
-                    .paddingOnly(top: screenHPadding16.sh()),
-                contentCard(addWebsite, [], onAddClick: () {})
-                    .paddingOnly(top: screenHPadding16.sh()),
-                contentCard(addSocialMedia, [], onAddClick: () {})
-                    .paddingOnly(top: screenHPadding16.sh()),
-                contentCard(addBirthday, [], onAddClick: () {})
-                    .paddingOnly(top: screenHPadding16.sh()),
-                aboutMeCard("Likes to play golf, pool, games"),
+                contentCard(
+                  "Add Phone",
+                  ["1-000-000-0000"],
+                  onAddClick: () {},
+                  textController: ctrl.addPhoneController,
+                ).paddingOnly(
+                  top: screenHPadding16.sh(),
+                ),
+                contentCard(
+                  addEmail,
+                  ["Work_email@gmail.com"],
+                  onAddClick: () {},
+                  textController: ctrl.addEmailController,
+                ).paddingOnly(
+                  top: screenHPadding16.sh(),
+                ),
+                contentCard(
+                  textController: ctrl.addUnionController,
+                  union,
+                  ["lATSE Local 600"],
+                  onAddClick: () {},
+                ).paddingOnly(
+                  top: screenHPadding16.sh(),
+                ),
+                contentCard(
+                  primaryPosition,
+                  ["Camera / 1st Assist..."],
+                  onAddClick: () {},
+                  textController: ctrl.addPrimaryPositionController,
+                ).paddingOnly(
+                  top: screenHPadding16.sh(),
+                ),
+                contentCard(
+                  addAddress,
+                  [],
+                  textController: ctrl.addAddressController,
+                  onAddClick: () {},
+                ).paddingOnly(
+                  top: screenHPadding16.sh(),
+                ),
+                contentCard(
+                  addWebsite,
+                  [],
+                  textController: ctrl.addAddressController,
+                  onAddClick: () {},
+                ).paddingOnly(
+                  top: screenHPadding16.sh(),
+                ),
+                contentCard(
+                  addSocialMedia,
+                  [],
+                  onAddClick: () {},
+                  textController: ctrl.addSocialMediaController,
+                ).paddingOnly(
+                  top: screenHPadding16.sh(),
+                ),
+                contentCard(
+                  addBirthday,
+                  [],
+                  onAddClick: () {},
+                  textController: ctrl.addBirthDayController,
+                ).paddingOnly(
+                  top: screenHPadding16.sh(),
+                ),
+                aboutMeCard(ctrl),
                 FmButton(
                   ontap: () {
                     ctrl.performSaveButton(context);
@@ -81,12 +127,10 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget contentCard(
-    String title,
-    List<String> valueList, {
-    GestureTapCallback? onAddClick,
-    GestureTapCallback? onRemoveClick,
-  }) {
+  Widget contentCard(String title, List<String> valueList,
+      {GestureTapCallback? onAddClick,
+      GestureTapCallback? onRemoveClick,
+      TextEditingController? textController}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -126,16 +170,6 @@ class EditProfileScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  /*Expanded(
-                    child: Row(
-                      children: [
-                        valueList[index].text(
-                          fontColor: Colors.black,
-                          fontSize: 16,
-                        )
-                      ],
-                    ),
-                  )*/
                   Expanded(
                     child: FmEmptyTextField(),
                   )
@@ -252,7 +286,7 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget aboutMeCard(String value) {
+  Widget aboutMeCard(EditProfileController ctrl) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -282,6 +316,7 @@ class EditProfileScreen extends StatelessWidget {
           FmEmptyTextField(
             hintText: enterAboutMe,
             maxLines: 3,
+            controller: ctrl.aboutMeController,
           )
         ],
       ).paddingOnly(

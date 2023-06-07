@@ -22,6 +22,12 @@ class MethodNames {
   static const logout = 'logout';
   static const myProfile = 'myProfile';
   static const editProfile = 'editProfile';
+  static const quickEntry = 'quickEntry';
+  static const getAllTypes = 'getAllTypes';
+  static const getAllTerms = 'getAllTerms';
+  static const getAllPaidBy = 'getAllPaidBy';
+  static const getAllGuaranteedHour = 'getAllGuaranteedHour';
+  static const getAllPerHour = 'getAllPerHour';
 
 }
 

@@ -143,7 +143,7 @@ class _AppCalenderState extends State<AppCalender> {
     );
   }
 
-  CalendarStyle calenderStyle() {
+  CalendarStyle calenderStyle(){
     return CalendarStyle(
       outsideDaysVisible: false,
       cellMargin: EdgeInsets.all(3),
@@ -169,10 +169,21 @@ class _AppCalenderState extends State<AppCalender> {
       ),
       cellPadding: EdgeInsets.zero,
       selectedDecoration: decoration(),
-      todayDecoration: decoration(),
+      todayDecoration: todaysDecoration(),
+    );
+  }
+  BoxDecoration todaysDecoration() {
+    return BoxDecoration(
+      shape: BoxShape.circle,
+      color: Colors.white,
+      border: Border.all(
+        color: Colors.white,
+        width: 1,
+      ),
     );
   }
 }
+
 
 class WeeklyCalender extends StatefulWidget {
   OnDaySelected? onDaySelected;

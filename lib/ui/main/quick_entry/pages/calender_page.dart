@@ -28,7 +28,7 @@ class CalenderPage extends StatelessWidget {
                 bottom: screenHPadding16.sh(),
               ),
               AppCalender(
-                currentDay: controller.currentDay,
+               // currentDay: controller.currentDay,
                 focusDay: controller.focusedDay,
                 onDaySelected: (selectedDay, focusDay) {
                   controller.onDaySelect(selectedDay, focusDay);
@@ -40,8 +40,8 @@ class CalenderPage extends StatelessWidget {
               ),
               FmButton(
                 ontap: () {
-                  controller.pageController.jumpToPage(1);
-                  // controller.pageController.animateToPage(1, duration: null, curve: null);
+                   controller.pageController.jumpToPage(1);
+                  controller.selectedDays;
                 },
                 name: next,
               ).paddingOnly(

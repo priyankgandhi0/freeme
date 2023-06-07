@@ -2,36 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:freeme/globle.dart';
 import 'package:freeme/utils/extension.dart';
 
+import '../../../widgets/dropdown.dart';
 import '../quick_entry_controller.dart';
 
 class PaymentDetailPage extends StatelessWidget {
-    PaymentDetailPage({Key? key}) : super(key: key);
+  PaymentDetailPage({Key? key}) : super(key: key);
 
   final controller = Get.find<QuickEntryController>();
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          Row(
+      child: GetBuilder<QuickEntryController>(
+        builder: (ctrl) {
+          return Column(
             children: [
-              "Payment Details"
-                  .text(
-                    fontSize: 18,
-                    weight: FontWeight.w500,
-                  )
-                  .paddingOnly(
-                    left: screenWPadding16.sw(),
-                  ),
+              Row(
+                children: [
+                  "Payment Details"
+                      .text(
+                        fontSize: 18,
+                        weight: FontWeight.w500,
+                      )
+                      .paddingOnly(
+                        left: screenWPadding16.sw(),
+                      ),
+                ],
+              ),
+              _rateAndOther(ctrl,context),
+              _guaranteedHours(context,ctrl),
+              _w2Or1099(),
+              _paidBy(ctrl,context),
+              _terms(ctrl,context),
+              _backNextButton()
             ],
-          ),
-          _rateAndOther(),
-          _guaranteedHours(),
-          _w2Or1099(),
-          _paidBy(),
-          _terms(),
-          _backNextButton()
-        ],
+          );
+        },
       ),
     );
   }
@@ -49,7 +55,7 @@ class PaymentDetailPage extends StatelessWidget {
         ),
         FmButton(
           ontap: () {
-            controller.pageController.jumpToPage(3);
+           controller.moveToFourthPage();
           },
           width: 120,
           name: next,
@@ -63,98 +69,119 @@ class PaymentDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _terms(){
+  Widget _terms(QuickEntryController ctrl, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         terms.text(
           fontSize: 16,
         ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.black,
-            ),
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              "Net 30".text(
-                fontSize: 16,
-                fontColor: greyTextColor,
-              ),
-              FmImage.assetImage(
-                path: Assets.iconsDownIcon,
-                height: 15.sh(),
-                width: 15.sw(),
-              )
-            ],
-          ).paddingOnly(
-            top: 13.sh(),
-            bottom: 13.sh(),
-            left: screenWPadding16.sw(),
-            right: screenWPadding16.sw(),
-          ),
-        ).paddingOnly(
-          top: screenHPadding8.sh(),
-        )
+        fmDropDown(
+          child: termsDropDownItem(ctrl.selectedTerm.text ?? ""),
+          onDropDownTap: (item) {
+            ctrl.onTermsDropDownTap(item);
+          },
+          items: ctrl.allTerms,
+          context: context,
+        ),
+
       ],
     ).paddingOnly(
       left: screenWPadding16.sw(),
       right: screenWPadding16.sw(),
       top: screenHPadding16.sw(),
     );
-    }
-  
-  
-  Widget _paidBy(){
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          paidBy.text(
-            fontSize: 16,
+  }
+
+  Widget termsDropDownItem(String? selected){
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black,
           ),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.black,
-              ),
-              borderRadius: BorderRadius.circular(10),
-                color: Colors.white
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                entertainmentPartners.text(
-                  fontSize: 16,
-                  fontColor: greyTextColor,
-                ),
-                FmImage.assetImage(
-                  path: Assets.iconsDownIcon,
-                  height: 15.sh(),
-                  width: 15.sw(),
-                )
-              ],
-            ).paddingOnly(
-              top: 13.sh(),
-              bottom: 13.sh(),
-              left: screenWPadding16.sw(),
-              right: screenWPadding16.sw(),
-            ),
-          ).paddingOnly(
-            top: screenHPadding8.sh(),
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          selected.text(
+            fontSize: 16,
+            fontColor: Colors.black,
+          ),
+          FmImage.assetImage(
+            path: Assets.iconsDownIcon,
+            height: 15.sh(),
+            width: 15.sw(),
           )
         ],
       ).paddingOnly(
+        top: 13.sh(),
+        bottom: 13.sh(),
         left: screenWPadding16.sw(),
         right: screenWPadding16.sw(),
-        top: screenHPadding16.sw(),
+      ),
+    ).paddingOnly(
+      top: screenHPadding8.sh(),
+    );
+  }
+
+  Widget _paidBy(QuickEntryController ctrl, BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        paidBy.text(
+          fontSize: 16,
+        ),
+        fmDropDown(
+          child: _paidByDropDownItem(ctrl.selectedPaidBy.text ?? ""),
+          onDropDownTap: (item) {
+            ctrl.onPaidByDropDownTap(item);
+          },
+          items: ctrl.allPaidBy,
+          context: context,
+          width: 245
+        ),
+
+      ],
+    ).paddingOnly(
+      left: screenWPadding16.sw(),
+      right: screenWPadding16.sw(),
+      top: screenHPadding16.sw(),
+    );
+  }
+
+  Widget _paidByDropDownItem(String selected){
+      return Container(
+        decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.black,
+            ),
+            borderRadius: BorderRadius.circular(10),
+            color: Colors.white),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            selected.text(
+              fontSize: 16,
+              fontColor: Colors.black,
+            ),
+            FmImage.assetImage(
+              path: Assets.iconsDownIcon,
+              height: 15.sh(),
+              width: 15.sw(),
+            )
+          ],
+        ).paddingOnly(
+          top: 13.sh(),
+          bottom: 13.sh(),
+          left: screenWPadding16.sw(),
+          right: screenWPadding16.sw(),
+        ),
+      ).paddingOnly(
+        top: screenHPadding8.sh(),
       );
     }
 
-  
   Widget _w2Or1099() {
     return Column(
       children: [
@@ -234,43 +261,21 @@ class PaymentDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _guaranteedHours() {
+  Widget _guaranteedHours(BuildContext context, QuickEntryController ctrl) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        perHowManyHours.text(
+        guaranteedHours.text(
           fontSize: 16,
         ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.black,
-            ),
-            borderRadius: BorderRadius.circular(10),
-              color: Colors.white
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              "10 hours".text(
-                fontSize: 16,
-                fontColor: greyTextColor,
-              ),
-              FmImage.assetImage(
-                path: Assets.iconsDownIcon,
-                height: 15.sh(),
-                width: 15.sw(),
-              )
-            ],
-          ).paddingOnly(
-            top: 13.sh(),
-            bottom: 13.sh(),
-            left: screenWPadding16.sw(),
-            right: screenWPadding16.sw(),
-          ),
-        ).paddingOnly(
-          top: screenHPadding8.sh(),
-        )
+        fmDropDown(
+          child: guaranteedHourDropDownItem(ctrl.selectedGuaranteedHour.text ?? ""),
+          onDropDownTap: (item) {
+            controller.guaranteedHourClick(item);
+          },
+          items: controller.allGuaranteedHour,
+          context: context,
+        ),
       ],
     ).paddingOnly(
       left: screenWPadding16.sw(),
@@ -279,16 +284,50 @@ class PaymentDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _rateAndOther() {
+  Widget guaranteedHourDropDownItem(String selected){
+   return Container(
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black,
+          ),
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          selected.text(
+            fontSize: 16,
+            fontColor: Colors.black,
+          ),
+          FmImage.assetImage(
+            path: Assets.iconsDownIcon,
+            height: 15.sh(),
+            width: 15.sw(),
+          )
+        ],
+      ).paddingOnly(
+        top: 13.sh(),
+        bottom: 13.sh(),
+        left: screenWPadding16.sw(),
+        right: screenWPadding16.sw(),
+      ),
+    ).paddingOnly(
+      top: screenHPadding8.sh(),
+    );
+  }
+
+  Widget _rateAndOther(QuickEntryController ctrl, BuildContext context) {
     return Row(
       children: [
         Expanded(
           child: FmTextField(
             hint: "\$500",
             header: rateStar,
-            inputType: TextInputType.emailAddress,
+            inputType: TextInputType.number,
             radius: 10,
+            controller: ctrl.rateTextController,
             headerColor: redColor,
+            error: controller.rateError,
           ),
         ),
         Expanded(
@@ -299,35 +338,14 @@ class PaymentDetailPage extends StatelessWidget {
                 fontSize: 16,
                 fontColor: redColor,
               ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    "10 hours".text(
-                      fontSize: 16,
-                      fontColor: greyTextColor,
-                    ),
-                    FmImage.assetImage(
-                      path: Assets.iconsDownIcon,
-                      height: 15.sh(),
-                      width: 15.sw(),
-                    )
-                  ],
-                ).paddingOnly(
-                  top: 13.sh(),
-                  bottom: 13.sh(),
-                  left: screenWPadding16.sw(),
-                  right: screenWPadding16.sw(),
-                ),
-              ).paddingOnly(
-                top: screenHPadding8.sh(),
-              )
+              fmDropDown(
+                child: perHowManyHour(ctrl.selectedPerHour.text ?? ""),
+                onDropDownTap: (item) {
+                  controller.onPerHourDropDownTap(item);
+                },
+                items: controller.allPerHour,
+                context: context,
+              ),
             ],
           ).paddingOnly(
             left: screenWPadding16.sw(),
@@ -335,5 +353,37 @@ class PaymentDetailPage extends StatelessWidget {
         )
       ],
     ).paddingOnly(left: screenWPadding16.sw(), right: screenWPadding16.sw());
+  }
+
+  perHowManyHour(String selected){
+   return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.black,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          selected.text(
+            fontSize: 16,
+            fontColor: Colors.black,
+          ),
+          FmImage.assetImage(
+            path: Assets.iconsDownIcon,
+            height: 15.sh(),
+            width: 15.sw(),
+          )
+        ],
+      ).paddingOnly(
+        top: 13.sh(),
+        bottom: 13.sh(),
+        left: screenWPadding16.sw(),
+        right: screenWPadding16.sw(),
+      ),
+    ).paddingOnly(
+      top: screenHPadding8.sh(),
+    );
   }
 }

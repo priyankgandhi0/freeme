@@ -13,6 +13,16 @@ import '../myprofile/myprofile_controller.dart';
 class EditProfileController extends GetxController {
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
+  late TextEditingController aboutMeController;
+
+  late TextEditingController addPhoneController;
+  late TextEditingController addEmailController;
+  late TextEditingController addUnionController;
+  late TextEditingController addPrimaryPositionController;
+  late TextEditingController addAddressController;
+  late TextEditingController addWebsiteController;
+  late TextEditingController addSocialMediaController;
+  late TextEditingController addBirthDayController;
 
   UserModel? userModel;
 
@@ -24,9 +34,17 @@ class EditProfileController extends GetxController {
 
   void setDefaultData() {
     userModel = UserModel.fromJson(box.read(AppConstant.userProfile) ?? "");
-    firstNameController =
-        TextEditingController(text: userModel?.firstName ?? "");
+    firstNameController = TextEditingController(text: userModel?.firstName ?? "");
     lastNameController = TextEditingController(text: userModel?.lastName ?? "");
+    aboutMeController = TextEditingController();
+    addPhoneController = TextEditingController();
+    addEmailController = TextEditingController();
+    addUnionController = TextEditingController();
+    addPrimaryPositionController = TextEditingController();
+    addAddressController = TextEditingController();
+    addWebsiteController = TextEditingController();
+    addSocialMediaController = TextEditingController();
+    addBirthDayController = TextEditingController();
   }
 
   startLoading() {
@@ -38,8 +56,12 @@ class EditProfileController extends GetxController {
   }
 
   Future<void> performSaveButton(BuildContext context) async {
+    startLoading();
     ResponseItem response = await ProfileRepo.editProfile(
       profile: selectedImage,
+      firstName: firstNameController.text.toString(),
+      lastName: lastNameController.text.toString(),
+      about: aboutMeController.text.toString(),
     );
     if (response.status) {
       UserModel responseData = UserModel.fromJson(response.data);
@@ -72,6 +94,8 @@ class EditProfileController extends GetxController {
   Future<void> pickImage() async {
     final ImagePicker _picker = ImagePicker();
     XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    selectedImage = image?.path;
+    if(image?.path!=null){
+      selectedImage = image?.path;
+    }
   }
 }

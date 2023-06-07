@@ -150,6 +150,7 @@ const String enterAboutMe= "Enter About me";
 const String somethingWentWrong= "Something went wrong";
 const String select= "Select";
 const String selectIndustry= "Select Industry";
+const String guaranteedHours= "Guaranteed hours:";
 
 
 

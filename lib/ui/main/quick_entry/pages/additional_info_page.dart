@@ -22,7 +22,7 @@ class AdditionalInfoPage extends StatelessWidget {
             ).paddingOnly(
               left: screenWPadding16.sw(),
             ),
-            _type(context),
+            _type(context,ctrl),
             _unionOrNonUnion(),
             Row(
               children: [
@@ -31,9 +31,12 @@ class AdditionalInfoPage extends StatelessWidget {
                   fontSize: 18,
                 ),
               ],
-            ).paddingOnly(left: screenWPadding16.sw(), top: 24.sh()),
-            _recommendedBy(),
-            _hiredBy(),
+            ).paddingOnly(
+              left: screenWPadding16.sw(),
+              top: 24.sh(),
+            ),
+            _recommendedBy(ctrl),
+            _hiredBy(ctrl),
             _backNextButton(),
           ],
         ),
@@ -136,7 +139,7 @@ class AdditionalInfoPage extends StatelessWidget {
         ),
         FmButton(
           ontap: () {
-            controller.pageController.jumpToPage(5);
+            controller.moveToLastPage();
           },
           width: 120,
           name: next,
@@ -150,7 +153,7 @@ class AdditionalInfoPage extends StatelessWidget {
     );
   }
 
-  Widget _hiredBy() {
+  Widget _hiredBy(QuickEntryController ctrl) {
     return Column(
       children: [
         FmTextField(
@@ -158,6 +161,8 @@ class AdditionalInfoPage extends StatelessWidget {
           header: hiredBy,
           inputType: TextInputType.text,
           radius: 10,
+          controller: ctrl.hiredByController,
+          error: ctrl.hiredByError,
         )
       ],
     ).paddingOnly(
@@ -166,13 +171,15 @@ class AdditionalInfoPage extends StatelessWidget {
     );
   }
 
-  Widget _recommendedBy() {
+  Widget _recommendedBy(QuickEntryController ctrl) {
     return Column(
       children: [
         FmTextField(
           hint: "Erica Chan",
           header: recommendedBy,
           inputType: TextInputType.text,
+          controller: ctrl.recommendedByController,
+          error: ctrl.recommendedByError,
           radius: 10,
         )
       ],
@@ -183,56 +190,61 @@ class AdditionalInfoPage extends StatelessWidget {
     );
   }
 
-  Widget _type(BuildContext context) {
-    return fmDropDown(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                type.text(
-                  fontSize: 16,
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      "Commercial".text(
-                        fontSize: 16,
-                        fontColor: greyTextColor,
-                      ),
-                      FmImage.assetImage(
-                        path: Assets.iconsDownIcon,
-                        height: 15.sh(),
-                        width: 15.sw(),
-                      )
-                    ],
-                  ).paddingOnly(
-                    top: 13.sh(),
-                    bottom: 13.sh(),
-                    left: screenWPadding16.sw(),
-                    right: screenWPadding16.sw(),
-                  ),
-                ).paddingOnly(
-                  top: screenHPadding8.sh(),
-                )
-              ],
-            ),
+  Widget _type(BuildContext context, QuickEntryController ctrl) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        type.text(
+          fontSize: 16,
+        ),
+        fmDropDown(
+            child: _typeDropDownItem(ctrl.selectedType.text ?? ""),
             onDropDownTap: (item) {
-              controller.onTypeDropDownTap(item);
+              ctrl.onTypeDropDownTap(item);
             },
-            items: controller.typeByList,
+            items: ctrl.allTypes,
             context: context,
             width: 210)
+
+      ],
+    )
         .paddingOnly(
       left: screenWPadding16.sw(),
       right: screenWPadding16.sw(),
       top: screenHPadding16.sw(),
+    );
+  }
+
+  Widget _typeDropDownItem(String selected) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.black,
+        ),
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          selected.text(
+            fontSize: 16,
+            fontColor: Colors.black,
+          ),
+          FmImage.assetImage(
+            path: Assets.iconsDownIcon,
+            height: 15.sh(),
+            width: 15.sw(),
+          )
+        ],
+      ).paddingOnly(
+        top: 13.sh(),
+        bottom: 13.sh(),
+        left: screenWPadding16.sw(),
+        right: screenWPadding16.sw(),
+      ),
+    ).paddingOnly(
+      top: screenHPadding8.sh(),
     );
   }
 }

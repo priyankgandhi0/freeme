@@ -233,24 +233,29 @@ class SummeryScreen extends StatelessWidget {
   }
 
   Widget _totalEarningItem() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Expanded(
-          child: Row(
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: darkGreenColor2.withOpacity(0.2),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Expanded(
+              child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              "Gross Earnings:".text(fontSize: 16),
-              "\$2510.50".text(fontSize: 16),
+              "Gross Earnings:".text(fontSize: 16, fontColor: darkGreenColor),
+              "\$2510.50".text(fontSize: 16, fontColor: darkGreenColor),
             ],
-          ),
-        ),
-      ],
-    ).paddingOnly(
-      left: screenWPadding16.sw(),
-      right: screenWPadding16.sw(),
-      top: screenHPadding8.sh(),
-      bottom: screenHPadding8.sh(),
+          )),
+        ],
+      ).paddingOnly(
+        left: screenWPadding16.sw(),
+        right: screenWPadding16.sw(),
+        top: screenHPadding16.sh(),
+        bottom: screenHPadding16.sh(),
+      ),
     );
   }
 
@@ -355,12 +360,13 @@ class SummeryScreen extends StatelessWidget {
           ),
           Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: Colors.black)),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: Colors.black),
+            ),
             child: Row(
               children: [
                 "Tenths".text(),
-                SizedBox(
+                const SizedBox(
                   width: 38,
                 ),
                 FmImage.assetImage(
@@ -386,7 +392,7 @@ class SummeryScreen extends StatelessWidget {
       left: 24.sw(),
       right: 24.sw(),
       top: screenHPadding16.sh(),
-      bottom: screenHPadding16.sh(),
+      bottom: 24.sh(),
     );
   }
 
@@ -926,7 +932,7 @@ class SummeryDataTableFirst extends StatelessWidget {
     return Column(
       children: [
         DataTable(
-          columnSpacing: 15,
+          columnSpacing: 20,
           horizontalMargin: 15,
           headingRowColor: MaterialStateProperty.all(darkGreenColor2),
           border: TableBorder.all(

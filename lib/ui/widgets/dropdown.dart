@@ -33,9 +33,10 @@ Widget fmDropDown<T>(
           onDropDownTap(items[i]);
         },
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
+            Expanded(child: Container()),
             buildItem(items![i], context),
+            Expanded(child: Container()),
             Container(
               color: borderGreyColor,
               width: Get.width,
@@ -69,8 +70,7 @@ Widget fmDropDown<T>(
           radius: Radius.circular(50),
         ),
       ),
-      menuItemStyleData:
-          MenuItemStyleData(padding: EdgeInsets.zero, height: 45),
+      menuItemStyleData: MenuItemStyleData(padding: EdgeInsets.zero, height: 58),
     ),
   );
 }
@@ -139,10 +139,12 @@ Widget buildItem(
 
 class MenuItem {
   String? text;
+  num? id;
   bool isSelected;
 
   MenuItem({
     this.text,
+    this.id,
     this.isSelected = false,
   });
 }

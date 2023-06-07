@@ -36,7 +36,9 @@ class TaxedItemPage extends StatelessWidget {
           ),
           _nonTaxedItems(context),
           FmButton(
-            ontap: () {},
+            ontap: () {
+              controller.finishButtonClick(context);
+            },
             name: finish,
           )
               .paddingOnly(
