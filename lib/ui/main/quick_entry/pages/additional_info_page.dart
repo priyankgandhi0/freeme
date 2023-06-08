@@ -22,7 +22,7 @@ class AdditionalInfoPage extends StatelessWidget {
             ).paddingOnly(
               left: screenWPadding16.sw(),
             ),
-            _type(context,ctrl),
+            _type(context, ctrl),
             _unionOrNonUnion(),
             Row(
               children: [
@@ -61,24 +61,34 @@ class AdditionalInfoPage extends StatelessWidget {
           children: [
             Expanded(
               child: _radioButton(
-                isSelected: true,
-                label: "Not Sure",
-              ),
+                isSelected: controller.unionNonUnionOptions[0].isSelected,
+                label: controller.unionNonUnionOptions[0].text,
+              ).onClick(() {
+                controller.onUnionNonUnionOptionsClick(0);
+              }),
             ),
             const SizedBox(
               width: 16,
             ),
             Expanded(
               child: _radioButton(
-                label: "Non Union",
-              ),
+                isSelected: controller.unionNonUnionOptions[1].isSelected,
+                label: controller.unionNonUnionOptions[1].text,
+              ).onClick(() {
+                controller.onUnionNonUnionOptionsClick(1);
+              }),
             ),
             const SizedBox(
               width: 16,
             ),
             Expanded(
               child: _radioButton(
-                label: "Union",
+                isSelected: controller.unionNonUnionOptions[2].isSelected,
+                label: controller.unionNonUnionOptions[2].text,
+              ).onClick(
+                () {
+                  controller.onUnionNonUnionOptionsClick(2);
+                },
               ),
             ),
           ],
@@ -205,10 +215,8 @@ class AdditionalInfoPage extends StatelessWidget {
             items: ctrl.allTypes,
             context: context,
             width: 210)
-
       ],
-    )
-        .paddingOnly(
+    ).paddingOnly(
       left: screenWPadding16.sw(),
       right: screenWPadding16.sw(),
       top: screenHPadding16.sw(),

@@ -29,11 +29,11 @@ class PaymentDetailPage extends StatelessWidget {
                       ),
                 ],
               ),
-              _rateAndOther(ctrl,context),
-              _guaranteedHours(context,ctrl),
+              _rateAndOther(ctrl, context),
+              _guaranteedHours(context, ctrl),
               _w2Or1099(),
-              _paidBy(ctrl,context),
-              _terms(ctrl,context),
+              _paidBy(ctrl, context),
+              _terms(ctrl, context),
               _backNextButton()
             ],
           );
@@ -55,7 +55,7 @@ class PaymentDetailPage extends StatelessWidget {
         ),
         FmButton(
           ontap: () {
-           controller.moveToFourthPage();
+            controller.moveToFourthPage();
           },
           width: 120,
           name: next,
@@ -84,7 +84,6 @@ class PaymentDetailPage extends StatelessWidget {
           items: ctrl.allTerms,
           context: context,
         ),
-
       ],
     ).paddingOnly(
       left: screenWPadding16.sw(),
@@ -93,7 +92,7 @@ class PaymentDetailPage extends StatelessWidget {
     );
   }
 
-  Widget termsDropDownItem(String? selected){
+  Widget termsDropDownItem(String? selected) {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -133,15 +132,13 @@ class PaymentDetailPage extends StatelessWidget {
           fontSize: 16,
         ),
         fmDropDown(
-          child: _paidByDropDownItem(ctrl.selectedPaidBy.text ?? ""),
-          onDropDownTap: (item) {
-            ctrl.onPaidByDropDownTap(item);
-          },
-          items: ctrl.allPaidBy,
-          context: context,
-          width: 245
-        ),
-
+            child: _paidByDropDownItem(ctrl.selectedPaidBy.text ?? ""),
+            onDropDownTap: (item) {
+              ctrl.onPaidByDropDownTap(item);
+            },
+            items: ctrl.allPaidBy,
+            context: context,
+            width: 245),
       ],
     ).paddingOnly(
       left: screenWPadding16.sw(),
@@ -150,37 +147,37 @@ class PaymentDetailPage extends StatelessWidget {
     );
   }
 
-  Widget _paidByDropDownItem(String selected){
-      return Container(
-        decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.black,
-            ),
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            selected.text(
-              fontSize: 16,
-              fontColor: Colors.black,
-            ),
-            FmImage.assetImage(
-              path: Assets.iconsDownIcon,
-              height: 15.sh(),
-              width: 15.sw(),
-            )
-          ],
-        ).paddingOnly(
-          top: 13.sh(),
-          bottom: 13.sh(),
-          left: screenWPadding16.sw(),
-          right: screenWPadding16.sw(),
-        ),
+  Widget _paidByDropDownItem(String selected) {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black,
+          ),
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          selected.text(
+            fontSize: 16,
+            fontColor: Colors.black,
+          ),
+          FmImage.assetImage(
+            path: Assets.iconsDownIcon,
+            height: 15.sh(),
+            width: 15.sw(),
+          )
+        ],
       ).paddingOnly(
-        top: screenHPadding8.sh(),
-      );
-    }
+        top: 13.sh(),
+        bottom: 13.sh(),
+        left: screenWPadding16.sw(),
+        right: screenWPadding16.sw(),
+      ),
+    ).paddingOnly(
+      top: screenHPadding8.sh(),
+    );
+  }
 
   Widget _w2Or1099() {
     return Column(
@@ -196,25 +193,33 @@ class PaymentDetailPage extends StatelessWidget {
           children: [
             Expanded(
               child: _radioButton(
-                isSelected: true,
-                label: "Not Sure",
-              ),
+                isSelected: controller.w2or1099Options[0].isSelected,
+                label: controller.w2or1099Options[0].text,
+              ).onClick(() {
+                controller.onW2or1099OptionsClick(0);
+              }),
             ),
             const SizedBox(
               width: 16,
             ),
             Expanded(
               child: _radioButton(
-                label: "W2",
-              ),
+                isSelected: controller.w2or1099Options[1].isSelected,
+                label: controller.w2or1099Options[1].text,
+              ).onClick(() {
+                controller.onW2or1099OptionsClick(1);
+              }),
             ),
             const SizedBox(
               width: 16,
             ),
             Expanded(
               child: _radioButton(
-                label: "1099",
-              ),
+                isSelected: controller.w2or1099Options[2].isSelected,
+                label: controller.w2or1099Options[2].text,
+              ).onClick(() {
+                controller.onW2or1099OptionsClick(2);
+              }),
             ),
           ],
         ).paddingOnly(
@@ -269,7 +274,8 @@ class PaymentDetailPage extends StatelessWidget {
           fontSize: 16,
         ),
         fmDropDown(
-          child: guaranteedHourDropDownItem(ctrl.selectedGuaranteedHour.text ?? ""),
+          child: guaranteedHourDropDownItem(
+              ctrl.selectedGuaranteedHour.text ?? ""),
           onDropDownTap: (item) {
             controller.guaranteedHourClick(item);
           },
@@ -284,8 +290,8 @@ class PaymentDetailPage extends StatelessWidget {
     );
   }
 
-  Widget guaranteedHourDropDownItem(String selected){
-   return Container(
+  Widget guaranteedHourDropDownItem(String selected) {
+    return Container(
       decoration: BoxDecoration(
           border: Border.all(
             color: Colors.black,
@@ -355,8 +361,8 @@ class PaymentDetailPage extends StatelessWidget {
     ).paddingOnly(left: screenWPadding16.sw(), right: screenWPadding16.sw());
   }
 
-  perHowManyHour(String selected){
-   return Container(
+  perHowManyHour(String selected) {
+    return Container(
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.black,

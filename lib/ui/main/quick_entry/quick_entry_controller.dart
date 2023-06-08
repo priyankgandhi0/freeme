@@ -1,6 +1,7 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:freeme/api/api_globle.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../../../api/repositories/quick_entry_repo.dart';
 import '../../../api/response_item.dart';
@@ -8,8 +9,11 @@ import '../../../calender_demo/utils.dart';
 import '../../../globle.dart';
 import '../../../models/country.dart';
 import '../../../models/guaranteed_hour_model.dart';
+import '../../../models/job_classification_model.dart';
 import '../../../models/paid_by_model.dart';
 import '../../../models/per_hour_model.dart';
+import '../../../models/sub_job_classification_model.dart';
+import '../../../models/taxed_nontaxed_item.dart';
 import '../../../models/term_model.dart';
 import '../../../models/type_model.dart';
 import '../../widgets/dropdown.dart';
@@ -31,6 +35,7 @@ class QuickEntryController extends GetxController {
     getAllPaidBy();
     getAllTerms();
     getAllTypes();
+    getAllJobClassifications();
     super.onInit();
   }
 
@@ -40,7 +45,12 @@ class QuickEntryController extends GetxController {
     countryList.clear();
     List<Country> list = await getCountries(context);
     countryList.addAll(list
-        .map((e) => MenuItem(text: e.name.toString(), isSelected: false))
+        .map(
+          (e) => MenuItem(
+              text: e.name.toString(),
+              isSelected: false,
+              countryCode: e.countryCode),
+        )
         .toList());
     update(["CompanyAdddressExpanded"]);
   }
@@ -49,6 +59,8 @@ class QuickEntryController extends GetxController {
     equals: isSameDay,
     hashCode: getHashCode,
   );
+
+  var selectedDaysList = [];
 
   void onDaySelect(DateTime selectedDay, DateTime focusDay) {
     focusedDay = focusDay;
@@ -71,7 +83,7 @@ class QuickEntryController extends GetxController {
     update(["CompanyAdddressExpanded"]);
   }
 
-  MenuItem? selectedCountry;
+  MenuItem selectedCountry = MenuItem(text: "United States", countryCode: "US");
 
   void onCountryDropDownTap(MenuItem item) {
     for (int i = 0; i < countryList.length; i++) {
@@ -114,18 +126,32 @@ class QuickEntryController extends GetxController {
   Future<void> finishButtonClick(BuildContext context) async {
     startLoading();
     ResponseItem response = await QuickEntryRepo.quickEntrySubmit(
-        description: descriptionController.text.trim(),
-        productionTitle: productionTitleController.text.trim(),
-        producer: producerController.text.trim(),
-        productionCompany: productionCompanyController.text.trim(),
-        companyAddressLine1: addressLIne1Controller.text.trim(),
-        companyAddressLine2: addressLIne2Controller.text.trim(),
-        city: cityController.text.trim(),
-        state: stateController.text.trim(),
-        zip: zipController.text.trim(),
-        rate: int.parse(rateTextController.text.trim().toString()),
-        recommendedBy: recommendedByController.text.trim(),
-        hiredBy: hiredByController.text.trim());
+      selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
+      description: descriptionController.text.trim(),
+      productionTitle: productionTitleController.text.trim(),
+      producer: producerController.text.trim(),
+      productionCompany: productionCompanyController.text.trim(),
+      companyAddressLine1: addressLIne1Controller.text.trim(),
+      companyAddressLine2: addressLIne2Controller.text.trim(),
+      city: cityController.text.trim(),
+      state: stateController.text.trim(),
+      zip: zipController.text.trim(),
+      rate: rateTextController.text.isNotEmpty
+          ? int.parse(rateTextController.text.trim().toString())
+          : null,
+      recommendedBy: recommendedByController.text.trim(),
+      hiredBy: hiredByController.text.trim(),
+      unionNonunion: selectedUnion.text,
+      department: selectedDepartment.text,
+      w2_1099: selectedW2Or1099.text,
+      guaranteedHours: selectedGuaranteedHour.text,
+      paidBy: selectedPaidBy.text,
+      terms: selectedTerm.text,
+      perHowManyHours: selectedPerHour.text,
+      countryCode: selectedCountry.countryCode,
+      type: selectedType.text,
+      position: selectedPosition.text,
+    );
     if (response.status) {
       stopLoading();
     } else {
@@ -313,6 +339,45 @@ class QuickEntryController extends GetxController {
     } else {}
   }
 
+  List<MenuItem> allJobClassificationList = [];
+
+  Future<void> getAllJobClassifications() async {
+    ResponseItem response = await QuickEntryRepo.allJobClassificationsList();
+    if (response.status) {
+      allJobClassificationList.clear();
+      allJobClassificationList
+          .addAll(jobClassificationModelFromJson(response.data)
+              .map(
+                (e) => MenuItem(
+                  text: e.jobClassificationCategory,
+                  id: e.jobClassificationId,
+                  isSelected: false,
+                ),
+              )
+              .toList());
+    } else {}
+  }
+
+  List<MenuItem> allSubJobList = [];
+
+  Future<void> getAllSubJobList(num id) async {
+    ResponseItem response =
+        await QuickEntryRepo.allSubJobClassificationList(id);
+    if (response.status) {
+      allSubJobList.clear();
+      allSubJobList.addAll(subJobClassificationModelFromJson(response.data)
+          .map(
+            (e) => MenuItem(
+              text: e.subJobClassificationsCategory,
+              id: e.subJobClassificationsId,
+              isSelected: false,
+            ),
+          )
+          .toList());
+      update();
+    } else {}
+  }
+
   ///
   ///
   ///
@@ -411,4 +476,149 @@ class QuickEntryController extends GetxController {
     }
     update();
   }
+
+  MenuItem selectedDepartment = MenuItem(text: "Select Department");
+
+  void onDepartmentTap(MenuItem item) {
+    for (int i = 0; i < allJobClassificationList.length; i++) {
+      if (allJobClassificationList[i].text == item.text) {
+        if (allJobClassificationList[i].isSelected) {
+          allJobClassificationList[i].isSelected = false;
+          selectedDepartment = MenuItem(text: "Select Department");
+          allSubJobList.clear();
+          selectedPosition = MenuItem(text: "Select Position");
+        } else {
+          allJobClassificationList[i].isSelected = true;
+          selectedDepartment = allJobClassificationList[i];
+          getAllSubJobList(selectedDepartment.id ?? -1);
+          selectedPosition = MenuItem(text: "Select Position");
+        }
+      } else {
+        allJobClassificationList[i].isSelected = false;
+      }
+    }
+    update();
+  }
+
+  MenuItem selectedPosition = MenuItem(text: "Select Position");
+
+  void onPositionTap(MenuItem item) {
+    for (int i = 0; i < allSubJobList.length; i++) {
+      if (allSubJobList[i].text == item.text) {
+        if (allSubJobList[i].isSelected) {
+          allSubJobList[i].isSelected = false;
+          selectedPosition = MenuItem(text: "Select Position");
+        } else {
+          allSubJobList[i].isSelected = true;
+          selectedPosition = allSubJobList[i];
+        }
+      } else {
+        allSubJobList[i].isSelected = false;
+      }
+    }
+    update();
+  }
+
+  void moveToFifthPage() {
+    if (isFourthPageValidate()) {
+      pageController.jumpToPage(4);
+    }
+  }
+
+  String? departmentError;
+  String? positionError;
+
+  bool isFourthPageValidate() {
+    if (selectedPosition.id == null || selectedDepartment.id == null) {
+      if (selectedDepartment.id == null) {
+        departmentError = "Please Select Department";
+      } else {
+        departmentError = null;
+      }
+      if (selectedPosition.id == null) {
+        positionError = "Please Select Position";
+      } else {
+        positionError = null;
+      }
+      update();
+      return false;
+    }
+    departmentError = null;
+    positionError = null;
+    update();
+    return true;
+  }
+
+  ///
+  ///
+  ///
+
+  List<MenuItem> w2or1099Options = [
+    MenuItem(text: "Not Sure", isSelected: true),
+    MenuItem(text: "W2", isSelected: false),
+    MenuItem(text: "1099", isSelected: false),
+  ];
+
+  MenuItem selectedW2Or1099 = MenuItem(text: "Not Sure");
+
+  void onW2or1099OptionsClick(int index) {
+    for (int i = 0; i < w2or1099Options.length; i++) {
+      if (index == i) {
+        w2or1099Options[i].isSelected = true;
+        selectedW2Or1099 = w2or1099Options[i];
+      } else {
+        w2or1099Options[i].isSelected = false;
+      }
+    }
+    update();
+  }
+
+  List<MenuItem> unionNonUnionOptions = [
+    MenuItem(text: "Not Sure", isSelected: true),
+    MenuItem(text: "Non Union", isSelected: false),
+    MenuItem(text: "Union", isSelected: false),
+  ];
+
+  MenuItem selectedUnion = MenuItem(text: "Not Sure", isSelected: true);
+
+  void onUnionNonUnionOptionsClick(int index) {
+    for (int i = 0; i < unionNonUnionOptions.length; i++) {
+      if (index == i) {
+        unionNonUnionOptions[i].isSelected = true;
+        selectedUnion = unionNonUnionOptions[i];
+      } else {
+        unionNonUnionOptions[i].isSelected = false;
+      }
+    }
+    update();
+  }
+
+  void moveToSecondPage() {
+    if (_firstPageValidate()) {
+      pageController.jumpToPage(1);
+    }
+  }
+
+  String? calenderError;
+
+  _firstPageValidate() {
+    if (selectedDays.isEmpty) {
+      calenderError = "Please Select Some Dates";
+      update();
+      return false;
+    }
+    calenderError = null;
+    update();
+    return true;
+  }
+
+  String convertToMyFormat(DateTime e) {
+    String formattedDate = DateFormat('yyyy-MM-dd').format(e);
+    return formattedDate;
+    //2023-06-06
+  }
+
+
+  List<TaxedNontaxedModel> taxedItems = [];
+  List<TaxedNontaxedModel> nonTaxedItems = [];
 }

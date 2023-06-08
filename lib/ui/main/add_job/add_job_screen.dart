@@ -2,6 +2,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 import '../../../globle.dart';
+import '../../../models/taxed_nontaxed_item.dart';
 import '../../widgets/app_calender.dart';
 import '../../widgets/dropdown.dart';
 import '../../widgets/fm_appbar.dart';
@@ -420,7 +421,7 @@ class AddJobScreen extends StatelessWidget {
                 },
               ).paddingOnly(
                 top: /*controller.nonTaxedItem.isNotEmpty ? 0 :*/
-                screenHPadding16.sh(),
+                    screenHPadding16.sh(),
                 left: screenWPadding16.sw(),
                 right: screenWPadding16.sw(),
               )
@@ -767,7 +768,9 @@ class AddJobScreen extends StatelessWidget {
     fMDialog(
       context: context,
       horizontalPadding: 16,
-      child: NonTaxItemDialog(),
+      child: NonTaxItemDialog(onAddClick: (item) {
+
+      }),
     );
   }
 
@@ -882,7 +885,9 @@ class AddJobScreen extends StatelessWidget {
     fMDialog(
       context: context,
       horizontalPadding: 16,
-      child: TaxItemDialog(),
-    );
+      child: TaxItemDialog(onAddClick: (TaxedNontaxedModel model) {  },),
+    ).whenComplete(() {
+      Get.find<TaxedItemDialogController>().whenDialogClose();
+    });
   }
 }

@@ -28,20 +28,27 @@ class CalenderPage extends StatelessWidget {
                 bottom: screenHPadding16.sh(),
               ),
               AppCalender(
-               // currentDay: controller.currentDay,
+                // currentDay: controller.currentDay,
                 focusDay: controller.focusedDay,
                 onDaySelected: (selectedDay, focusDay) {
                   controller.onDaySelect(selectedDay, focusDay);
                 },
-                onMonthChange: (date) {
-
-                },
+                onMonthChange: (date) {},
                 selectedDays: ctrl.selectedDays,
+              ),
+              Row(
+                children: [
+                  controller.calenderError != null
+                      ? controller.calenderError.text(fontColor: redColor)
+                      : Container(),
+                ],
+              ).paddingOnly(
+                left: screenWPadding16.sw(),
+                top: screenHPadding8.sh(),
               ),
               FmButton(
                 ontap: () {
-                   controller.pageController.jumpToPage(1);
-                  controller.selectedDays;
+                  controller.moveToSecondPage();
                 },
                 name: next,
               ).paddingOnly(

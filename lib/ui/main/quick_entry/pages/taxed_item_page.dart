@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../globle.dart';
+import '../../../../models/taxed_nontaxed_item.dart';
 import '../../../widgets/fm_dialog.dart';
 import '../../../widgets/non_tax_item_dialog.dart';
 import '../../../widgets/tax_item_dialog.dart';
@@ -14,40 +15,42 @@ class TaxedItemPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          Row(
-            children: [
-              "Taxed Items".text(fontSize: 18),
-            ],
-          ).paddingOnly(
-            left: screenWPadding16.sw(),
-            bottom: screenHPadding8.sh(),
-          ),
-          _taxedItemTable(context),
-          Row(
-            children: [
-              "Non-Tax Items".text(fontSize: 18),
-            ],
-          ).paddingOnly(
-            left: screenWPadding16.sw(),
-            bottom: screenHPadding8.sh(),
-            top: screenHPadding16.sh(),
-          ),
-          _nonTaxedItems(context),
-          FmButton(
-            ontap: () {
-              controller.finishButtonClick(context);
-            },
-            name: finish,
-          )
-              .paddingOnly(
-                left: screenWPadding16.sw(),
-                right: screenWPadding16.sw(),
-              )
-              .paddingOnly(top: 60)
-        ],
-      ),
+      child: GetBuilder<QuickEntryController>(builder: (ctrl) {
+        return Column(
+          children: [
+            Row(
+              children: [
+                "Taxed Items".text(fontSize: 18),
+              ],
+            ).paddingOnly(
+              left: screenWPadding16.sw(),
+              bottom: screenHPadding8.sh(),
+            ),
+            _taxedItemTable(context, ctrl),
+            Row(
+              children: [
+                "Non-Tax Items".text(fontSize: 18),
+              ],
+            ).paddingOnly(
+              left: screenWPadding16.sw(),
+              bottom: screenHPadding8.sh(),
+              top: screenHPadding16.sh(),
+            ),
+            _nonTaxedItems(context, ctrl),
+            FmButton(
+              ontap: () {
+                controller.finishButtonClick(context);
+              },
+              name: finish,
+            )
+                .paddingOnly(
+                  left: screenWPadding16.sw(),
+                  right: screenWPadding16.sw(),
+                )
+                .paddingOnly(top: 60)
+          ],
+        );
+      }),
     );
   }
 
@@ -55,19 +58,28 @@ class TaxedItemPage extends StatelessWidget {
     fMDialog(
       context: context,
       horizontalPadding: 16,
-      child: NonTaxItemDialog(),
-    );
+      child: NonTaxItemDialog(
+        onAddClick: (item) {
+          controller.nonTaxedItems.add(item);
+          controller.update();
+        },
+      ),
+    ).whenComplete(() {
+      Get.find<NonTaxItemDialogController>().whenDialogClose();
+    });
   }
 
   void showTaxedItems(BuildContext context) {
     fMDialog(
       context: context,
       horizontalPadding: 16,
-      child: TaxItemDialog(),
-    );
+      child: TaxItemDialog(onAddClick: (TaxedNontaxedModel model) {  },),
+    ).whenComplete(() {
+      Get.find<TaxedItemDialogController>().whenDialogClose();
+    });
   }
 
-  Widget _nonTaxedItems(BuildContext context) {
+  Widget _nonTaxedItems(BuildContext context, QuickEntryController ctrl) {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -83,14 +95,15 @@ class TaxedItemPage extends StatelessWidget {
             color: Colors.black,
           ),
           ListView.builder(
-            itemCount: 2,
+            itemCount: ctrl.nonTaxedItems.length,
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
+              var item = ctrl.nonTaxedItems[index];
               return _childItem(
-                "Kit Fee",
-                "\$75",
-                "Day",
+                item.type,
+                item.amount,
+                item.per,
               );
             },
           ),
@@ -121,7 +134,10 @@ class TaxedItemPage extends StatelessWidget {
     ).paddingOnly(left: screenWPadding16.sw(), right: screenWPadding16.sw());
   }
 
-  Widget _taxedItemTable(BuildContext context) {
+  Widget _taxedItemTable(
+    BuildContext context,
+    QuickEntryController ctrl,
+  ) {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
@@ -137,14 +153,15 @@ class TaxedItemPage extends StatelessWidget {
             color: Colors.black,
           ),
           ListView.builder(
-            itemCount: 2,
+            itemCount: ctrl.taxedItems.length,
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
+              var item = ctrl.taxedItems[index];
               return _childItem(
-                "Kit Fee",
-                "\$75",
-                "Day",
+                item.type,
+                item.amount,
+                item.per,
               );
             },
           ),
@@ -176,9 +193,9 @@ class TaxedItemPage extends StatelessWidget {
   }
 
   Widget _childItem(
-    String type,
-    String amount,
-    String per, {
+    String? type,
+    String? amount,
+    String? per, {
     bool showBottomLine = true,
   }) {
     return Column(

@@ -210,7 +210,7 @@ class JobDetailPage extends StatelessWidget {
                     ),
                     fmDropDown(
                       child:
-                          countryItemWithDropDown(ctrl.selectedCountry?.text),
+                          countryItemWithDropDown(ctrl.selectedCountry?.text ?? ""),
                       width: 240,
                       onDropDownTap: (item) {
                         controller.onCountryDropDownTap(item);
@@ -238,7 +238,7 @@ class JobDetailPage extends StatelessWidget {
     );
   }
 
-  Widget countryItemWithDropDown(String? selectedCountry) {
+  Widget countryItemWithDropDown(String selectedCountry) {
     return Row(
       children: [
         Expanded(
@@ -256,7 +256,7 @@ class JobDetailPage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              (selectedCountry ?? "United States").text(fontSize: 16),
+              (selectedCountry).text(fontSize: 16),
               FmImage.assetImage(
                 path: Assets.iconsDownIcon,
                 height: 15.sh(),

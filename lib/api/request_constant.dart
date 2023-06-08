@@ -28,6 +28,10 @@ class MethodNames {
   static const getAllPaidBy = 'getAllPaidBy';
   static const getAllGuaranteedHour = 'getAllGuaranteedHour';
   static const getAllPerHour = 'getAllPerHour';
+  static const getAllJobClassifications = 'getAllJobClassifications';
+  static const getAllSubJobClassifications = 'getAllSubJobClassifications';
+  static const getAllTaxedItemType = 'getAllTaxedItemType';
+  static const getAllTaxPerTime = 'getAllTaxPerTime';
 
 }
 

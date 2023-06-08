@@ -196,4 +196,94 @@ class QuickEntryRepo {
     message = result.message;
     return ResponseItem(data: data, message: message, status: status);
   }
+
+  static Future<ResponseItem> allJobClassificationsList() async {
+    ResponseItem result;
+    bool status = true;
+    dynamic data;
+    String message = '';
+    var queryParameters = {
+      RequestParam.service: MethodNames.getAllJobClassifications,
+      RequestParam.showError: false,
+    };
+    result = await BaseApiHelper.postRequest(
+      requestUrl: AppUrls.baseUrl,
+      queryParam: queryParameters,
+      requestData: {},
+      passAuthToken: true,
+      isMultipart: false,
+    );
+    status = result.status;
+    data = result.data;
+    message = result.message;
+    return ResponseItem(data: data, message: message, status: status);
+  }
+
+  static Future<ResponseItem> allSubJobClassificationList(num id) async {
+    ResponseItem result;
+    bool status = true;
+    dynamic data;
+    String message = '';
+    var queryParameters = {
+      RequestParam.service: MethodNames.getAllSubJobClassifications,
+      RequestParam.showError: false,
+    };
+    result = await BaseApiHelper.postRequest(
+      requestUrl: AppUrls.baseUrl,
+      queryParam: queryParameters,
+      requestData: {
+        "job_classification_id" : id
+      },
+      passAuthToken: true,
+      isMultipart: false,
+    );
+    status = result.status;
+    data = result.data;
+    message = result.message;
+    return ResponseItem(data: data, message: message, status: status);
+  }
+
+  static Future<ResponseItem> getTaxedItemTypeList() async {
+    ResponseItem result;
+    bool status = true;
+    dynamic data;
+    String message = '';
+    var queryParameters = {
+      RequestParam.service: MethodNames.getAllTaxedItemType,
+      RequestParam.showError: false,
+    };
+    result = await BaseApiHelper.postRequest(
+      requestUrl: AppUrls.baseUrl,
+      queryParam: queryParameters,
+      requestData: {},
+      passAuthToken: true,
+      isMultipart: false,
+    );
+    status = result.status;
+    data = result.data;
+    message = result.message;
+    return ResponseItem(data: data, message: message, status: status);
+  }
+
+  static Future<ResponseItem> getPerTimeList() async {
+    ResponseItem result;
+    bool status = true;
+    dynamic data;
+    String message = '';
+    var queryParameters = {
+      RequestParam.service: MethodNames.getAllTaxPerTime,
+      RequestParam.showError: false,
+    };
+    result = await BaseApiHelper.postRequest(
+      requestUrl: AppUrls.baseUrl,
+      queryParam: queryParameters,
+      requestData: {},
+      passAuthToken: true,
+      isMultipart: false,
+    );
+    status = result.status;
+    data = result.data;
+    message = result.message;
+    return ResponseItem(data: data, message: message, status: status);
+  }
 }
