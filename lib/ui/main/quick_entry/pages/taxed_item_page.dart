@@ -73,123 +73,164 @@ class TaxedItemPage extends StatelessWidget {
     fMDialog(
       context: context,
       horizontalPadding: 16,
-      child: TaxItemDialog(onAddClick: (TaxedNontaxedModel model) {  },),
+      child: TaxItemDialog(
+        onAddClick: (TaxedNonTaxedModel model) {
+          controller.taxedItems.add(model);
+          controller.update();
+        },
+      ),
     ).whenComplete(() {
       Get.find<TaxedItemDialogController>().whenDialogClose();
     });
   }
 
   Widget _nonTaxedItems(BuildContext context, QuickEntryController ctrl) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.black,
-          ),
-          borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        children: [
-          _titleItem(),
-          Container(
-            width: Get.width,
-            height: 1,
-            color: Colors.black,
-          ),
-          ListView.builder(
-            itemCount: ctrl.nonTaxedItems.length,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              var item = ctrl.nonTaxedItems[index];
-              return _childItem(
-                item.type,
-                item.amount,
-                item.per,
-              );
-            },
-          ),
-          Row(
-            children: [
-              FmImage.assetImage(
-                path: Assets.iconsPlusicon,
-                height: 20.sh(),
-                width: 20.sw(),
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black,
               ),
-              "Add Non-Taxed Item"
-                  .text(
-                    fontSize: 16,
-                  )
-                  .paddingOnly(
-                    left: 10,
+              borderRadius: BorderRadius.circular(10)),
+          child: Column(
+            children: [
+              _titleItem(),
+              Container(
+                width: Get.width,
+                height: 1,
+                color: Colors.black,
+              ),
+              ListView.builder(
+                itemCount: ctrl.nonTaxedItems.length,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  var item = ctrl.nonTaxedItems[index];
+                  return _childItem(
+                    item.type,
+                    item.amount,
+                    item.per,
+                  );
+                },
+              ),
+              Row(
+                children: [
+                  FmImage.assetImage(
+                    path: Assets.iconsPlusicon,
+                    height: 20.sh(),
+                    width: 20.sw(),
                   ),
+                  "Add Non-Taxed Item"
+                      .text(
+                        fontSize: 16,
+                      )
+                      .paddingOnly(
+                        left: 10,
+                      ),
+                ],
+              ).onTap(() {
+                showNonTaxItems(context);
+              }).paddingOnly(
+                left: screenWPadding16.sw(),
+                top: screenHPadding16.sh(),
+                bottom: screenHPadding16.sh(),
+              )
             ],
-          ).onTap(() {
-            showNonTaxItems(context);
-          }).paddingOnly(
-            left: screenWPadding16.sw(),
-            top: screenHPadding16.sh(),
-            bottom: screenHPadding16.sh(),
-          )
-        ],
-      ),
-    ).paddingOnly(left: screenWPadding16.sw(), right: screenWPadding16.sw());
+          ),
+        ).paddingOnly(
+          left: screenWPadding16.sw(),
+          right: screenWPadding16.sw(),
+        ),
+        Row(
+          children: [
+            ctrl.nonTaxedItemError != null
+                ? ctrl.nonTaxedItemError.text(fontColor: redColor)
+                : Container(),
+          ],
+        ).paddingOnly(
+          left: screenWPadding16.sw(),
+          right: screenWPadding16.sw(),
+          top: 4.sh(),
+        )
+      ],
+    );
   }
 
   Widget _taxedItemTable(
     BuildContext context,
     QuickEntryController ctrl,
   ) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.black,
-          ),
-          borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        children: [
-          _titleItem(),
-          Container(
-            width: Get.width,
-            height: 1,
-            color: Colors.black,
-          ),
-          ListView.builder(
-            itemCount: ctrl.taxedItems.length,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              var item = ctrl.taxedItems[index];
-              return _childItem(
-                item.type,
-                item.amount,
-                item.per,
-              );
-            },
-          ),
-          Row(
-            children: [
-              FmImage.assetImage(
-                path: Assets.iconsPlusicon,
-                height: 20.sh(),
-                width: 20.sw(),
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.black,
               ),
-              "Taxed Item"
-                  .text(
-                    fontSize: 16,
-                  )
-                  .paddingOnly(
-                    left: 10,
+              borderRadius: BorderRadius.circular(10)),
+          child: Column(
+            children: [
+              _titleItem(),
+              Container(
+                width: Get.width,
+                height: 1,
+                color: Colors.black,
+              ),
+              ListView.builder(
+                itemCount: ctrl.taxedItems.length,
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  var item = ctrl.taxedItems[index];
+                  return _childItem(
+                    item.type,
+                    item.amount,
+                    item.per,
+                  );
+                },
+              ),
+              Row(
+                children: [
+                  FmImage.assetImage(
+                    path: Assets.iconsPlusicon,
+                    height: 20.sh(),
+                    width: 20.sw(),
                   ),
+                  "Taxed Item"
+                      .text(
+                        fontSize: 16,
+                      )
+                      .paddingOnly(
+                        left: 10,
+                      ),
+                ],
+              ).onTap(() {
+                showTaxedItems(context);
+              }).paddingOnly(
+                left: screenWPadding16.sw(),
+                top: screenHPadding16.sh(),
+                bottom: screenHPadding16.sh(),
+              )
             ],
-          ).onTap(() {
-            showTaxedItems(context);
-          }).paddingOnly(
-            left: screenWPadding16.sw(),
-            top: screenHPadding16.sh(),
-            bottom: screenHPadding16.sh(),
-          )
-        ],
-      ),
-    ).paddingOnly(left: screenWPadding16.sw(), right: screenWPadding16.sw());
+          ),
+        ).paddingOnly(
+          left: screenWPadding16.sw(),
+          right: screenWPadding16.sw(),
+        ),
+        Row(
+          children: [
+            ctrl.taxedItemError != null
+                ? ctrl.taxedItemError.text(fontColor: redColor)
+                : Container(),
+          ],
+        ).paddingOnly(
+          left: screenWPadding16.sw(),
+          right: screenWPadding16.sw(),
+          top: 4.sh(),
+        )
+      ],
+    );
   }
 
   Widget _childItem(

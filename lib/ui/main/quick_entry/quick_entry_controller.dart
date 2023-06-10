@@ -118,45 +118,48 @@ class QuickEntryController extends GetxController {
   TextEditingController cityController = TextEditingController();
   TextEditingController stateController = TextEditingController();
   TextEditingController zipController = TextEditingController();
-
   TextEditingController rateTextController = TextEditingController();
   TextEditingController recommendedByController = TextEditingController();
   TextEditingController hiredByController = TextEditingController();
 
   Future<void> finishButtonClick(BuildContext context) async {
-    startLoading();
-    ResponseItem response = await QuickEntryRepo.quickEntrySubmit(
-      selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
-      description: descriptionController.text.trim(),
-      productionTitle: productionTitleController.text.trim(),
-      producer: producerController.text.trim(),
-      productionCompany: productionCompanyController.text.trim(),
-      companyAddressLine1: addressLIne1Controller.text.trim(),
-      companyAddressLine2: addressLIne2Controller.text.trim(),
-      city: cityController.text.trim(),
-      state: stateController.text.trim(),
-      zip: zipController.text.trim(),
-      rate: rateTextController.text.isNotEmpty
-          ? int.parse(rateTextController.text.trim().toString())
-          : null,
-      recommendedBy: recommendedByController.text.trim(),
-      hiredBy: hiredByController.text.trim(),
-      unionNonunion: selectedUnion.text,
-      department: selectedDepartment.text,
-      w2_1099: selectedW2Or1099.text,
-      guaranteedHours: selectedGuaranteedHour.text,
-      paidBy: selectedPaidBy.text,
-      terms: selectedTerm.text,
-      perHowManyHours: selectedPerHour.text,
-      countryCode: selectedCountry.countryCode,
-      type: selectedType.text,
-      position: selectedPosition.text,
-    );
-    if (response.status) {
-      stopLoading();
-    } else {
-      response.message.errorSnack(context);
-      stopLoading();
+    if (isSixthPageValidate()) {
+      startLoading();
+      ResponseItem response = await QuickEntryRepo.quickEntrySubmit(
+        selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
+        description: descriptionController.text.trim(),
+        productionTitle: productionTitleController.text.trim(),
+        producer: producerController.text.trim(),
+        productionCompany: productionCompanyController.text.trim(),
+        companyAddressLine1: addressLIne1Controller.text.trim(),
+        companyAddressLine2: addressLIne2Controller.text.trim(),
+        city: cityController.text.trim(),
+        state: stateController.text.trim(),
+        zip: zipController.text.trim(),
+        rate: rateTextController.text.isNotEmpty
+            ? int.parse(rateTextController.text.trim().toString())
+            : null,
+        recommendedBy: recommendedByController.text.trim(),
+        hiredBy: hiredByController.text.trim(),
+        unionNonunion: selectedUnion.text,
+        department: selectedDepartment.text,
+        w2_1099: selectedW2Or1099.text,
+        guaranteedHours: selectedGuaranteedHour.text,
+        paidBy: selectedPaidBy.text,
+        terms: selectedTerm.text,
+        perHowManyHours: selectedPerHour.text,
+        countryCode: selectedCountry.countryCode,
+        type: selectedType.text,
+        position: selectedPosition.text,
+        nonTaxedItems: nonTaxedItems,
+        taxedItems: taxedItems,
+      );
+      if (response.status) {
+        stopLoading();
+      } else {
+        response.message.errorSnack(context);
+        stopLoading();
+      }
     }
   }
 
@@ -190,6 +193,30 @@ class QuickEntryController extends GetxController {
       update();
       return true;
     }
+  }
+
+  String? taxedItemError;
+  String? nonTaxedItemError;
+
+  bool isSixthPageValidate() {
+    if (taxedItems.isEmpty || nonTaxedItems.isEmpty) {
+      if (taxedItems.isEmpty) {
+        taxedItemError = "Please Add One Tax Item";
+      } else {
+        taxedItemError = null;
+      }
+      if (nonTaxedItems.isEmpty) {
+        nonTaxedItemError = "Please Add One Non-Tax Item";
+      } else {
+        nonTaxedItemError = null;
+      }
+      update();
+      return false;
+    }
+    taxedItemError = null;
+    nonTaxedItemError = null;
+    update();
+    return true;
   }
 
   String? recommendedByError;
@@ -276,7 +303,6 @@ class QuickEntryController extends GetxController {
   }
 
   List<MenuItem> allTypes = [];
-
   Future getAllTypes() async {
     ResponseItem response = await QuickEntryRepo.getAllTypesList();
     if (response.status) {
@@ -288,7 +314,6 @@ class QuickEntryController extends GetxController {
   }
 
   List<MenuItem> allTerms = [];
-
   Future getAllTerms() async {
     ResponseItem response = await QuickEntryRepo.getAllTermsList();
     if (response.status) {
@@ -300,7 +325,6 @@ class QuickEntryController extends GetxController {
   }
 
   List<MenuItem> allPaidBy = [];
-
   Future getAllPaidBy() async {
     ResponseItem response = await QuickEntryRepo.getAllPaidByList();
     if (response.status) {
@@ -313,7 +337,6 @@ class QuickEntryController extends GetxController {
   }
 
   List<MenuItem> allGuaranteedHour = [];
-
   Future getAllGuaranteedHour() async {
     ResponseItem response = await QuickEntryRepo.getAllGuaranteedHourList();
     if (response.status) {
@@ -328,7 +351,6 @@ class QuickEntryController extends GetxController {
   }
 
   List<MenuItem> allPerHour = [];
-
   Future getAllPerHour() async {
     ResponseItem response = await QuickEntryRepo.allPerHourList();
     if (response.status) {
@@ -340,7 +362,6 @@ class QuickEntryController extends GetxController {
   }
 
   List<MenuItem> allJobClassificationList = [];
-
   Future<void> getAllJobClassifications() async {
     ResponseItem response = await QuickEntryRepo.allJobClassificationsList();
     if (response.status) {
@@ -359,7 +380,6 @@ class QuickEntryController extends GetxController {
   }
 
   List<MenuItem> allSubJobList = [];
-
   Future<void> getAllSubJobList(num id) async {
     ResponseItem response =
         await QuickEntryRepo.allSubJobClassificationList(id);
@@ -383,7 +403,6 @@ class QuickEntryController extends GetxController {
   ///
   ///
   MenuItem selectedGuaranteedHour = MenuItem(text: "Not Sure");
-
   void guaranteedHourClick(MenuItem item) {
     for (int i = 0; i < allGuaranteedHour.length; i++) {
       if (allGuaranteedHour[i].text == item.text) {
@@ -402,7 +421,6 @@ class QuickEntryController extends GetxController {
   }
 
   MenuItem selectedPerHour = MenuItem(text: "10 hours");
-
   void onPerHourDropDownTap(MenuItem item) {
     for (int i = 0; i < allPerHour.length; i++) {
       if (allPerHour[i].text == item.text) {
@@ -421,7 +439,6 @@ class QuickEntryController extends GetxController {
   }
 
   MenuItem selectedPaidBy = MenuItem(text: "Not Sure");
-
   void onPaidByDropDownTap(MenuItem item) {
     for (int i = 0; i < allPaidBy.length; i++) {
       if (allPaidBy[i].text == item.text) {
@@ -440,7 +457,6 @@ class QuickEntryController extends GetxController {
   }
 
   MenuItem selectedTerm = MenuItem(text: "Not Sure");
-
   void onTermsDropDownTap(MenuItem item) {
     for (int i = 0; i < allTerms.length; i++) {
       if (allTerms[i].text == item.text) {
@@ -459,7 +475,6 @@ class QuickEntryController extends GetxController {
   }
 
   MenuItem selectedType = MenuItem(text: "Not Sure");
-
   void onTypeDropDownTap(MenuItem item) {
     for (int i = 0; i < allTypes.length; i++) {
       if (allTypes[i].text == item.text) {
@@ -478,7 +493,6 @@ class QuickEntryController extends GetxController {
   }
 
   MenuItem selectedDepartment = MenuItem(text: "Select Department");
-
   void onDepartmentTap(MenuItem item) {
     for (int i = 0; i < allJobClassificationList.length; i++) {
       if (allJobClassificationList[i].text == item.text) {
@@ -501,7 +515,6 @@ class QuickEntryController extends GetxController {
   }
 
   MenuItem selectedPosition = MenuItem(text: "Select Position");
-
   void onPositionTap(MenuItem item) {
     for (int i = 0; i < allSubJobList.length; i++) {
       if (allSubJobList[i].text == item.text) {
@@ -618,7 +631,6 @@ class QuickEntryController extends GetxController {
     //2023-06-06
   }
 
-
-  List<TaxedNontaxedModel> taxedItems = [];
-  List<TaxedNontaxedModel> nonTaxedItems = [];
+  List<TaxedNonTaxedModel> taxedItems = [];
+  List<TaxedNonTaxedModel> nonTaxedItems = [];
 }

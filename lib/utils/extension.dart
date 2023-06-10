@@ -83,6 +83,7 @@ extension extOnString on String? {
       {FontWeight? weight,
       Color? fontColor,
       double? fontSize,
+        TextOverflow? overFlow,
       bool underLine = false}) {
     return Text(
       this ?? "",
@@ -91,6 +92,7 @@ extension extOnString on String? {
         color: fontColor ?? Colors.black,
         fontSize: fontSize ?? 14,
         fontFamily: sfPro,
+        overflow: overFlow,
         decoration: underLine ? TextDecoration.underline : null,
         fontWeight: weight ?? FontWeight.normal,
       ),

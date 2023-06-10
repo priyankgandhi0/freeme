@@ -72,9 +72,9 @@ class QuickEntryScreen extends StatelessWidget {
           pages.length,
           (index) => InkWell(
             onTap: () {
-              controller.pageController.animateToPage(index,
+             /* controller.pageController.animateToPage(index,
                   duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeIn);
+                  curve: Curves.easeIn);*/
             },
             child: Container(
               decoration: BoxDecoration(

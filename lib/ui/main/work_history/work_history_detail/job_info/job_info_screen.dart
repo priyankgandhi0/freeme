@@ -13,15 +13,22 @@ class JobInfoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<JobInfoController>(
+      initState: (initState) async {
+        Future.delayed(Duration.zero, () {
+          controller.getJobInfo(
+            jobId: 28,
+          );
+        });
+      },
       builder: (ctrl) {
         return SingleChildScrollView(
           child: Column(
             children: [
-              _descriptionCard(),
-              _rateCard(context),
-              _jobClassificationCard(),
-              _taxedItem(),
-              _nonTaxedItem(),
+              _descriptionCard(ctrl),
+              _rateCard(context, ctrl),
+              _jobClassificationCard(ctrl),
+              _taxedItem(ctrl),
+              _nonTaxedItem(ctrl),
               _calender(ctrl)
             ],
           ),
@@ -35,7 +42,7 @@ class JobInfoScreen extends StatelessWidget {
       currentDay: controller.currentDay,
       focusDay: controller.focusedDay,
       onDaySelected: (selectedDay, focusDay) {
-        controller.onDaySelect(selectedDay, focusDay);
+       // controller.onDaySelect(selectedDay, focusDay);
       },
       onMonthChange: (date) {},
       selectedDays: ctrl.selectedDays,
@@ -45,7 +52,7 @@ class JobInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _nonTaxedItem() {
+  Widget _nonTaxedItem(JobInfoController ctrl) {
     return Column(
       children: [
         Row(
@@ -57,43 +64,30 @@ class JobInfoScreen extends StatelessWidget {
           ],
         ),
         Container(
-
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.black),
-          ),
-          child: Column(
-            children: [
-              detailItem(
-                title: moniter,
-                desc: "\$250/Day",
-              ).paddingOnly(
-                top: screenHPadding16.sh(),
-                bottom: screenHPadding8.sh(),
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.black,
               ),
-              detailItem(
-                title: kitfee,
-                desc: "\$20/Day",
+              borderRadius: BorderRadius.circular(10)),
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: ctrl.jobInfo?.nonTaxes?.length ?? 0,
+            itemBuilder: (context, index) {
+              var data = (ctrl.jobInfo?.nonTaxes ?? [])[index];
+              return detailItem(
+                title: data.nonTaxtType,
+                desc: "\$${data.nonTaxtAmount}/${data.nonTaxtPer}",
               ).paddingOnly(
-                top: screenHPadding8.sh(),
-                bottom: screenHPadding8.sh(),
-              ),
-              detailItem(
-                title: cardFee,
-                desc: "\$200/Week",
-              ).paddingOnly(
-                top: screenHPadding8.sh(),
-                bottom: screenHPadding8.sh(),
-              ),
-              detailItem(
-                title: mileage,
-                desc: "\$82.50 Flat",
-              ).paddingOnly(
-                top: screenHPadding8.sh(),
-                bottom: screenHPadding8.sh(),
-              ),
-            ],
+                right: screenWPadding16.sw(),
+                top: screenHPadding16.sw(),
+                bottom: ((ctrl.jobInfo?.nonTaxes?.length ?? 0) - 1) == index
+                    ? screenHPadding16.sw()
+                    : 0,
+              );
+            },
           ),
         ).paddingOnly(
           top: screenHPadding8.sh(),
@@ -106,7 +100,7 @@ class JobInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _taxedItem() {
+  Widget _taxedItem(JobInfoController ctrl) {
     return Column(
       children: [
         Row(
@@ -121,24 +115,30 @@ class JobInfoScreen extends StatelessWidget {
           bottom: screenHPadding8.sh(),
         ),
         Container(
-
           decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(
                 color: Colors.black,
               ),
               borderRadius: BorderRadius.circular(10)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              "COVID Stipend".text(fontSize: 16),
-              "\$250 flat".text(fontSize: 16),
-            ],
-          ).paddingOnly(
-            left: screenWPadding16.sw(),
-            right: screenWPadding16.sw(),
-            top: screenHPadding16.sw(),
-            bottom: screenHPadding16.sw(),
+          child: ListView.builder(
+            padding: EdgeInsets.zero,
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: ctrl.jobInfo?.taxes?.length ?? 0,
+            itemBuilder: (context, index) {
+              var data = (ctrl.jobInfo?.taxes ?? [])[index];
+              return detailItem(
+                title: data.taxType,
+                desc: "\$${data.taxAmount}/${data.taxPer}",
+              ).paddingOnly(
+                right: screenWPadding16.sw(),
+                top: screenHPadding16.sw(),
+                bottom: ((ctrl.jobInfo?.taxes?.length ?? 0) - 1) == index
+                    ? screenHPadding16.sw()
+                    : 0,
+              );
+            },
           ),
         )
       ],
@@ -148,11 +148,9 @@ class JobInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _jobClassificationCard() {
+  Widget _jobClassificationCard(JobInfoController ctrl) {
     return Container(
-
       decoration: BoxDecoration(
-
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.black),
@@ -161,7 +159,7 @@ class JobInfoScreen extends StatelessWidget {
         children: [
           detailItem(
             title: jobClassification,
-            desc: "Camera/1st Assist...",
+            desc: "${ctrl.jobInfo?.department}/${ctrl.jobInfo?.position}",
             titleColor: redTextColor,
           ).paddingOnly(
             top: screenHPadding16.sh(),
@@ -169,28 +167,28 @@ class JobInfoScreen extends StatelessWidget {
           ),
           detailItem(
             title: type,
-            desc: "Commercial",
+            desc: ctrl.jobInfo?.type,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: unionNonUnion,
-            desc: "Non-Union",
+            desc: ctrl.jobInfo?.unionNonunion,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: recommendedBy,
-            desc: "Erica Chan",
+            desc: ctrl.jobInfo?.recommendedBy,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: hiredBy,
-            desc: "Zachariah Dalton",
+            desc: ctrl.jobInfo?.hiredBy,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding16.sh(),
@@ -204,9 +202,8 @@ class JobInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _rateCard(BuildContext context) {
+  Widget _rateCard(BuildContext context, JobInfoController ctrl) {
     return Container(
-
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -215,7 +212,7 @@ class JobInfoScreen extends StatelessWidget {
         children: [
           detailItem(
               title: rateStar,
-              desc: "\$750/10",
+              desc: "\$${ctrl.jobInfo?.rate}/${ctrl.jobInfo?.perHowManyHours}",
               titleColor: redTextColor,
               onIbuttonClick: () {
                 showDialogOnIButtonClick(context);
@@ -225,28 +222,28 @@ class JobInfoScreen extends StatelessWidget {
           ),
           detailItem(
             title: guarHours,
-            desc: "10 Hours",
+            desc: ctrl.jobInfo?.guaranteedHours.toString(),
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: w21099,
-            desc: "Not Sure",
+            desc: ctrl.jobInfo?.w21099.toString(),
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: paidBy,
-            desc: "Ep Services",
+            desc: ctrl.jobInfo?.paidBy.toString(),
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: terms,
-            desc: "Net 15",
+            desc: ctrl.jobInfo?.terms.toString(),
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding16.sh(),
@@ -260,9 +257,8 @@ class JobInfoScreen extends StatelessWidget {
     );
   }
 
-  Widget _descriptionCard() {
+  Widget _descriptionCard(JobInfoController ctrl) {
     return Container(
-
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -272,7 +268,7 @@ class JobInfoScreen extends StatelessWidget {
         children: [
           detailItem(
                   title: descriptionStar,
-                  desc: "Commercial with Joey",
+                  desc: ctrl.jobInfo?.description,
                   titleColor: redTextColor)
               .paddingOnly(
             top: screenHPadding16.sh(),
@@ -280,28 +276,31 @@ class JobInfoScreen extends StatelessWidget {
           ),
           detailItem(
             title: title,
-            desc: "Commercial#1234",
+            desc: ctrl.jobInfo?.productionTital,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: producer,
-            desc: "Full Name",
+            desc: ctrl.jobInfo?.producer,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: prodCompany,
-            desc: "Company, LLC",
+            desc: ctrl.jobInfo?.productionCompany,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: companyAddress,
-            desc: "1234 Street Dr\n.Apt 111\nLos Angeles, CA 91506\nUnited States ",
+            desc: "${ctrl.jobInfo?.companyAddressLine1 ?? ""}"
+                "\m${ctrl.jobInfo?.companyAddressLine2 ?? ""}"
+                "\n${ctrl.jobInfo?.city ?? ""}${ctrl.jobInfo?.state ?? ""}"
+                "${ctrl.jobInfo?.zip ?? ""}\n${ctrl.jobInfo?.country ?? ""}",
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding16.sh(),

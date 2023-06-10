@@ -1,12 +1,27 @@
 import 'dart:collection';
 
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:freeme/api/api_globle.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../../../../api/repositories/job_repo.dart';
+import '../../../../../api/response_item.dart';
 import '../../../../../calender_demo/utils.dart';
 import '../../../../../globle.dart';
+import '../../../../../models/get_job_info_model.dart';
+import '../../../navigator/main_controller.dart';
 
-class JobInfoController extends GetxController{
+class JobInfoController extends GetxController {
   var focusedDay = DateTime.now();
+
+  @override
+  void onInit() {
+    getJobInfo(
+      jobId: 28,
+    );
+    super.onInit();
+  }
 
   DateTime currentDay = DateTime.now();
 
@@ -26,4 +41,39 @@ class JobInfoController extends GetxController{
     update();
   }
 
+  startLoading() {
+    Future.delayed(Duration.zero, () {
+      Get.find<HomeController>().startLoading();
+    });
+  }
+
+  stopLoading() {
+    Future.delayed(Duration.zero, () {
+      Get.find<HomeController>().stopLoading();
+    });
+  }
+
+  GetJobInfoModel? jobInfo;
+
+  Future<void> getJobInfo({
+    required int jobId,
+  }) async {
+    startLoading();
+    ResponseItem response = await JobRepo.getJobInfo(jobId);
+    if (response.status) {
+      jobInfo = GetJobInfoModel.fromJson(response.data);
+      setCalenderData();
+      stopLoading();
+    } else {
+      stopLoading();
+    }
+  }
+
+  void setCalenderData() {
+    jobInfo?.days?.forEach((element) {
+      DateTime tempDate = DateFormat("yyyy-MM-dd hh:mm:ss").parse(element.date.toString());
+      onDaySelect(tempDate, tempDate);
+    });
+
+  }
 }

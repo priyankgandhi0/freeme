@@ -210,7 +210,7 @@ class JobDetailPage extends StatelessWidget {
                     ),
                     fmDropDown(
                       child:
-                          countryItemWithDropDown(ctrl.selectedCountry?.text ?? ""),
+                          countryItemWithDropDown(ctrl.selectedCountry.text ?? ""),
                       width: 240,
                       onDropDownTap: (item) {
                         controller.onCountryDropDownTap(item);

@@ -38,12 +38,12 @@ class AddJobScreen extends StatelessWidget {
                 children: [
                   isForEdit ? Container() : _autoPopulatedlastEntryButton(),
                   _daysDropdownButton(context, ctrl),
-                  _discriptionCard(),
+                  _discriptionCard(context),
                   _rateCard(context),
-                  _jobClassificationCard(context),
+                  _jobClassificationCard(context, ctrl),
                   _taxedItemCard(context),
                   _nonTaxItemsCard(context),
-                  isForEdit ? _saveButton() : _addJobButton()
+                  isForEdit ? _saveButton(context) : _addJobButton(context)
                 ],
               );
             },
@@ -67,9 +67,11 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _saveButton() {
+  Widget _saveButton(BuildContext context) {
     return FmButton(
-      ontap: () {},
+      ontap: () {
+        controller.addJobButtonClick(context);
+      },
       name: save,
     ).paddingOnly(
       top: screenHPadding32.sh(),
@@ -100,10 +102,15 @@ class AddJobScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      selectDays.text(
-                        fontSize: 18,
-                        weight: FontWeight.w500,
-                      ),
+                      selectDays
+                          .text(
+                            fontSize: 18,
+                            weight: FontWeight.w500,
+                          )
+                          .paddingOnly(
+                            top: screenHPadding16.sh(),
+                            bottom: screenHPadding8.sh(),
+                          ),
                     ],
                   ),
                   FmImage.assetImage(
@@ -112,10 +119,10 @@ class AddJobScreen extends StatelessWidget {
                     size: 12,
                   )
                       .paddingOnly(
-                    top: 16.sh(),
-                    right: 22.sw(),
-                    left: 22.sw(),
-                    bottom: 16.sw(),
+                    top: 20.sh(),
+                    right: screenWPadding16.sw(),
+                    left: screenWPadding16.sw(),
+                    bottom: screenWPadding16.sw(),
                   )
                       .onTap(
                     () {
@@ -139,19 +146,34 @@ class AddJobScreen extends StatelessWidget {
                 selectedDays: ctrl.selectedDays,
               ).paddingOnly(
                 top: screenHPadding16.sh(),
-                bottom: screenHPadding16.sh(),
                 left: screenWPadding16.sw(),
                 right: screenWPadding16.sw(),
               ),
+              Row(
+                children: [
+                  ctrl.calenderError != null
+                      ? ctrl.calenderError.text(fontColor: redColor)
+                      : Container(),
+                ],
+              ).paddingOnly(
+                left: screenWPadding32.sw(),
+                right: screenWPadding16.sw(),
+                top: 4.sh(),
+                bottom: screenHPadding16.sh(),
+              ),
               FmButton(
-                ontap: () {},
+                ontap: () {
+                  controller.onSelectDaysClick(context);
+                },
                 name: select,
               ).paddingAll(10)
             ],
           );
         },
       ),
-    );
+    ).whenComplete(() {
+      controller.update();
+    });
   }
 
   Widget _daysCard() {
@@ -164,26 +186,37 @@ class AddJobScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          daysStar.text(
-            fontColor: redTextColor,
-            fontSize: 16,
+          Expanded(
+            child: daysStar.text(
+              fontColor: redTextColor,
+              fontSize: 16,
+            ),
           ),
-          Row(
-            children: [
-              selectDays
-                  .text(
-                    fontColor: greyTextColor,
-                    fontSize: 16,
-                  )
-                  .paddingOnly(
-                    right: 10.sw(),
-                  ),
-              FmImage.assetImage(
-                path: Assets.iconsForwardIcon,
-                height: 15.sh(),
-                width: 8.sw(),
-              )
-            ],
+          Expanded(
+            child: Row(
+              children: [
+                Expanded(
+                  child: (controller.selectedDays.isNotEmpty
+                          ? controller.selectedDays
+                              .map((e) => "${e.day}-${e.month}")
+                              .toList()
+                              .join(",")
+                          : selectDays)
+                      .text(
+                          fontColor: greyTextColor,
+                          fontSize: 16,
+                          overFlow: TextOverflow.ellipsis)
+                      .paddingOnly(
+                        right: 10.sw(),
+                      ),
+                ),
+                FmImage.assetImage(
+                  path: Assets.iconsForwardIcon,
+                  height: 15.sh(),
+                  width: 8.sw(),
+                )
+              ],
+            ),
           )
         ],
       ).paddingOnly(
@@ -199,34 +232,58 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _discriptionCard() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.black),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            offset: Offset(2, 3),
-            blurRadius: 10.0,
+  Widget _discriptionCard(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.black),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                offset: Offset(2, 3),
+                blurRadius: 10.0,
+              ),
+            ],
           ),
-        ],
-      ),
-      child: Column(
-        children: [
-          _detailItem(descriptionStar,
-              hint: "Commercial with Joey", color: redTextColor),
-          _detailItem(title, hint: "Commercial#1234"),
-          _detailItem(producer, hint: "Full Name"),
-          _detailItem(prodCompany, hint: "Company, LLC"),
-          _expandableDetailItem()
-        ],
-      ),
-    ).paddingOnly(
-      top: screenHPadding16.sh(),
-      left: screenWPadding16.sw(),
-      right: screenWPadding16.sw(),
+          child: Column(
+            children: [
+              _detailItem(descriptionStar,
+                  hint: "Commercial with Joey",
+                  color: redTextColor,
+                  controller: controller.descriptionController),
+              _detailItem(title,
+                  hint: "Commercial#1234",
+                  controller: controller.productionTitleController),
+              _detailItem(
+                producer,
+                hint: "Full Name",
+                controller: controller.producerController,
+              ),
+              _detailItem(
+                prodCompany,
+                hint: "Company, LLC",
+                controller: controller.productionCompanyController,
+              ),
+              _expandableDetailItem(context)
+            ],
+          ),
+        ).paddingOnly(
+          top: screenHPadding16.sh(),
+          left: screenWPadding16.sw(),
+          right: screenWPadding16.sw(),
+        ),
+        /*Row(
+          children: [
+            controller.descriptionError != null
+                ? controller.descriptionError.text(fontColor: redColor).paddingOnly(   left: screenWPadding16.sw(), top: 4)
+                : Container()
+
+          ],
+        )*/
+      ],
     );
   }
 
@@ -246,63 +303,65 @@ class AddJobScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _detailItemWithDropDown("Rate*",
-              hint: "\$750", showDownIcon: false, labelColor: redTextColor),
+          _detailItem("Rate*",
+              hint: "\$750",
+              controller: controller.rateTextController,
+              color: redColor),
           fmDropDown(
             child: _detailItemWithDropDown(
               per,
-              hint: "10 Hours",
+              hint: controller.selectedPerHour.text,
             ),
             onDropDownTap: (item) {
-              _onPerHourDropDownTap(item);
+              controller.onPerHourDropDownTap(item);
             },
-            items: controller.perHoursList,
+            items: controller.allPerHour,
             context: context,
           ),
           fmDropDown(
-            child: _detailItemWithDropDown(
-              guarHours,
-              hint: "10 Hours",
-            ),
+            child: _detailItemWithDropDown(guarHours,
+                hint: controller.selectedGuaranteedHour.text),
             onDropDownTap: (item) {
-              _onPerGuaranteedHourDropDownTap(item);
+              controller.onPerGuaranteedHourDropDownTap(item);
             },
-            items: controller.guaranteedHoursList,
+            items: controller.allGuaranteedHour,
             context: context,
           ),
           fmDropDown(
             child: _detailItemWithDropDown(
               w21099,
-              hint: "Not Sure",
+              hint: controller.selectedW2Or1099.text,
             ),
             onDropDownTap: (item) {
-              _onw21099DropDownTap(item);
+              controller.onw21099DropDownTap(item);
             },
             items: controller.w21099List,
             context: context,
           ),
           fmDropDown(
-              child: _detailItemWithDropDown(
-                paidBy,
-                hint: "Ep Services",
-              ),
-              onDropDownTap: (item) {
-                _onPaidByDropDownTap(item);
-              },
-              items: controller.paidByList,
-              context: context,
-              width: 250),
+            child: _detailItemWithDropDown(
+              paidBy,
+              hint: controller.selectedPaidBy.text,
+            ),
+            onDropDownTap: (item) {
+              controller.onPaidByDropDownTap(item);
+            },
+            items: controller.allPaidBy,
+            context: context,
+            width: 250,
+          ),
           fmDropDown(
-              child: _detailItemWithDropDown(
-                terms,
-                hint: "Net 15",
-              ),
-              onDropDownTap: (item) {
-                _onTermDropDownTap(item);
-              },
-              items: controller.termsList,
-              context: context,
-              width: 250),
+            child: _detailItemWithDropDown(
+              terms,
+              hint: controller.selectedTerm.text,
+            ),
+            onDropDownTap: (item) {
+              controller.onTermDropDownTap(item);
+            },
+            items: controller.allTerms,
+            context: context,
+            width: 250,
+          ),
         ],
       ),
     ).paddingOnly(
@@ -312,7 +371,7 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _jobClassificationCard(BuildContext context) {
+  Widget _jobClassificationCard(BuildContext context, AddJobController ctrl) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -328,50 +387,39 @@ class AddJobScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _detailItemWithDropDown(
-            jobClassification,
-            hint: "Camera/1st Assist...",
-            showDownIcon: true,
-            labelColor: redTextColor,
-            customSuffix: FmImage.assetImage(
-              path: Assets.iconsForwardIcon,
-              height: 15.sh(),
-              width: 15.sw(),
-              color: Colors.black,
-            ).paddingOnly(
-              right: screenWPadding16.sw(),
-            ),
-          ),
+          _jobClassificationDetailItem(context),
           fmDropDown(
             child: _detailItemWithDropDown(
               type,
-              hint: "Commercial",
+              hint: ctrl.selectedType.text,
             ),
             onDropDownTap: (item) {
-              _onTypeDropDownTap(item);
+              controller.onTypeDropDownTap(item);
             },
-            items: controller.typeList,
+            items: controller.allTypes,
             context: context,
             width: 210,
           ),
           fmDropDown(
             child: _detailItemWithDropDown(
               unionNonUnion,
-              hint: "Non-Union",
+              hint: ctrl.selectedUnion.text,
             ),
             onDropDownTap: (item) {
-              _onUnionNonUnionDropDownTap(item);
+              controller.onUnionNonUnionDropDownTap(item);
             },
             items: controller.unionNonUnionList,
             context: context,
           ),
-          _detailItemWithDropDown(
+          _detailItem(
             recommendedBy,
             hint: "Erica Chan",
+            controller: controller.recommendedByController,
           ),
-          _detailItemWithDropDown(
+          _detailItem(
             hiredby,
             hint: "Zachariah Dalton",
+            controller: controller.recommendedByController,
           ),
         ],
       ),
@@ -404,13 +452,13 @@ class AddJobScreen extends StatelessWidget {
           child: Column(
             children: [
               ListView.builder(
-                itemCount: controller.taxedItem.length,
+                itemCount: controller.taxedItems.length,
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return _taxedNonTaxedItem(
-                    controller.taxedItem[index],
+                    controller.taxedItems[index],
                   );
                 },
               ),
@@ -440,7 +488,7 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _taxedNonTaxedItem(NonTaxedItem item) {
+  Widget _taxedNonTaxedItem(TaxedNonTaxedModel item) {
     return Column(
       children: [
         Row(
@@ -453,7 +501,7 @@ class AddJobScreen extends StatelessWidget {
                     height: 20.sh(),
                     width: 20.sw(),
                   ),
-                  item.name.text(fontSize: 16).paddingOnly(
+                  item.type.text(fontSize: 16).paddingOnly(
                         left: 10.sw(),
                       )
                 ],
@@ -462,7 +510,7 @@ class AddJobScreen extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  item.value.text(fontSize: 16),
+                  "\$${item.amount} / ${item.per}".text(fontSize: 16),
                 ],
               ),
             )
@@ -504,13 +552,13 @@ class AddJobScreen extends StatelessWidget {
           child: Column(
             children: [
               ListView.builder(
-                itemCount: controller.nonTaxedItem.length,
+                itemCount: controller.nonTaxedItems.length,
                 shrinkWrap: true,
                 padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
                   return _taxedNonTaxedItem(
-                    controller.nonTaxedItem[index],
+                    controller.nonTaxedItems[index],
                   );
                 },
               ),
@@ -559,9 +607,11 @@ class AddJobScreen extends StatelessWidget {
     ).onTap(onclick ?? () {});
   }
 
-  Widget _addJobButton() {
+  Widget _addJobButton(BuildContext context) {
     return FmButton(
-      ontap: () {},
+      ontap: () {
+        controller.addJobButtonClick(context);
+      },
       name: addJob,
     ).paddingOnly(
       top: screenHPadding32.sh(),
@@ -571,15 +621,14 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _detailItem(
-    String lable, {
-    bool showBorder = true,
-    String? hint,
-    double? leftPadding,
-    double? rightPadding,
-    Color? color = Colors.black,
-    TextInputType? textInputType,
-  }) {
+  Widget _detailItem(String lable,
+      {bool showBorder = true,
+      String? hint,
+      double? leftPadding,
+      double? rightPadding,
+      Color? color = Colors.black,
+      TextInputType? textInputType,
+      TextEditingController? controller}) {
     return Container(
       decoration: BoxDecoration(
         border: showBorder
@@ -609,6 +658,7 @@ class AddJobScreen extends StatelessWidget {
             child: FmEmptyTextField(
               hintText: hint,
               textInputType: textInputType,
+              controller: controller,
             ),
           )
         ],
@@ -658,7 +708,12 @@ class AddJobScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                hint.text(fontColor: greyTextColor, fontSize: 16),
+                Expanded(
+                  child: hint.text(
+                      fontColor: greyTextColor,
+                      fontSize: 16,
+                      overFlow: TextOverflow.ellipsis),
+                ),
                 showDownIcon
                     ? customSuffix ??
                         FmImage.assetImage(
@@ -681,9 +736,12 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _expandableDetailItem() {
+  Widget _expandableDetailItem(BuildContext context) {
     return GetBuilder<AddJobController>(
         id: "CompanyAdddressExpanded",
+        initState: (init) {
+          controller.getAllCountryFromRaw(context);
+        },
         builder: (ctrl) {
           return ExpansionTile(
             title: Row(
@@ -726,41 +784,175 @@ class AddJobScreen extends StatelessWidget {
               expandedChildItem(
                 label: addressLineOne,
                 hint: "1234 Street Dr.",
+                controller: ctrl.addressLIne1Controller,
               ),
               expandedChildItem(
                 label: addressLineTwo,
                 hint: "Apt 111",
+                controller: ctrl.addressLIne2Controller,
               ),
               expandedChildItem(
                 label: city,
                 hint: "Los Angeles",
+                controller: ctrl.cityController,
               ),
               expandedChildItem(
                 label: state,
                 hint: "CA",
+                controller: ctrl.stateController,
               ),
               expandedChildItem(
-                  label: zip, hint: "91506", inputType: TextInputType.number),
-              expandedChildItem(
-                label: country,
-                hint: "United States",
-                showBorder: false,
+                label: zip,
+                hint: "91506",
+                inputType: TextInputType.number,
+                controller: ctrl.zipController,
               ),
+              fmDropDown(
+                child: countryItemWithDropDown(ctrl.selectedCountry.text ?? ""),
+                width: 240,
+                onDropDownTap: (item) {
+                  controller.onCountryDropDownTap(item);
+                },
+                items: controller.countryList,
+                context: context,
+              )
             ],
           );
         });
+  }
+
+  Widget _jobClassificationDetailItem(BuildContext context) {
+    return GetBuilder<AddJobController>(
+      id: "jobClassificationExpanded",
+      initState: (init) {},
+      builder: (ctrl) {
+        return Column(
+          children: [
+            ExpansionTile(
+              title: Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      jobClassification.text(fontSize: 16, fontColor: redColor)
+                    ],
+                  )
+                ],
+              ),
+              trailing: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  ctrl.isJobClassificationExpanded
+                      ? FmImage.assetImage(
+                          path: Assets.iconsDownIcon,
+                          height: 20.sh(),
+                          width: 15.sw(),
+                        )
+                      : FmImage.assetImage(
+                          path: Assets.iconsForwardIcon,
+                          height: 15.sh(),
+                          width: 8.sw(),
+                        )
+                ],
+              ),
+              onExpansionChanged: (value) {
+                ctrl.onJobClassificationExpansionChange(value);
+              },
+              children: [
+                Container(
+                  width: Get.width,
+                  height: 1,
+                  color: borderGreyColor,
+                ),
+                fmDropDown(
+                  child: _detailItemWithDropDown(
+                    department,
+                    hint: ctrl.selectedDepartment.text,
+                  ),
+                  onDropDownTap: (item) {
+                    controller.onDepartmentTap(item);
+                  },
+                  items: controller.allJobClassificationList,
+                  context: context,
+                  width: 300,
+                ).paddingOnly(
+                  left: screenWPadding8.sw(),
+                ),
+                fmDropDown(
+                  child: _detailItemWithDropDown(
+                    position,
+                    hint: controller.selectedPosition.text,
+                    showBorder: false,
+                  ),
+                  onDropDownTap: (item) {
+                    controller.onPositionTap(item);
+                  },
+                  items: controller.allSubJobList,
+                  context: context,
+                  width: 260,
+                ).paddingOnly(
+                  left: screenWPadding8.sw(),
+                ),
+              ],
+            ),
+            ctrl.isJobClassificationExpanded
+                ? Container()
+                : Container(
+                    height: 1,
+                    width: Get.width,
+                    color: borderGreyColor,
+                  ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget countryItemWithDropDown(String selectedCountry) {
+    return Row(
+      children: [
+        Expanded(
+          child: Row(
+            children: [
+              "Country".text(fontSize: 16).paddingOnly(
+                    left: screenWPadding16.sw(),
+                    top: screenHPadding16.sh(),
+                    bottom: screenHPadding16.sh(),
+                  ),
+            ],
+          ),
+        ),
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              (selectedCountry).text(fontSize: 16),
+              FmImage.assetImage(
+                path: Assets.iconsDownIcon,
+                height: 15.sh(),
+                width: 15.sw(),
+              ).paddingOnly(
+                right: screenWPadding16.sw(),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Widget expandedChildItem(
       {String? label,
       String? hint,
       bool showBorder = true,
-      TextInputType? inputType}) {
+      TextInputType? inputType,
+      TextEditingController? controller}) {
     return _detailItem(label ?? "",
         hint: hint,
         showBorder: showBorder,
         leftPadding: screenWPadding16.sw(),
         rightPadding: screenWPadding16.sw(),
+        controller: controller,
         textInputType: inputType);
   }
 
@@ -769,125 +961,32 @@ class AddJobScreen extends StatelessWidget {
       context: context,
       horizontalPadding: 16,
       child: NonTaxItemDialog(onAddClick: (item) {
-
+        controller.nonTaxedItems.add(item);
+        controller.update();
       }),
+    ).whenComplete(
+      () {
+        Get.find<NonTaxItemDialogController>().whenDialogClose();
+      },
     );
   }
 
   void showHoursDropDown() {}
 
-  void _onPerHourDropDownTap(MenuItem item) {
-    for (int i = 0; i < controller.perHoursList.length; i++) {
-      if (controller.perHoursList[i].text == item.text) {
-        if (controller.perHoursList[i].isSelected) {
-          controller.perHoursList[i].isSelected = false;
-        } else {
-          controller.perHoursList[i].isSelected = true;
-        }
-      } else {
-        controller.perHoursList[i].isSelected = false;
-      }
-    }
-    controller.update();
-  }
-
-  void _onPerGuaranteedHourDropDownTap(MenuItem item) {
-    for (int i = 0; i < controller.guaranteedHoursList.length; i++) {
-      if (controller.guaranteedHoursList[i].text == item.text) {
-        if (controller.guaranteedHoursList[i].isSelected) {
-          controller.guaranteedHoursList[i].isSelected = false;
-        } else {
-          controller.guaranteedHoursList[i].isSelected = true;
-        }
-      } else {
-        controller.guaranteedHoursList[i].isSelected = false;
-      }
-    }
-    controller.update();
-  }
-
-  void _onw21099DropDownTap(MenuItem item) {
-    for (int i = 0; i < controller.w21099List.length; i++) {
-      if (controller.w21099List[i].text == item.text) {
-        if (controller.w21099List[i].isSelected) {
-          controller.w21099List[i].isSelected = false;
-        } else {
-          controller.w21099List[i].isSelected = true;
-        }
-      } else {
-        controller.w21099List[i].isSelected = false;
-      }
-    }
-    controller.update();
-  }
-
-  void _onPaidByDropDownTap(MenuItem item) {
-    for (int i = 0; i < controller.paidByList.length; i++) {
-      if (controller.paidByList[i].text == item.text) {
-        if (controller.paidByList[i].isSelected) {
-          controller.paidByList[i].isSelected = false;
-        } else {
-          controller.paidByList[i].isSelected = true;
-        }
-      } else {
-        controller.paidByList[i].isSelected = false;
-      }
-    }
-    controller.update();
-  }
-
-  void _onTermDropDownTap(MenuItem item) {
-    for (int i = 0; i < controller.termsList.length; i++) {
-      if (controller.termsList[i].text == item.text) {
-        if (controller.termsList[i].isSelected) {
-          controller.termsList[i].isSelected = false;
-        } else {
-          controller.termsList[i].isSelected = true;
-        }
-      } else {
-        controller.termsList[i].isSelected = false;
-      }
-    }
-    controller.update();
-  }
-
-  void _onTypeDropDownTap(MenuItem item) {
-    for (int i = 0; i < controller.typeList.length; i++) {
-      if (controller.typeList[i].text == item.text) {
-        if (controller.typeList[i].isSelected) {
-          controller.typeList[i].isSelected = false;
-        } else {
-          controller.typeList[i].isSelected = true;
-        }
-      } else {
-        controller.typeList[i].isSelected = false;
-      }
-    }
-    controller.update();
-  }
-
-  void _onUnionNonUnionDropDownTap(MenuItem item) {
-    for (int i = 0; i < controller.unionNonUnionList.length; i++) {
-      if (controller.unionNonUnionList[i].text == item.text) {
-        if (controller.unionNonUnionList[i].isSelected) {
-          controller.unionNonUnionList[i].isSelected = false;
-        } else {
-          controller.unionNonUnionList[i].isSelected = true;
-        }
-      } else {
-        controller.unionNonUnionList[i].isSelected = false;
-      }
-    }
-    controller.update();
-  }
-
   void showTaxedItems(BuildContext context) {
     fMDialog(
       context: context,
       horizontalPadding: 16,
-      child: TaxItemDialog(onAddClick: (TaxedNontaxedModel model) {  },),
-    ).whenComplete(() {
-      Get.find<TaxedItemDialogController>().whenDialogClose();
-    });
+      child: TaxItemDialog(
+        onAddClick: (TaxedNonTaxedModel model) {
+          controller.taxedItems.add(model);
+          controller.update();
+        },
+      ),
+    ).whenComplete(
+      () {
+        Get.find<TaxedItemDialogController>().whenDialogClose();
+      },
+    );
   }
 }

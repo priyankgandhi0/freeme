@@ -32,6 +32,9 @@ class MethodNames {
   static const getAllSubJobClassifications = 'getAllSubJobClassifications';
   static const getAllTaxedItemType = 'getAllTaxedItemType';
   static const getAllTaxPerTime = 'getAllTaxPerTime';
+  static const addJob = 'addJob';
+  static const editJob = 'editJob';
+  static const getJobInfo = 'getJobInfo';
 
 }
 

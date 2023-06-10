@@ -9,7 +9,7 @@ import '../../models/taxed_nontaxed_item.dart';
 import 'dropdown.dart';
 
 class TaxItemDialog extends StatelessWidget {
-  Function(TaxedNontaxedModel model) onAddClick;
+  Function(TaxedNonTaxedModel model) onAddClick;
 
   TaxItemDialog({
     Key? key,
@@ -141,6 +141,7 @@ class TaxItemDialog extends StatelessWidget {
                         child: FmEmptyTextField(
                           hintText: "\$25",
                           textInputType: TextInputType.number,
+                          controller: controller.amountController,
                         ).paddingOnly(
                           top: screenWPadding16.sw(),
                           left: screenWPadding16.sw(),
@@ -225,7 +226,7 @@ class TaxItemDialog extends StatelessWidget {
               ontap: () {
                 if (controller.isValidate()) {
                   onAddClick(
-                    TaxedNontaxedModel(
+                    TaxedNonTaxedModel(
                         type: controller.selectedTaxedItemType.text,
                         per: controller.selectedPerTime.text,
                         amount: controller.amountController.text),
@@ -355,6 +356,7 @@ class TaxedItemDialogController extends GetxController {
   void whenDialogClose() {
     selectedTaxedItemType = MenuItem(text: "Select Type");
     selectedPerTime = MenuItem(text: "Day", id: 1);
+    amountController.clear();
     update();
   }
 }
