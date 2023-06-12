@@ -1,6 +1,10 @@
 import 'dart:convert';
 
 
+List<GetJobInfoModel> getAllJobFromJson(dynamic json){
+  return (json as List).map((e) => GetJobInfoModel.fromJson(e)).toList();
+}
+
 class GetJobInfoModel {
   GetJobInfoModel.fromJson(dynamic json) {
     _jobId = json['job_id'];
@@ -138,11 +142,20 @@ Days daysFromJson(String str) => Days.fromJson(json.decode(str));
 
 class Days {
   Days.fromJson(dynamic json) {
+    _dayId = json['day_id'];
+    _jobId = json['job_id'];
+    _userToken = json['user_token'];
     _date = json['date'];
   }
 
+  num? _dayId;
+  num? _jobId;
+  String? _userToken;
   String? _date;
 
+  num? get dayId => _dayId;
+  num? get jobId => _jobId;
+  String? get userToken => _userToken;
   String? get date => _date;
 }
 

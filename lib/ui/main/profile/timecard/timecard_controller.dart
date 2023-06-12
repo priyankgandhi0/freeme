@@ -1,9 +1,13 @@
 import 'dart:collection';
 
+import 'package:freeme/api/repositories/job_repo.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../../../api/response_item.dart';
 import '../../../../calender_demo/utils.dart';
 import '../../../../globle.dart';
+import '../../../../models/work_history_model.dart';
+import '../../navigator/main_controller.dart';
 
 class TimeCardController extends GetxController{
   var focusedDay = DateTime.now();
@@ -27,21 +31,58 @@ class TimeCardController extends GetxController{
     currentDay = focusDay;
     update();
   }
+  startLoading() {
+    Future.delayed(Duration.zero, () {
+      Get.find<HomeController>().startLoading();
+    });
+  }
+
+  stopLoading() {
+    Future.delayed(Duration.zero, () {
+      Get.find<HomeController>().stopLoading();
+    });
+    update();
+  }
+
+  WorkHistoryModel? historyModel;
 
 
-  var dayTypeList = [
-    DayType("Call Time:","8:00 AM"),
-    DayType("1st Meal Start:","2:00 PM"),
-    DayType("1st Meal End:","2:45 PM"),
-    DayType("2nd Meal Start:","--:-- AM/PM"),
-    DayType("2nd Meal End:","--:-- AM/PM"),
-    DayType("Wrap:","--:-- AM/PM"),
+
+  Future<void> getWorkHistory(num? jobId, String date) async {
+    startLoading();
+    ResponseItem response = await JobRepo.getWorkHistory(jobId ?? -1, date);
+    if (response.status) {
+      historyModel = WorkHistoryModel.fromJson(response.data);
+      if(historyModel!=null){
+        setUpData(historyModel!);
+      }
+      update();
+      stopLoading();
+    } else {
+      stopLoading();
+    }
+  }
+
+  List<ClockTime> clockTimeList = [
+
   ];
+
+  void setUpData(WorkHistoryModel model) {
+    clockTimeList.clear();
+    clockTimeList.add(ClockTime("Call Time:",model.callTime.isNullOrEmpty?"--:-- AM/PM":model.callTime));
+    clockTimeList.add(ClockTime("1st Meal Start:",model.firstMealStart.isNullOrEmpty?"--:-- AM/PM":model.firstMealStart));
+    clockTimeList.add(ClockTime("1st Meal End:",model.firstMealEnd.isNullOrEmpty?"--:-- AM/PM":model.firstMealEnd));
+    clockTimeList.add(ClockTime("2nd Meal Start:",model.secondMealStart.isNullOrEmpty?"--:-- AM/PM":model.secondMealStart));
+    clockTimeList.add(ClockTime("2nd Meal End:",model.secondMealEnd.isNullOrEmpty?"--:-- AM/PM":model.secondMealEnd));
+    clockTimeList.add(ClockTime("Wrap:",model.wrap.isNullOrEmpty?"--:-- AM/PM":model.wrap));
+
+  }
+
 }
 
-class DayType {
-  String? dayType;
-  String? shootDay;
+class ClockTime {
+  String? title;
+  String? time;
 
-  DayType(this.dayType, this.shootDay);
+  ClockTime(this.title, this.time);
 }

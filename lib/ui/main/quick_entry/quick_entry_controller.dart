@@ -18,6 +18,7 @@ import '../../../models/term_model.dart';
 import '../../../models/type_model.dart';
 import '../../widgets/dropdown.dart';
 import '../navigator/main_controller.dart';
+import '../work_history/history/work_history_controller.dart';
 
 class QuickEntryController extends GetxController {
   bool isExpanded = false;
@@ -155,6 +156,8 @@ class QuickEntryController extends GetxController {
         taxedItems: taxedItems,
       );
       if (response.status) {
+        Get.find<WorkHistoryController>().onInit();
+        Navigator.of(context).pop();
         stopLoading();
       } else {
         response.message.errorSnack(context);
@@ -497,10 +500,10 @@ class QuickEntryController extends GetxController {
     for (int i = 0; i < allJobClassificationList.length; i++) {
       if (allJobClassificationList[i].text == item.text) {
         if (allJobClassificationList[i].isSelected) {
-          allJobClassificationList[i].isSelected = false;
-          selectedDepartment = MenuItem(text: "Select Department");
-          allSubJobList.clear();
-          selectedPosition = MenuItem(text: "Select Position");
+          // allJobClassificationList[i].isSelected = false;
+          // selectedDepartment = MenuItem(text: "Select Department");
+          // allSubJobList.clear();
+          // selectedPosition = MenuItem(text: "Select Position");
         } else {
           allJobClassificationList[i].isSelected = true;
           selectedDepartment = allJobClassificationList[i];
@@ -519,8 +522,8 @@ class QuickEntryController extends GetxController {
     for (int i = 0; i < allSubJobList.length; i++) {
       if (allSubJobList[i].text == item.text) {
         if (allSubJobList[i].isSelected) {
-          allSubJobList[i].isSelected = false;
-          selectedPosition = MenuItem(text: "Select Position");
+          // allSubJobList[i].isSelected = false;
+          // selectedPosition = MenuItem(text: "Select Position");
         } else {
           allSubJobList[i].isSelected = true;
           selectedPosition = allSubJobList[i];

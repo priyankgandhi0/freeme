@@ -240,8 +240,8 @@ class AddJobController extends GetxController {
     for (int i = 0; i < allPerHour.length; i++) {
       if (allPerHour[i].text == item.text) {
         if (allPerHour[i].isSelected) {
-          allPerHour[i].isSelected = false;
-          selectedPerHour = MenuItem(text: "10 hours");
+          // allPerHour[i].isSelected = false;
+          // selectedPerHour = MenuItem(text: "10 hours");
         } else {
           allPerHour[i].isSelected = true;
           selectedPerHour = allPerHour[i];
@@ -259,8 +259,8 @@ class AddJobController extends GetxController {
     for (int i = 0; i < allGuaranteedHour.length; i++) {
       if (allGuaranteedHour[i].text == item.text) {
         if (allGuaranteedHour[i].isSelected) {
-          allGuaranteedHour[i].isSelected = false;
-          selectedGuaranteedHour = MenuItem(text: "Not Sure");
+          /*allGuaranteedHour[i].isSelected = false;
+          selectedGuaranteedHour = MenuItem(text: "Not Sure");*/
         } else {
           allGuaranteedHour[i].isSelected = true;
           selectedGuaranteedHour = allGuaranteedHour[i];
@@ -278,8 +278,8 @@ class AddJobController extends GetxController {
     for (int i = 0; i < allPaidBy.length; i++) {
       if (allPaidBy[i].text == item.text) {
         if (allPaidBy[i].isSelected) {
-          allPaidBy[i].isSelected = false;
-          selectedPaidBy = MenuItem(text: "Not Sure");
+         /* allPaidBy[i].isSelected = false;
+          selectedPaidBy = MenuItem(text: "Not Sure");*/
         } else {
           allPaidBy[i].isSelected = true;
           selectedPaidBy = allPaidBy[i];
@@ -297,8 +297,8 @@ class AddJobController extends GetxController {
     for (int i = 0; i < allTerms.length; i++) {
       if (allTerms[i].text == item.text) {
         if (allTerms[i].isSelected) {
-          allTerms[i].isSelected = false;
-          selectedTerm = MenuItem(text: "Not Sure");
+         /* allTerms[i].isSelected = false;
+          selectedTerm = MenuItem(text: "Not Sure");*/
         } else {
           allTerms[i].isSelected = true;
           selectedTerm = allTerms[i];
@@ -316,8 +316,8 @@ class AddJobController extends GetxController {
     for (int i = 0; i < allTypes.length; i++) {
       if (allTypes[i].text == item.text) {
         if (allTypes[i].isSelected) {
-          allTypes[i].isSelected = false;
-          selectedType = MenuItem(text: "Not Sure");
+         /* allTypes[i].isSelected = false;
+          selectedType = MenuItem(text: "Not Sure");*/
         } else {
           allTypes[i].isSelected = true;
           selectedType = allTypes[i];
@@ -335,10 +335,10 @@ class AddJobController extends GetxController {
     for (int i = 0; i < allJobClassificationList.length; i++) {
       if (allJobClassificationList[i].text == item.text) {
         if (allJobClassificationList[i].isSelected) {
-          allJobClassificationList[i].isSelected = false;
-          selectedDepartment = MenuItem(text: "Select Department");
-          allSubJobList.clear();
-          selectedPosition = MenuItem(text: "Select Position");
+          //allJobClassificationList[i].isSelected = false;
+          // selectedDepartment = MenuItem(text: "Select Department");
+          // allSubJobList.clear();
+          // selectedPosition = MenuItem(text: "Select Position");
         } else {
           allJobClassificationList[i].isSelected = true;
           selectedDepartment = allJobClassificationList[i];
@@ -358,8 +358,8 @@ class AddJobController extends GetxController {
     for (int i = 0; i < allSubJobList.length; i++) {
       if (allSubJobList[i].text == item.text) {
         if (allSubJobList[i].isSelected) {
-          allSubJobList[i].isSelected = false;
-          selectedPosition = MenuItem(text: "Select Position");
+          // allSubJobList[i].isSelected = false;
+          // selectedPosition = MenuItem(text: "Select Position");
         } else {
           allSubJobList[i].isSelected = true;
           selectedPosition = allSubJobList[i];
@@ -476,6 +476,7 @@ class AddJobController extends GetxController {
         taxedItems: taxedItems,
       );
       if (response.status) {
+        Navigator.of(context).pop();
         stopLoading();
       } else {
         response.message.errorSnack(context);

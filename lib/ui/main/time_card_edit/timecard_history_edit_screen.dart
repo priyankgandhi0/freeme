@@ -1,44 +1,72 @@
 import 'package:flutter/material.dart';
 import 'package:freeme/ui/main/time_card_edit/timecard__history_edit_controller.dart';
+import 'package:intl/intl.dart';
 import '../../../../../globle.dart';
+import '../../widgets/dropdown.dart';
 import '../../widgets/fm_appbar.dart';
 
 class TimeCardEditHistoryScreen extends StatelessWidget {
-  TimeCardEditHistoryScreen({Key? key}) : super(key: key);
+  TimeCardEditHistoryScreen({
+    Key? key,
+  }) : super(key: key);
 
   final controller = Get.put(TimeCardEditController());
 
+  String? title;
+  num? jobId;
+  num? dayId;
+  String? date;
+
   @override
   Widget build(BuildContext context) {
+    Map arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    title = arguments["title"] ?? "";
+    jobId = arguments["job_id"] ?? -1;
+    dayId = arguments["day_id"] ?? -1;
+    date = arguments["date"] ?? "";
+
     return WillPopScope(
       child: Scaffold(
         backgroundColor: backGroundWhiteColor,
-        body: Column(
-          children: [
-            fMAppBar2(
-                title: "Commercial with Adam",
+        body: GetBuilder<TimeCardEditController>(initState: (init) {
+          Future.delayed(
+            Duration.zero,
+            () async {
+              await controller.getAllDayTypeList();
+              controller.getAllCountryFromRaw(context);
+              controller.getWorkHistory(jobId, changeFormat(date));
+            },
+          );
+        }, builder: (ctrl) {
+          return Column(
+            children: [
+              fMAppBar2(
+                title: title,
                 description: "Week Ending 7/23/2022",
                 context: context,
                 onBackClick: () {
                   FocusScope.of(context).unfocus();
                   Navigator.of(context).pop();
-                }),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _dateCard(),
-                    _dayTypeField(),
-                    _addressLocationOne(),
-                    _addressLocationTwo(),
-                    _clockedTimes(),
-                    _bottomButtons()
-                  ],
-                ),
+                },
               ),
-            )
-          ],
-        ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _dateCard(date),
+                      _dayTypeField(context, ctrl),
+                      _addressLocationOne(context, ctrl),
+                      _addressLocationTwo(context, ctrl),
+                      _clockedTimes(ctrl),
+                      _bottomButtons(context)
+                    ],
+                  ),
+                ),
+              )
+            ],
+          );
+        }),
       ),
       onWillPop: () async {
         return false;
@@ -46,7 +74,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _bottomButtons() {
+  Widget _bottomButtons(BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -61,7 +89,13 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
         ),
         Expanded(
           child: FmButton(
-            ontap: () {},
+            ontap: () {
+              controller.saveEditTimeCard(
+                jobId ?? -1,
+                changeFormat(date),
+                context,
+              );
+            },
             name: save,
           ),
         )
@@ -73,7 +107,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
         bottom: 24);
   }
 
-  Widget _clockedTimes() {
+  Widget _clockedTimes(TimeCardEditController ctrl) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -89,31 +123,18 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _clockTimeItem(
-                "Call Time:",
-                "8:00 AM",
-              ),
-              _clockTimeItem(
-                "1st Meal Start:",
-                "2:00 PM",
-              ),
-              _clockTimeItem(
-                "1st Meal End:",
-                "2:45 PM",
-              ),
-              _clockTimeItem(
-                "2nd Meal Start:",
-                "4:00 PM",
-              ),
-              _clockTimeItem(
-                "2nd Meal End:",
-                "4:45 PM",
-              ),
-              _clockTimeItem(
+              ...ctrl.clockTimeList
+                  .map((e) => _clockTimeItem(
+                        e.title.toString(),
+                        e.time.toString(),
+                      ))
+                  .toList()
+
+              /*_clockTimeItem(
                 "Wrap:",
                 "--:-- AM/PM",
                 showBottomLine: false,
-              ),
+              ),*/
             ],
           ),
         ).paddingOnly(
@@ -167,7 +188,10 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _addressLocationTwo() {
+  Widget _addressLocationTwo(
+    BuildContext context,
+    TimeCardEditController ctrl,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -180,41 +204,48 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _addressItem(addressLineOne),
-              _addressItem(addressLineTwo),
-              _addressItem(city),
+              _addressItem(addressLineOne,
+                  controller: ctrl.l2addressl1Controller),
+              _addressItem(addressLineTwo,
+                  controller: ctrl.l2addressl2Controller),
+              _addressItem(city, controller: ctrl.l2CityController),
               Row(
                 children: [
                   Expanded(
-                    child: _addressItem(
-                      state,
-                      showRightBorder: true,
-                    ),
+                    child: _addressItem(state,
+                        showRightBorder: true,
+                        controller: ctrl.l2StateController),
                   ),
                   Expanded(
-                    child: _addressItem(
-                      zip,
-                      inputType: TextInputType.number,
-                    ),
+                    child: _addressItem(zip,
+                        inputType: TextInputType.number,
+                        controller: ctrl.l2ZipController),
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  Expanded(
-                    child: _addressItem(
-                      country,
-                      showBottomBorder: false,
+              fmDropDown(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: (ctrl.locationTwoCountry.text)
+                          .text(fontSize: 16)
+                          .paddingAll(16),
                     ),
-                  ),
-                  FmImage.assetImage(
-                    path: Assets.iconsForwardIcon,
-                    height: 15,
-                    width: 15,
-                  ).paddingOnly(
-                    right: screenWPadding16.sw(),
-                  )
-                ],
+                    FmImage.assetImage(
+                      path: Assets.iconsForwardIcon,
+                      height: 15,
+                      width: 15,
+                    ).paddingOnly(
+                      right: screenWPadding16.sw(),
+                    )
+                  ],
+                ),
+                width: 240,
+                onDropDownTap: (item) {
+                  controller.onLocationTwoCountrySelect(item);
+                },
+                items: controller.locationTwoCountryList,
+                context: context,
               )
             ],
           ),
@@ -229,7 +260,8 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _addressLocationOne() {
+  Widget _addressLocationOne(
+      BuildContext context, TimeCardEditController ctrl) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -242,38 +274,59 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _addressItem(addressLineOne),
-              _addressItem(addressLineTwo),
-              _addressItem(city),
-              Row(
-                children: [
-                  Expanded(
-                    child: _addressItem(state, showRightBorder: true),
-                  ),
-                  Expanded(
-                    child: _addressItem(
-                      zip,
-                      inputType: TextInputType.number,
-                    ),
-                  ),
-                ],
+              _addressItem(
+                addressLineOne,
+                controller: controller.l1addressl1Controller,
+              ),
+              _addressItem(
+                addressLineTwo,
+                controller: controller.l1addressl2Controller,
+              ),
+              _addressItem(
+                city,
+                controller: controller.l1CityController,
               ),
               Row(
                 children: [
                   Expanded(
                     child: _addressItem(
-                      country,
-                      showBottomBorder: false,
+                      state,
+                      showRightBorder: true,
+                      controller: controller.l1StateController,
                     ),
                   ),
-                  FmImage.assetImage(
-                    path: Assets.iconsForwardIcon,
-                    height: 15,
-                    width: 15,
-                  ).paddingOnly(
-                    right: screenWPadding16.sw(),
-                  )
+                  Expanded(
+                    child: _addressItem(
+                      zip,
+                      inputType: TextInputType.number,
+                      controller: controller.l1ZipController,
+                    ),
+                  ),
                 ],
+              ),
+              fmDropDown(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: (ctrl.locationOneCountry.text)
+                          .text(fontSize: 16)
+                          .paddingAll(16),
+                    ),
+                    FmImage.assetImage(
+                      path: Assets.iconsForwardIcon,
+                      height: 15,
+                      width: 15,
+                    ).paddingOnly(
+                      right: screenWPadding16.sw(),
+                    )
+                  ],
+                ),
+                width: 240,
+                onDropDownTap: (item) {
+                  controller.onLocationOneCountrySelect(item);
+                },
+                items: controller.locationOneCountryList,
+                context: context,
               )
             ],
           ),
@@ -291,7 +344,8 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
   Widget _addressItem(String hint,
       {bool showRightBorder = false,
       bool showBottomBorder = true,
-      TextInputType? inputType}) {
+      TextInputType? inputType,
+      TextEditingController? controller}) {
     return Container(
       width: Get.width,
       decoration: BoxDecoration(
@@ -307,6 +361,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
       child: FmEmptyTextField(
         hintText: hint,
         textInputType: inputType,
+        controller: controller,
       ).paddingOnly(
         left: screenWPadding16.sw(),
         top: screenHPadding16.sh(),
@@ -315,7 +370,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _dayTypeField() {
+  Widget _dayTypeField(BuildContext context, TimeCardEditController ctrl) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -323,30 +378,13 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
           fontSize: 18,
           weight: FontWeight.w500,
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.black),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              "Shoot Day".text(
-                fontSize: 16,
-              ),
-              FmImage.assetImage(
-                path: Assets.iconsDownIcon,
-                fit: BoxFit.fill,
-                size: 15,
-              )
-            ],
-          ).paddingOnly(
-            left: screenWPadding16.sw(),
-            right: screenWPadding16.sw(),
-            top: screenHPadding16.sw(),
-            bottom: screenHPadding16.sw(),
-          ),
+        fmDropDown(
+          child: _dayTimeDropDownItem(ctrl.selectedDayType),
+          onDropDownTap: (item) {
+            controller.onDayTypeSelect(item);
+          },
+          items: controller.dayTypeList,
+          context: context,
         ).paddingOnly(top: screenHPadding8.sh())
       ],
     ).paddingOnly(
@@ -356,7 +394,35 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
     );
   }
 
-  Widget _dateCard() {
+  Widget _dayTimeDropDownItem(MenuItem item) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.black),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          item.text.text(
+            fontSize: 16,
+          ),
+          FmImage.assetImage(
+            path: Assets.iconsDownIcon,
+            fit: BoxFit.fill,
+            size: 15,
+          )
+        ],
+      ).paddingOnly(
+        left: screenWPadding16.sw(),
+        right: screenWPadding16.sw(),
+        top: screenHPadding16.sw(),
+        bottom: screenHPadding16.sw(),
+      ),
+    );
+  }
+
+  Widget _dateCard(String? date) {
     return Container(
       width: Get.width,
       decoration: BoxDecoration(
@@ -367,7 +433,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
           width: 1,
         ),
       ),
-      child: "Thursday, July 21, 2022"
+      child: changeToTextDateFormat(date)
           .text(
             weight: FontWeight.w500,
             fontSize: 16,
@@ -382,5 +448,24 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
       right: screenWPadding16.sw(),
       top: 24.sh(),
     );
+  }
+
+  String changeFormat(String? date) {
+    if (date != null) {
+      DateTime tempDate = DateFormat("yyyy-MM-dd hh:mm:ss").parse(date);
+      String formattedDate = DateFormat('yyyy-MM-dd').format(tempDate);
+      return formattedDate;
+    } else {
+      return "";
+    }
+  }
+
+  String changeToTextDateFormat(String? date) {
+    if (date != null) {
+      DateTime tempDate = DateFormat("yyyy-MM-dd hh:mm:ss").parse(date);
+      return DateFormat('EEEE, MMM dd,yyyy').format(tempDate);
+    } else {
+      return "";
+    }
   }
 }

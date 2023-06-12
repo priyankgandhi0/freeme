@@ -319,8 +319,10 @@ class AddJobScreen extends StatelessWidget {
             context: context,
           ),
           fmDropDown(
-            child: _detailItemWithDropDown(guarHours,
-                hint: controller.selectedGuaranteedHour.text),
+            child: _detailItemWithDropDown(
+              guarHours,
+              hint: controller.selectedGuaranteedHour.text,
+            ),
             onDropDownTap: (item) {
               controller.onPerGuaranteedHourDropDownTap(item);
             },
@@ -419,7 +421,7 @@ class AddJobScreen extends StatelessWidget {
           _detailItem(
             hiredby,
             hint: "Zachariah Dalton",
-            controller: controller.recommendedByController,
+            controller: controller.hiredByController,
           ),
         ],
       ),
@@ -710,7 +712,7 @@ class AddJobScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: hint.text(
-                      fontColor: greyTextColor,
+                      fontColor: Colors.black,
                       fontSize: 16,
                       overFlow: TextOverflow.ellipsis),
                 ),

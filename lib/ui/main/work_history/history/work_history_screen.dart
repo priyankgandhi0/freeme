@@ -1,5 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:freeme/models/get_job_info_model.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../globle.dart';
 import '../../../widgets/fm_appbar.dart';
@@ -21,49 +23,105 @@ class WorkHistoryScreen extends StatelessWidget {
           workHistory,
         ),
         body: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              addNewJob(context),
-              fMExpandedView(
-                title: "Commercial With Adam",
-                description: "07/23/22",
-              ).onTap(() {}).paddingOnly(
-                    top: 24.sh(),
-                  ),
-              fMExpandedView(
-                title: "Soulmates",
-                description: "7/12/22 - 7/23/22",
-                childList: const [
-                  "07/23/22 - Soulmates",
-                  "07/16/22 - Soulmates",
-                  "07/12/22 - Soulmates",
-                ],
-              ).paddingOnly(
-                top: screenHPadding16.sh(),
-              ),
-              fMExpandedView(
-                title: "John JLO",
-                description: "07/02/22",
-              ).paddingOnly(
-                top: screenHPadding16.sh(),
-              ),
-              fMExpandedView(
-                title: "Girlswirl",
-                description: "06/11/22",
-              ).paddingOnly(
-                top: screenHPadding16.sh(),
-              ),
-              fMExpandedView(
-                title: "Culprit",
-                description: "05/21/22",
-              ).paddingOnly(
-                top: screenHPadding16.sh(),
-              ),
+          /*   physics: BouncingScrollPhysics(),*/
+          child: GetBuilder<WorkHistoryController>(initState: (initState) {
+            // controller.getAllJob();
+          }, builder: (ctrl) {
+            return Column(
+              children: [
+                addNewJob(context),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: ctrl.allJobList.length,
+                  itemBuilder: (context, index) {
+                    var job = ctrl.allJobList[index];
+                    return fMExpandedView(
+                      title: job.description,
+                      description: createDescription(job.days),
+                      onTap: job.days != null &&
+                              job.days!.isNotEmpty &&
+                              job.days!.length == 1
+                          ? () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.workHistoryDetailScreen,
+                                arguments: {
+                                  "job_id": job.days![0].jobId,
+                                  "day_id": job.days![0].dayId,
+                                  "date": job.days![0].date,
+                                  "title": job.description,
+                                },
+                              );
+                            }
+                          : null,
+                      onChildTap: (index) {
+                        Navigator.pushNamed(
+                          context,
+                          Routes.workHistoryDetailScreen,
+                          arguments: {
+                            "job_id": job.days![index].jobId,
+                            "day_id": job.days![index].dayId,
+                            "date": job.days![index].date,
+                            "title": job.description,
+                          },
+                        );
+                      },
+                      childList: [
+                        if (job.days != null &&
+                            job.days!.isNotEmpty &&
+                            job.days!.length != 1)
+                          ...(job.days ?? [])
+                              .map((e) =>
+                                  "${chageFormat(e.date.toString())} - ${job.description}")
+                              .toList()
+                      ],
+                    ).paddingOnly(
+                      top: 24.sh(),
+                    );
+                  },
+                ),
 
-              //expandableItem(),
-            ],
-          ).safeArea,
+                /* fMExpandedView(
+                  title: "Commercial With Adam",
+                  description: "07/23/22",
+                ).onTap(() {}).paddingOnly(
+                      top: 24.sh(),
+                    ),
+                fMExpandedView(
+                  title: "Soulmates",
+                  description: "7/12/22 - 7/23/22",
+                  childList: const [
+                    "07/23/22 - Soulmates",
+                    "07/16/22 - Soulmates",
+                    "07/12/22 - Soulmates",
+                  ],
+                ).paddingOnly(
+                  top: screenHPadding16.sh(),
+                ),
+                fMExpandedView(
+                  title: "John JLO",
+                  description: "07/02/22",
+                ).paddingOnly(
+                  top: screenHPadding16.sh(),
+                ),
+                fMExpandedView(
+                  title: "Girlswirl",
+                  description: "06/11/22",
+                ).paddingOnly(
+                  top: screenHPadding16.sh(),
+                ),
+                fMExpandedView(
+                  title: "Culprit",
+                  description: "05/21/22",
+                ).paddingOnly(
+                  top: screenHPadding16.sh(),
+                ),
+*/
+                //expandableItem(),
+              ],
+            ).safeArea;
+          }),
         ),
       ),
       onWillPop: () async {
@@ -176,5 +234,23 @@ class WorkHistoryScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  chageFormat(String date) {
+    DateTime now = DateTime.parse(date);
+    String formattedDate = DateFormat('MM/dd/yy').format(now);
+    return formattedDate;
+  }
+
+  String createDescription(List<Days>? days) {
+    if (days != null && days.isNotEmpty) {
+      if (days.length == 1) {
+        return "${chageFormat(days.first.date.toString())}";
+      } else {
+        return "${chageFormat(days.first.date.toString())} - ${chageFormat(days.last.date.toString())}";
+      }
+    } else {
+      return "";
+    }
   }
 }

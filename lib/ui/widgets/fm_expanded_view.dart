@@ -7,13 +7,17 @@ class fMExpandedView extends StatefulWidget {
   String? title;
   String? description;
   List<String>? childList;
+  Function()? onTap;
+  Function(int index)? onChildTap;
 
-  fMExpandedView({
-    Key? key,
-    this.title,
-    this.description,
-    this.childList,
-  }) : super(key: key);
+  fMExpandedView(
+      {Key? key,
+      this.title,
+      this.description,
+      this.childList,
+      this.onTap,
+      this.onChildTap})
+      : super(key: key);
 
   @override
   State<fMExpandedView> createState() => _fMExpandedViewState();
@@ -29,6 +33,18 @@ class _fMExpandedViewState extends State<fMExpandedView> {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> childList = [];
+    if (widget.childList != null && widget.childList!.isNotEmpty) {
+      for (int i = 0; i < widget.childList!.length; i++) {
+        childList.add(
+          expandedChildItem(
+            widget.childList![i],
+            showBorder: i == widget.childList!.length - 1 ? false : true,
+              index: i
+          ),
+        );
+      }
+    }
     return Container(
       decoration: BoxDecoration(
           border: Border.all(color: Colors.black),
@@ -76,8 +92,12 @@ class _fMExpandedViewState extends State<fMExpandedView> {
           ],
         ),
         onExpansionChanged: (value) {
-          value.debugPrint;
-          expansionChange(value);
+          if (widget.onTap != null) {
+            widget.onTap!();
+          } else {
+            value.debugPrint;
+            expansionChange(value);
+          }
         },
         children: [
           (widget.childList ?? []).isNotEmpty
@@ -87,7 +107,8 @@ class _fMExpandedViewState extends State<fMExpandedView> {
                   color: Colors.black,
                 )
               : Container(),
-          ...(widget.childList ?? []).map((e) => expandedChildItem(e)).toList()
+          // ...(widget.childList ?? []).map((e) => expandedChildItem(e)).toList()
+          ...childList
         ],
       ),
     ).paddingOnly(
@@ -96,14 +117,16 @@ class _fMExpandedViewState extends State<fMExpandedView> {
     );
   }
 
-  Widget expandedChildItem(String name) {
+  Widget expandedChildItem(String name, {bool showBorder = true,int index=-1}) {
     return Container(
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: borderGreyColor,
-            width: 1,
-          ),
+          bottom: showBorder
+              ? const BorderSide(
+                  color: borderGreyColor,
+                  width: 1,
+                )
+              : BorderSide.none,
         ),
       ),
       child: Row(
@@ -121,7 +144,9 @@ class _fMExpandedViewState extends State<fMExpandedView> {
         ],
       ),
     ).onTap(() {
-      Navigator.pushNamed(context, Routes.workHistoryDetailScreen);
+      if (widget.onChildTap != null) {
+        widget.onChildTap!(index);
+      }
     });
   }
 }

@@ -35,6 +35,10 @@ class MethodNames {
   static const addJob = 'addJob';
   static const editJob = 'editJob';
   static const getJobInfo = 'getJobInfo';
+  static const getAllJobs = 'getAllJobs';
+  static const getWorkHistory = 'getWorkHistory';
+  static const editWorkHistoryTimecard = 'editWorkHistoryTimecard';
+  static const getAllDayTypes = 'getAllDayTypes';
 
 }
 

@@ -79,6 +79,15 @@ extension extOnWidget on Widget {
 }
 
 extension extOnString on String? {
+
+  bool get isNullOrEmpty{
+    if(this==null){
+      return true;
+    }else if(this!.isEmpty){
+      return true;
+    }
+    return false;
+  }
   Widget text(
       {FontWeight? weight,
       Color? fontColor,

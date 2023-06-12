@@ -15,6 +15,7 @@ const String logIn = 'Log In';
 const String dontHaveAccount = 'Don’t have an account?';
 const String haveAnAccount = 'Have an account? ';
 const String signUp = ' Sign Up';
+const String selectCountry = ' Select Country';
 
 const String request = ' Request';
 const String helloThere = ' Hello There!';

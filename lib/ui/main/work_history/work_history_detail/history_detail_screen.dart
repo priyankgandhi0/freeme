@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_screen.dart';
 import 'package:freeme/ui/main/work_history/work_history_detail/timecard/time_card_screen.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../globle.dart';
 import '../../../widgets/fm_appbar.dart';
@@ -14,17 +15,30 @@ class WorkHistoryDetailScreen extends StatelessWidget {
 
   final controller = Get.put(HistoryDetailController());
 
+  num? jobId;
+  num? dayId;
+  String? date;
+  String? title;
+
   @override
   Widget build(BuildContext context) {
+    Map arguments = (ModalRoute.of(context)?.settings.arguments ??
+        <String, dynamic>{}) as Map;
+    jobId = arguments["job_id"] ?? -1;
+    dayId = arguments["day_id"] ?? -1;
+    date = arguments["date"] ?? "";
+    title = arguments["title"] ?? "";
+
     return WillPopScope(
       child: Scaffold(
         backgroundColor: backGroundWhiteColor,
         body: GetBuilder<HistoryDetailController>(
+          initState: (initState) {},
           builder: (ctrl) {
             return Column(
               children: [
                 fMAppBar2(
-                  title: "Commercial with Adam",
+                  title: title,
                   description: "Week Ending 7/23/2022",
                   context: context,
                   onBackClick: () {
@@ -36,10 +50,21 @@ class WorkHistoryDetailScreen extends StatelessWidget {
                       Navigator.pushNamed(
                         context,
                         Routes.timeCardEditHistoryScreen,
+                        arguments: {
+                          "date": date,
+                          "job_id": jobId,
+                          "day_id": dayId,
+                          "title": title,
+                        },
                       );
                     } else if (controller.tabIndex == 2) {
-                      Navigator.pushNamed(context, Routes.addJobScreen,
-                          arguments: {"ForEdit": true});
+                      Navigator.pushNamed(
+                        context,
+                        Routes.addJobScreen,
+                        arguments: {
+                          "ForEdit": true,
+                        },
+                      );
                     }
                   },
                 ),
@@ -87,7 +112,11 @@ class WorkHistoryDetailScreen extends StatelessWidget {
                     controller: controller.tabController,
                     children: [
                       SummeryScreen(),
-                      TimeCardTabScreen(),
+                      TimeCardTabScreen(
+                        jobId: jobId ?? -1,
+                        dayId: dayId ?? -1,
+                        date: date ?? "",
+                      ),
                       JobInfoScreen(),
                       NotesScreen(),
                     ],
@@ -102,5 +131,15 @@ class WorkHistoryDetailScreen extends StatelessWidget {
         return false;
       },
     );
+  }
+
+  String changeFormat(String? date) {
+    if (date != null) {
+      DateTime tempDate = DateFormat("yyyy-MM-dd hh:mm:ss").parse(date);
+      String formattedDate = DateFormat('yyyy/mm/dd').format(tempDate);
+      return formattedDate;
+    } else {
+      return "";
+    }
   }
 }

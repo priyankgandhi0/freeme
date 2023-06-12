@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:freeme/ui/widgets/flutter_time_picker_spinner.dart';
 import 'package:freeme/utils/extension.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../../constant/app_string.dart';
@@ -17,35 +18,53 @@ import '../../../../widgets/fm_image.dart';
 import '../../../profile/timecard/timecard_controller.dart';
 
 class TimeCardTabScreen extends StatelessWidget {
-  TimeCardTabScreen({Key? key}) : super(key: key);
+  TimeCardTabScreen({
+    Key? key,
+    required this.jobId,
+    required this.dayId,
+    required this.date,
+  }) : super(key: key);
+
+  num jobId;
+  num dayId;
+  String date;
 
   final controller = Get.put(TimeCardController());
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          _timeAddressCard(),
-          dataTableCard(),
-          _duplicateTimeButton(context).paddingOnly(bottom: 124.sh()),
-          /* Expanded(
+      child: GetBuilder<TimeCardController>(
+        initState: (initState) {
+          Future.delayed(Duration.zero, () {
+            controller.getWorkHistory(jobId, changeFormat(date));
+          });
+        },
+        builder: (ctrl) {
+          return Column(
+            children: [
+              _timeAddressCard(),
+              dataTableCard(),
+              _duplicateTimeButton(context).paddingOnly(bottom: 124.sh()),
+              /* Expanded(
           child: Container(),
         ),*/
-          _clockInButton(context),
+              _clockInButton(context),
 
-          ///lunch start button
-          //_lunchStartButton(context),
+              ///lunch start button
+              //_lunchStartButton(context),
 
-          ///lunch end button
-          //_lunchEndButton(context),
+              ///lunch end button
+              //_lunchEndButton(context),
 
-          ///second meal button
-          //_secondMealStartWrapButton(context),
+              ///second meal button
+              //_secondMealStartWrapButton(context),
 
-          ///second meal end wrap
-          _secondMealEndWrapButton(context)
-        ],
+              ///second meal end wrap
+              _secondMealEndWrapButton(context)
+            ],
+          );
+        },
       ),
     );
   }
@@ -285,7 +304,6 @@ class TimeCardTabScreen extends StatelessWidget {
                       .paddingOnly(
                         top: screenHPadding16.sh(),
                         bottom: screenHPadding16.sh(),
-
                       ),
                 ],
               ),
@@ -294,19 +312,17 @@ class TimeCardTabScreen extends StatelessWidget {
                 fit: BoxFit.fill,
                 size: 12,
               )
-
                   .paddingOnly(
-
                 top: 22.sh(),
                 right: 22.sw(),
                 left: 22.sw(),
                 bottom: 22.sw(),
-                  ).onTap(
-                    () {
+              )
+                  .onTap(
+                () {
                   Navigator.of(context, rootNavigator: true).pop();
                 },
-              )
-                  .positioned(right: 0)
+              ).positioned(right: 0)
             ],
           ),
           Container(
@@ -338,13 +354,12 @@ class TimeCardTabScreen extends StatelessWidget {
   Widget _timeAddressCard() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: Colors.black,
-          width: 1,
-        ),
-        color: Colors.white
-      ),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: Colors.black,
+            width: 1,
+          ),
+          color: Colors.white),
       child: Row(
         children: [
           FmImage.assetImage(
@@ -430,12 +445,12 @@ class TimeCardTabScreen extends StatelessWidget {
             ),
           ),
           ListView.builder(
-            itemCount: controller.dayTypeList.length,
+            itemCount: controller.clockTimeList.length,
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              return dayTypeListItem(controller.dayTypeList[index]);
+              return dayTypeListItem(controller.clockTimeList[index]);
             },
           ),
           SizedBox(
@@ -467,12 +482,13 @@ class TimeCardTabScreen extends StatelessWidget {
     );
   }
 
-  Widget dayTypeListItem(DayType data){
-   return Container(
+  Widget dayTypeListItem(ClockTime data) {
+    return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          data.dayType.text(fontSize: 16), data.shootDay.text(fontSize: 16),
+          data.title.text(fontSize: 16),
+          data.time.text(fontSize: 16),
         ],
       ).paddingOnly(
         top: screenHPadding16.sh(),
@@ -480,5 +496,15 @@ class TimeCardTabScreen extends StatelessWidget {
         right: screenWPadding16.sw(),
       ),
     );
+  }
+
+  String changeFormat(String? date) {
+    if (date != null) {
+      DateTime tempDate = DateFormat("yyyy-MM-dd hh:mm:ss").parse(date);
+      String formattedDate = DateFormat('yyyy-MM-dd').format(tempDate);
+      return formattedDate;
+    } else {
+      return "";
+    }
   }
 }
