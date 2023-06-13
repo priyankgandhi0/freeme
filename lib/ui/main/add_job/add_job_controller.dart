@@ -7,9 +7,11 @@ import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../api/api_globle.dart';
+import '../../../api/repositories/job_repo.dart';
 import '../../../calender_demo/utils.dart';
 import '../../../globle.dart';
 import '../../../models/country.dart';
+import '../../../models/get_job_info_model.dart';
 import '../../../models/guaranteed_hour_model.dart';
 import '../../../models/job_classification_model.dart';
 import '../../../models/paid_by_model.dart';
@@ -20,6 +22,7 @@ import '../../../models/term_model.dart';
 import '../../../models/type_model.dart';
 import '../../widgets/dropdown.dart';
 import '../navigator/main_controller.dart';
+import '../work_history/work_history_detail/job_info/job_info_controller.dart';
 
 class AddJobController extends GetxController {
   TextEditingController descriptionController = TextEditingController();
@@ -36,15 +39,13 @@ class AddJobController extends GetxController {
   TextEditingController recommendedByController = TextEditingController();
   TextEditingController hiredByController = TextEditingController();
 
-  @override
-  void onInit() {
-    getAllPerHour();
-    getAllGuaranteedHour();
-    getAllPaidBy();
-    getAllTerms();
-    getAllTypes();
-    getAllJobClassifications();
-    super.onInit();
+  Future loadAllDropDown() async {
+    await getAllPerHour();
+    await getAllGuaranteedHour();
+    await getAllPaidBy();
+    await getAllTerms();
+    await getAllTypes();
+    await getAllJobClassifications();
   }
 
   bool isExpanded = false;
@@ -209,8 +210,8 @@ class AddJobController extends GetxController {
 
   List<MenuItem> unionNonUnionList = [
     MenuItem(text: "Not Sure", isSelected: true),
-    MenuItem(text: "Yes", isSelected: false),
-    MenuItem(text: "No", isSelected: false),
+    MenuItem(text: "Non Union", isSelected: false),
+    MenuItem(text: "Union", isSelected: false),
   ];
 
   MenuItem selectedUnion = MenuItem(text: "Not Sure", isSelected: true);
@@ -278,7 +279,7 @@ class AddJobController extends GetxController {
     for (int i = 0; i < allPaidBy.length; i++) {
       if (allPaidBy[i].text == item.text) {
         if (allPaidBy[i].isSelected) {
-         /* allPaidBy[i].isSelected = false;
+          /* allPaidBy[i].isSelected = false;
           selectedPaidBy = MenuItem(text: "Not Sure");*/
         } else {
           allPaidBy[i].isSelected = true;
@@ -297,7 +298,7 @@ class AddJobController extends GetxController {
     for (int i = 0; i < allTerms.length; i++) {
       if (allTerms[i].text == item.text) {
         if (allTerms[i].isSelected) {
-         /* allTerms[i].isSelected = false;
+          /* allTerms[i].isSelected = false;
           selectedTerm = MenuItem(text: "Not Sure");*/
         } else {
           allTerms[i].isSelected = true;
@@ -316,7 +317,7 @@ class AddJobController extends GetxController {
     for (int i = 0; i < allTypes.length; i++) {
       if (allTypes[i].text == item.text) {
         if (allTypes[i].isSelected) {
-         /* allTypes[i].isSelected = false;
+          /* allTypes[i].isSelected = false;
           selectedType = MenuItem(text: "Not Sure");*/
         } else {
           allTypes[i].isSelected = true;
@@ -435,54 +436,67 @@ class AddJobController extends GetxController {
   }
 
   startLoading() {
-    Get.find<HomeController>().startLoading();
+    Future.delayed(Duration.zero, () {
+      Get.find<HomeController>().startLoading();
+      update();
+    });
   }
 
   stopLoading() {
-    Get.find<HomeController>().stopLoading();
+    Future.delayed(Duration.zero, () {
+      Get.find<HomeController>().stopLoading();
+      update();
+    });
   }
 
-  Future<void> addJobButtonClick(BuildContext context,{String? jobId}) async {
-    if (_isValidate()) {
-      startLoading();
-      ResponseItem response = await QuickEntryRepo.addJobSubmit(
-        jobId: jobId,
-        selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
-        description: descriptionController.text.trim(),
-        productionTitle: productionTitleController.text.trim(),
-        producer: producerController.text.trim(),
-        productionCompany: productionCompanyController.text.trim(),
-        companyAddressLine1: addressLIne1Controller.text.trim(),
-        companyAddressLine2: addressLIne2Controller.text.trim(),
-        city: cityController.text.trim(),
-        state: stateController.text.trim(),
-        zip: zipController.text.trim(),
-        rate: rateTextController.text.isNotEmpty
-            ? int.parse(rateTextController.text.trim().toString())
-            : null,
-        recommendedBy: recommendedByController.text.trim(),
-        hiredBy: hiredByController.text.trim(),
-        unionNonunion: selectedUnion.text,
-        //department: selectedDepartment.text,
-        w2_1099: selectedW2Or1099.text,
-        guaranteedHours: selectedGuaranteedHour.text,
-        paidBy: selectedPaidBy.text,
-        terms: selectedTerm.text,
-        perHowManyHours: selectedPerHour.text,
-        countryCode: selectedCountry.countryCode,
-        type: selectedType.text,
-        //position: selectedPosition.text,
-        nonTaxedItems: nonTaxedItems,
-        taxedItems: taxedItems,
-      );
-      if (response.status) {
-        Navigator.of(context).pop();
-        stopLoading();
-      } else {
-        response.message.errorSnack(context);
-        stopLoading();
+  Future<void> addJobButtonClick(BuildContext context, {int? jobId}) async {
+    if (_isValidate(context)) {
+    startLoading();
+    ResponseItem response = await QuickEntryRepo.addJobSubmit(
+      jobId: jobId,
+      selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
+      description: descriptionController.text.trim(),
+      productionTitle: productionTitleController.text.trim(),
+      producer: producerController.text.trim(),
+      productionCompany: productionCompanyController.text.trim(),
+      companyAddressLine1: addressLIne1Controller.text.trim(),
+      companyAddressLine2: addressLIne2Controller.text.trim(),
+      city: cityController.text.trim(),
+      state: stateController.text.trim(),
+      zip: zipController.text.trim(),
+      rate: rateTextController.text.isNotEmpty
+          ? int.parse(rateTextController.text.trim().toString())
+          : null,
+      recommendedBy: recommendedByController.text.trim(),
+      hiredBy: hiredByController.text.trim(),
+      unionNonunion: selectedUnion.text,
+      department: selectedDepartment.text,
+      w2_1099: selectedW2Or1099.text,
+      guaranteedHours: selectedGuaranteedHour.text,
+      paidBy: selectedPaidBy.text,
+      terms: selectedTerm.text,
+      perHowManyHours: selectedPerHour.text,
+      countryCode: selectedCountry.countryCode,
+      type: selectedType.text,
+      position: selectedPosition.text,
+      nonTaxedItems: nonTaxedItems,
+      taxedItems: taxedItems,
+      removeNonTaxedItems: nonTaxedItemRemoveList,
+      removeTaxedItems: taxedItemRemoveList,
+    );
+    if (response.status) {
+      if (jobId != null) {
+        Future.delayed(Duration.zero, () {
+          Get.find<JobInfoController>().getJobInfo(jobId: jobId);
+        });
       }
+      Navigator.of(context).pop();
+      stopLoading();
+    } else {
+      response.message.errorSnack(context);
+      stopLoading();
     }
+     }
   }
 
   String convertToMyFormat(DateTime e) {
@@ -495,63 +509,146 @@ class AddJobController extends GetxController {
   String? rateError;
   String? jobClassificationError;
 
-  bool _isValidate() {
-    if (descriptionController.text.isEmpty ||
-        productionTitleController.text.isEmpty ||
-        producerController.text.isEmpty ||
-        productionCompanyController.text.isEmpty ||
-        addressLIne1Controller.text.isEmpty ||
-        addressLIne2Controller.text.isEmpty ||
-        cityController.text.isEmpty ||
-        stateController.text.isEmpty ||
-        zipController.text.isEmpty ||
-        rateTextController.text.isEmpty ||
-        recommendedByController.text.isEmpty ||
-        hiredByController.text.isEmpty ||
-        taxedItems.isEmpty ||
-        nonTaxedItems.isEmpty
-    ) {
-      if (descriptionController.text.isEmpty ||
-          productionTitleController.text.isEmpty ||
-          producerController.text.isEmpty ||
-          productionCompanyController.text.isEmpty ||
-          addressLIne1Controller.text.isEmpty ||
-          addressLIne2Controller.text.isEmpty ||
-          cityController.text.isEmpty ||
-          stateController.text.isEmpty ||
-          selectedDepartment.id == null ||
-          selectedPosition.id == null ||
-          zipController.text.isEmpty) {
-        descriptionError = "Enter all fields";
-      } else {
-        descriptionError = null;
-      }
-
-      if (rateTextController.text.isEmpty) {
-        rateError = "Please enter rate";
-      } else {
-        rateError = null;
-      }
-
-      if (recommendedByController.text.isEmpty ||
-          hiredByController.text.isEmpty) {
-        jobClassificationError = "Please fill all fields";
-      } else {
-        jobClassificationError = null;
-      }
-
-      if (selectedDepartment.id == null) {}
-      if (selectedPosition.id == null) {}
-      if (taxedItems.isEmpty) {}
-      if (nonTaxedItems.isEmpty) {}
-      update();
+  bool _isValidate(BuildContext context) {
+    if(selectedDays.isEmpty){
+      "Please Select Days".errorSnack(context);
       return false;
     }
-    jobClassificationError = null;
-    descriptionError = null;
-    rateError = null;
+    if(descriptionController.text.isEmpty){
+      "Please enter description".errorSnack(context);
+      return false;
+    }
+
+    if(selectedDepartment.id==null || selectedPosition.id==null){
+      if(selectedDepartment.id==null){
+        "Please select department".errorSnack(context);
+        return false;
+      }
+      if(selectedPosition.id==null){
+        "Please select position".errorSnack(context);
+        return false;
+      }
+      return false;
+    }
+
+    if (rateTextController.text.isEmpty) {
+      "Please enter rate".errorSnack(context);
+      return false;
+    }
     update();
     return true;
+  }
+
+  GetJobInfoModel? jobInfo;
+
+  Future<void> getJobInfo({required int jobId}) async {
+    startLoading();
+    ResponseItem response = await JobRepo.getJobInfo(jobId);
+    if (response.status) {
+      jobInfo = GetJobInfoModel.fromJson(response.data);
+      if (jobInfo != null) {
+        setJobData(jobInfo!);
+      }
+      stopLoading();
+    } else {
+      stopLoading();
+    }
+  }
+
+  void setJobData(GetJobInfoModel jobInfo) {
+    descriptionController.text = jobInfo.description ?? "";
+    productionTitleController.text = jobInfo.productionTital ?? "";
+    producerController.text = jobInfo.producer ?? "";
+    productionCompanyController.text = jobInfo.productionCompany ?? "";
+    addressLIne1Controller.text = jobInfo.companyAddressLine1 ?? "";
+    addressLIne2Controller.text = jobInfo.companyAddressLine2 ?? "";
+    cityController.text = jobInfo.city ?? "";
+    stateController.text = jobInfo.state ?? "";
+    zipController.text = (jobInfo.zip ?? "").toString();
+    rateTextController.text = (jobInfo.rate ?? "").toString();
+    recommendedByController.text = jobInfo.recommendedBy ?? "";
+    hiredByController.text = jobInfo.hiredBy ?? "";
+
+    selectedPerHour = allPerHour
+        .firstWhere((element) => element.text == jobInfo.perHowManyHours);
+    selectedGuaranteedHour = allGuaranteedHour
+        .firstWhere((element) => element.text == jobInfo.guaranteedHours);
+    selectedW2Or1099 =
+        w21099List.firstWhere((element) => element.text == jobInfo.w21099);
+    selectedPaidBy =
+        allPaidBy.firstWhere((element) => element.text == jobInfo.paidBy);
+    selectedTerm =
+        allTerms.firstWhere((element) => element.text == jobInfo.terms);
+    selectedDepartment = allJobClassificationList
+        .firstWhere((element) => element.text == jobInfo.department);
+    //selectedPosition = allSubJobList.firstWhere((element) => element.text==jobInfo.position);
+    selectedType =
+        allTypes.firstWhere((element) => element.text == jobInfo.type);
+    selectedUnion = unionNonUnionList
+        .firstWhere((element) => element.text == jobInfo.unionNonunion);
+
+    selectedDays.clear();
+    jobInfo.days?.forEach((element) {
+      DateTime tempDate =
+          DateFormat("yyyy-MM-dd").parse(element.date.toString());
+      onDaySelect(tempDate, tempDate);
+    });
+
+    selectedCountry = countryList
+            .firstWhereOrNull((element) => element.text == jobInfo.country) ??
+        MenuItem(text: "United States", countryCode: "US");
+
+    taxedItems.clear();
+    taxedItems.addAll(
+      jobInfo.taxes?.map(
+            (e) => TaxedNonTaxedModel(
+                type: e.taxType,
+                amount: e.taxAmount.toString(),
+                per: e.taxPer,
+                id: e.taxId),
+          ) ??
+          [],
+    );
+
+    nonTaxedItems.clear();
+    nonTaxedItems.addAll(
+      jobInfo.nonTaxes?.map(
+            (e) => TaxedNonTaxedModel(
+                type: e.nonTaxtType,
+                amount: e.nonTaxtAmount.toString(),
+                per: e.nonTaxtPer,
+                id: e.nonTaxId),
+          ) ??
+          [],
+    );
+  }
+
+  clearAllData() {
+    taxedItemRemoveList.clear();
+    nonTaxedItemRemoveList.clear();
+  }
+
+  List<String> taxedItemRemoveList = [];
+  List<String> nonTaxedItemRemoveList = [];
+
+  void removeTaxedItem(TaxedNonTaxedModel item) {
+    if (item.id != null) {
+      taxedItemRemoveList.add(item.id.toString());
+      taxedItems.remove(item);
+    } else {
+      taxedItems.remove(item);
+    }
+    update();
+  }
+
+  void removeNonTaxedItem(TaxedNonTaxedModel item) {
+    if (item.id != null) {
+      nonTaxedItemRemoveList.add(item.id.toString());
+      nonTaxedItems.remove(item);
+    } else {
+      nonTaxedItems.remove(item);
+    }
+    update();
   }
 }
 

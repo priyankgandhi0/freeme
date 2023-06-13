@@ -6,17 +6,17 @@ import '../../../../widgets/fm_dialog.dart';
 import 'job_info_controller.dart';
 
 class JobInfoScreen extends StatelessWidget {
-  JobInfoScreen({Key? key}) : super(key: key);
+  JobInfoScreen({Key? key,required this.jobId}) : super(key: key);
 
   final controller = Get.put(JobInfoController());
-
+  int jobId;
   @override
   Widget build(BuildContext context) {
     return GetBuilder<JobInfoController>(
       initState: (initState) async {
         Future.delayed(Duration.zero, () {
           controller.getJobInfo(
-            jobId: 28,
+            jobId: jobId,
           );
         });
       },

@@ -9,7 +9,7 @@ class AccountController extends GetxController{
 
   @override
   void onInit() {
-    userModel = UserModel.fromJson(box.read(AppConstant.userProfile) ?? "");
+    userModel = UserModel.fromJson(box.read(AppConstant.userProfile) ?? {});
     super.onInit();
   }
 

@@ -67,8 +67,8 @@ class QuickEntryRepo {
       "union_nonunion": unionNonunion,
       "recommended_by": recommendedBy,
       "hired_by": hiredBy,
-      "taxed_items": taxedItems?.map((e) => e.toJson()).toList(),
-      "non_taxed_items": nonTaxedItems?.map((e) => e.toJson()).toList()
+      "taxed_items": taxedItems?.map((e) => e.toTaxedJson()).toList(),
+      "non_taxed_items": nonTaxedItems?.map((e) => e.toNonTaxedJson()).toList()
     };
 
     result = await BaseApiHelper.postRequest(
@@ -85,7 +85,7 @@ class QuickEntryRepo {
   }
 
   static Future<ResponseItem> addJobSubmit({
-    String? jobId,
+    int? jobId,
     List<String>? selectedDays,
     String? description,
     String? productionTitle,
@@ -109,6 +109,8 @@ class QuickEntryRepo {
     String? unionNonunion,
     String? recommendedBy,
     String? hiredBy,
+    List<String>? removeTaxedItems,
+    List<String>? removeNonTaxedItems,
     List<TaxedNonTaxedModel>? taxedItems,
     List<TaxedNonTaxedModel>? nonTaxedItems,
   }) async {
@@ -145,12 +147,17 @@ class QuickEntryRepo {
       "union_nonunion": unionNonunion,
       "recommended_by": recommendedBy,
       "hired_by": hiredBy,
-      "taxed_items": taxedItems?.map((e) => e.toJson()).toList(),
-      "non_taxed_items": nonTaxedItems?.map((e) => e.toJson()).toList()
+      "taxed_items": taxedItems?.map((e) => e.toTaxedJson()).toList(),
+      "non_taxed_items": nonTaxedItems?.map((e) => e.toNonTaxedJson()).toList()
     };
     if (jobId != null) {
       reqData["job_id"] = jobId;
+      reqData["remove_taxed_items"] = removeTaxedItems?.join(",");
+
+      reqData["remove_non_taxed_items"] = removeNonTaxedItems?.join(",");
     }
+
+
     result = await BaseApiHelper.postRequest(
       requestUrl: AppUrls.baseUrl,
       queryParam: queryParameters,

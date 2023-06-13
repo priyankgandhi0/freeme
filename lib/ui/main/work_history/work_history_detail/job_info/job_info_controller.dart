@@ -17,9 +17,6 @@ class JobInfoController extends GetxController {
 
   @override
   void onInit() {
-    getJobInfo(
-      jobId: 28,
-    );
     super.onInit();
   }
 
@@ -70,8 +67,9 @@ class JobInfoController extends GetxController {
   }
 
   void setCalenderData() {
+    selectedDays.clear();
     jobInfo?.days?.forEach((element) {
-      DateTime tempDate = DateFormat("yyyy-MM-dd hh:mm:ss").parse(element.date.toString());
+      DateTime tempDate = DateFormat("yyyy-MM-dd").parse(element.date.toString());
       onDaySelect(tempDate, tempDate);
     });
 

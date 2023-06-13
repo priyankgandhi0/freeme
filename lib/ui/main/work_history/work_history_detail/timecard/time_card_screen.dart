@@ -37,7 +37,7 @@ class TimeCardTabScreen extends StatelessWidget {
       child: GetBuilder<TimeCardController>(
         initState: (initState) {
           Future.delayed(Duration.zero, () {
-            controller.getWorkHistory(jobId, changeFormat(date));
+            controller.getWorkHistory(jobId, date);
           });
         },
         builder: (ctrl) {
@@ -46,27 +46,31 @@ class TimeCardTabScreen extends StatelessWidget {
               _timeAddressCard(),
               dataTableCard(),
               _duplicateTimeButton(context).paddingOnly(bottom: 124.sh()),
-              /* Expanded(
-          child: Container(),
-        ),*/
-              _clockInButton(context),
-
-              ///lunch start button
-              //_lunchStartButton(context),
-
-              ///lunch end button
-              //_lunchEndButton(context),
-
-              ///second meal button
-              //_secondMealStartWrapButton(context),
-
-              ///second meal end wrap
-              _secondMealEndWrapButton(context)
+              _buttons(context, ctrl),
             ],
           );
         },
       ),
     );
+  }
+
+  Widget _buttons(BuildContext context, TimeCardController ctrl) {
+    if (ctrl.historyModel != null) {
+      if (ctrl.historyModel?.callTime.isNullOrEmpty ?? false) {
+        return _clockInButton(context);
+      } else if (ctrl.historyModel?.firstMealStart.isNullOrEmpty ?? false) {
+        return _lunchStartButton(context);
+      } else if (ctrl.historyModel?.firstMealEnd.isNullOrEmpty ?? false) {
+        return _lunchEndButton(context);
+      } else if (ctrl.historyModel?.secondMealStart.isNullOrEmpty ?? false) {
+        return _secondMealStartWrapButton(context);
+      } else if (ctrl.historyModel?.secondMealEnd.isNullOrEmpty ?? false) {
+        return _secondMealEndWrapButton(context);
+      }
+      return _clockInButton(context);
+    } else {
+      return Container();
+    }
   }
 
   Widget _secondMealEndWrapButton(BuildContext context) {
@@ -139,134 +143,211 @@ class TimeCardTabScreen extends StatelessWidget {
     );
   }
 
-  showSelectTimeDialog(BuildContext context) {
+  showSelectTimeDialog(
+    BuildContext context,
+  ) {
     fMDialog(
       context: context,
       horizontalPadding: screenWPadding64.sw(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
+      child: GetBuilder<TimeCardController>(
+        builder: (ctrl) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Stack(
                 children: [
-                  "Select Time"
-                      .text(
-                        fontSize: 18,
-                        weight: FontWeight.w500,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      "Select Time"
+                          .text(
+                            fontSize: 18,
+                            weight: FontWeight.w500,
+                          )
+                          .paddingOnly(
+                            top: screenHPadding16.sh(),
+                            bottom: screenHPadding8.sh(),
+                          ),
+                    ],
+                  ),
+                  FmImage.assetImage(
+                    path: Assets.iconsCloseIcon,
+                    fit: BoxFit.fill,
+                    size: 12,
+                  )
+                      .onTap(
+                        () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
                       )
                       .paddingOnly(
-                        top: screenHPadding16.sh(),
-                        bottom: screenHPadding8.sh(),
-                      ),
+                        top: 20.sh(),
+                        bottom: 20.sh(),
+                        left: 20.sh(),
+                        right: screenWPadding16.sw(),
+                      )
+                      .positioned(right: 0)
                 ],
               ),
-              FmImage.assetImage(
-                path: Assets.iconsCloseIcon,
-                fit: BoxFit.fill,
-                size: 12,
-              )
-                  .onTap(
-                    () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                  )
-                  .paddingOnly(
-                    top: 20.sh(),
-                    bottom: 20.sh(),
-                    left: 20.sh(),
-                    right: screenWPadding16.sw(),
-                  )
-                  .positioned(right: 0)
+              Container(
+                width: Get.width,
+                height: 1,
+                color: bottomLineGreyColor,
+              ),
+              TimePickerSpinner(
+                isForce2Digits: true,
+                normalTextStyle: const TextStyle(
+                  fontFamily: sfPro,
+                  fontSize: 18,
+                  color: greyTextColor,
+                ),
+                highlightedTextStyle: const TextStyle(
+                    fontFamily: sfPro,
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500),
+                itemHeight: 36,
+                is24HourMode: false,
+                onTimeChange: (time) {
+                  time.debugPrint;
+                },
+              ),
+
+              (ctrl.historyModel?.callTime.isNullOrEmpty ?? false)
+                  ? FmButton(
+                      ontap: () {},
+                      name: clockIn,
+                      type: ButtonType.greenCircular,
+                    ).paddingOnly(
+                      left: screenWPadding32.sw(),
+                      right: screenWPadding32.sw(),
+                      bottom: 24.sh(),
+                      top: 24.sh(),
+                    )
+                  : (ctrl.historyModel?.firstMealStart.isNullOrEmpty ?? false)
+                      ? _lunchStartWrapButtons(context)
+                      : (ctrl.historyModel?.firstMealEnd.isNullOrEmpty ?? false)
+                          ? _lunchEndWrapButtons(context)
+                          : (ctrl.historyModel?.secondMealStart.isNullOrEmpty ??
+                                  false)
+                              ? _secondMealStartWrapButtons(context)
+                              : (ctrl.historyModel?.secondMealEnd
+                                          .isNullOrEmpty ??
+                                      false)
+                                  ? _secondMealEndWrapButtons(context)
+                                  : Container(),
             ],
-          ),
-          Container(
-            width: Get.width,
-            height: 1,
-            color: bottomLineGreyColor,
-          ),
-          TimePickerSpinner(
-            isForce2Digits: true,
-            normalTextStyle: const TextStyle(
-              fontFamily: sfPro,
-              fontSize: 18,
-              color: greyTextColor,
-            ),
-            highlightedTextStyle: const TextStyle(
-                fontFamily: sfPro,
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.w500),
-            itemHeight: 36,
-            is24HourMode: false,
-            onTimeChange: (time) {},
-          ),
-
-          ///clock in
-          FmButton(
-            ontap: () {},
-            name: clockIn,
-            type: ButtonType.greenCircular,
-          ).paddingOnly(
-            left: screenWPadding32.sw(),
-            right: screenWPadding32.sw(),
-            bottom: 24.sh(),
-            top: 24.sh(),
-          ),
-
-          ///lunch start
-          /* FmButton(
-            ontap: () {
-              showSelectTimeDialog(context);
-            },
-            name: lunchStart,
-            type: ButtonType.yellow,
-          ).paddingOnly(
-            left: screenWPadding32.sw(),
-            right: screenWPadding32.sw(),
-            top: 24.sh(),
-          ),*/
-
-          ///second meal start
-          /* FmButton(
-            ontap: () {
-              showSelectTimeDialog(context);
-            },
-            name: secondMealStart,
-            type: ButtonType.yellow,
-          ).paddingOnly(
-            left: screenWPadding32.sw(),
-            right: screenWPadding32.sw(),
-            top: 24.sh(),
-          ),*/
-
-          ///second meal end
-          /*FmButton(
-            ontap: () {
-              showSelectTimeDialog(context);
-            },
-            name: secondMealEnd,
-            type: ButtonType.yellow,
-          ).paddingOnly(
-            left: screenWPadding32.sw(),
-            right: screenWPadding32.sw(),
-            top: 24.sh(),
-          ),*/
-
-          ///wrapButtton
-          /*FmButton(
-            ontap: () {},
-            name: wrap,
-            type: ButtonType.red,
-          ).paddingOnly(
-            left: screenWPadding32.sw(),
-            right: screenWPadding32.sw(),
-            bottom: 24.sh(),
-            top: screenHPadding16.sh()
-          )*/
-        ],
+          );
+        },
       ),
+    );
+  }
+
+  Widget _secondMealStartWrapButtons(BuildContext context) {
+    return Column(
+      children: [
+        FmButton(
+          ontap: () {
+
+          },
+          name: secondMealStart,
+          type: ButtonType.yellow,
+        ).paddingOnly(
+          left: screenWPadding32.sw(),
+          right: screenWPadding32.sw(),
+          top: 24.sh(),
+        ),
+        FmButton(
+          ontap: () {},
+          name: wrap,
+          type: ButtonType.red,
+        ).paddingOnly(
+            left: screenWPadding32.sw(),
+            right: screenWPadding32.sw(),
+            bottom: 24.sh(),
+            top: screenHPadding16.sh())
+      ],
+    );
+  }
+
+  Widget _secondMealEndWrapButtons(BuildContext context) {
+    return Column(
+      children: [
+        FmButton(
+          ontap: () {
+
+          },
+          name: secondMealEnd,
+          type: ButtonType.yellow,
+        ).paddingOnly(
+          left: screenWPadding32.sw(),
+          right: screenWPadding32.sw(),
+          top: 24.sh(),
+        ),
+        FmButton(
+          ontap: () {},
+          name: wrap,
+          type: ButtonType.red,
+        ).paddingOnly(
+            left: screenWPadding32.sw(),
+            right: screenWPadding32.sw(),
+            bottom: 24.sh(),
+            top: screenHPadding16.sh())
+      ],
+    );
+  }
+
+  Widget _lunchStartWrapButtons(BuildContext context) {
+    return Column(
+      children: [
+        FmButton(
+          ontap: () {
+             controller.lunchStart();
+          },
+          name: lunchStart,
+          type: ButtonType.yellow,
+        ).paddingOnly(
+          left: screenWPadding32.sw(),
+          right: screenWPadding32.sw(),
+          top: 24.sh(),
+        ),
+        FmButton(
+          ontap: () {},
+          name: wrap,
+          type: ButtonType.red,
+        ).paddingOnly(
+            left: screenWPadding32.sw(),
+            right: screenWPadding32.sw(),
+            bottom: 24.sh(),
+            top: screenHPadding16.sh())
+      ],
+    );
+  }
+
+  Widget _lunchEndWrapButtons(BuildContext context) {
+    return Column(
+      children: [
+        FmButton(
+          ontap: () {
+
+          },
+          name: lunchEnd,
+          type: ButtonType.yellow,
+        ).paddingOnly(
+          left: screenWPadding32.sw(),
+          right: screenWPadding32.sw(),
+          top: 24.sh(),
+        ),
+        FmButton(
+          ontap: () {},
+          name: wrap,
+          type: ButtonType.red,
+        ).paddingOnly(
+            left: screenWPadding32.sw(),
+            right: screenWPadding32.sw(),
+            bottom: 24.sh(),
+            top: screenHPadding16.sh())
+      ],
     );
   }
 
@@ -498,7 +579,7 @@ class TimeCardTabScreen extends StatelessWidget {
     );
   }
 
-  String changeFormat(String? date) {
+  /*String changeFormat(String? date) {
     if (date != null) {
       DateTime tempDate = DateFormat("yyyy-MM-dd hh:mm:ss").parse(date);
       String formattedDate = DateFormat('yyyy-MM-dd').format(tempDate);
@@ -506,5 +587,5 @@ class TimeCardTabScreen extends StatelessWidget {
     } else {
       return "";
     }
-  }
+  }*/
 }

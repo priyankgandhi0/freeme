@@ -63,6 +63,7 @@ class WorkHistoryDetailScreen extends StatelessWidget {
                         Routes.addJobScreen,
                         arguments: {
                           "ForEdit": true,
+                          "job_id": jobId?.toInt() ?? -1,
                         },
                       );
                     }
@@ -117,7 +118,9 @@ class WorkHistoryDetailScreen extends StatelessWidget {
                         dayId: dayId ?? -1,
                         date: date ?? "",
                       ),
-                      JobInfoScreen(),
+                      JobInfoScreen(
+                        jobId: jobId?.toInt() ?? -1,
+                      ),
                       NotesScreen(),
                     ],
                   ),
@@ -133,13 +136,4 @@ class WorkHistoryDetailScreen extends StatelessWidget {
     );
   }
 
-  String changeFormat(String? date) {
-    if (date != null) {
-      DateTime tempDate = DateFormat("yyyy-MM-dd hh:mm:ss").parse(date);
-      String formattedDate = DateFormat('yyyy/mm/dd').format(tempDate);
-      return formattedDate;
-    } else {
-      return "";
-    }
-  }
 }

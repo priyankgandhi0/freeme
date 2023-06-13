@@ -161,15 +161,18 @@ class Days {
 
 class Taxes {
   Taxes.fromJson(dynamic json) {
+    _taxesId = json['taxes_id'];
     _taxtType = json['taxt_type'];
     _taxtAmount = json['taxt_amount'];
     _taxtPer = json['taxt_per'];
   }
 
+  num? _taxesId;
   String? _taxtType;
   num? _taxtAmount;
   String? _taxtPer;
 
+  num? get taxId => _taxesId;
   String? get taxType => _taxtType;
 
   num? get taxAmount => _taxtAmount;
@@ -179,14 +182,18 @@ class Taxes {
 
 class NonTaxes {
   NonTaxes.fromJson(dynamic json) {
+    _nonTaxId = json['non_taxes_id'];
     _nonTaxtType = json['non_taxt_type'];
     _nonTaxtAmount = json['non_taxt_amount'];
     _nonTaxtPer = json['non_taxt_per'];
   }
 
+  num? _nonTaxId;
   String? _nonTaxtType;
   num? _nonTaxtAmount;
   String? _nonTaxtPer;
+
+  num? get nonTaxId => _nonTaxId;
 
   String? get nonTaxtType => _nonTaxtType;
 

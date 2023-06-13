@@ -37,7 +37,8 @@ class SplashScreen extends StatelessWidget {
       if (box.read(AppConstant.isLogin) ?? false) {
         Get.offAllNamed(Routes.mainScreen);
       } else {
-        Get.offAllNamed(Routes.login);
+         Get.offAllNamed(Routes.login);
+        //Get.toNamed(Routes.mainScreen);
       }
     });
   }

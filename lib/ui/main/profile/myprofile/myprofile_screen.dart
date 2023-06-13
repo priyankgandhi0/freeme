@@ -66,10 +66,10 @@ class MyProfileScreen extends StatelessWidget {
                         )
                       ],
                     ),
-                    contentCard("Mobile", (ctrl.userModel?.mobile ?? "-"),
+                    contentCard("Mobile", (ctrl.userModel?.mobile?[0].mobile ?? "-"),
                             textColor: blueTextColor)
                         .paddingOnly(top: 32),
-                    contentCard("E-mail", (ctrl.userModel?.email ?? "-"),
+                    contentCard("E-mail", (ctrl.userModel?.email?[0].email ?? "-"),
                             textColor: blueTextColor)
                         .paddingOnly(top: 16),
                     contentCard("Website", (ctrl.userModel?.website ?? "-"),

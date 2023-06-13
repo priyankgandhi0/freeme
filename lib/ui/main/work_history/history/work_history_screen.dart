@@ -23,7 +23,6 @@ class WorkHistoryScreen extends StatelessWidget {
           workHistory,
         ),
         body: SingleChildScrollView(
-          /*   physics: BouncingScrollPhysics(),*/
           child: GetBuilder<WorkHistoryController>(initState: (initState) {
             // controller.getAllJob();
           }, builder: (ctrl) {
@@ -82,43 +81,6 @@ class WorkHistoryScreen extends StatelessWidget {
                   },
                 ),
 
-                /* fMExpandedView(
-                  title: "Commercial With Adam",
-                  description: "07/23/22",
-                ).onTap(() {}).paddingOnly(
-                      top: 24.sh(),
-                    ),
-                fMExpandedView(
-                  title: "Soulmates",
-                  description: "7/12/22 - 7/23/22",
-                  childList: const [
-                    "07/23/22 - Soulmates",
-                    "07/16/22 - Soulmates",
-                    "07/12/22 - Soulmates",
-                  ],
-                ).paddingOnly(
-                  top: screenHPadding16.sh(),
-                ),
-                fMExpandedView(
-                  title: "John JLO",
-                  description: "07/02/22",
-                ).paddingOnly(
-                  top: screenHPadding16.sh(),
-                ),
-                fMExpandedView(
-                  title: "Girlswirl",
-                  description: "06/11/22",
-                ).paddingOnly(
-                  top: screenHPadding16.sh(),
-                ),
-                fMExpandedView(
-                  title: "Culprit",
-                  description: "05/21/22",
-                ).paddingOnly(
-                  top: screenHPadding16.sh(),
-                ),
-*/
-                //expandableItem(),
               ],
             ).safeArea;
           }),

@@ -16,12 +16,14 @@ class AddJobScreen extends StatelessWidget {
 
   final controller = Get.put(AddJobController());
   bool isForEdit = false;
+  int jobId = -1;
 
   @override
   Widget build(BuildContext context) {
     Map arguments = (ModalRoute.of(context)?.settings.arguments ??
         <String, dynamic>{}) as Map;
     isForEdit = arguments["ForEdit"] ?? false;
+    jobId = arguments["job_id"] ?? -1;
 
     return WillPopScope(
       child: Scaffold(
@@ -33,6 +35,16 @@ class AddJobScreen extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: GetBuilder<AddJobController>(
+            initState: (initState) {
+              if (isForEdit) {
+                Future.delayed(Duration.zero, () async {
+                  await controller.loadAllDropDown();
+                  controller.getJobInfo(
+                    jobId: jobId,
+                  );
+                });
+              }
+            },
             builder: (ctrl) {
               return Column(
                 children: [
@@ -70,7 +82,7 @@ class AddJobScreen extends StatelessWidget {
   Widget _saveButton(BuildContext context) {
     return FmButton(
       ontap: () {
-        controller.addJobButtonClick(context);
+        controller.addJobButtonClick(context, jobId: jobId);
       },
       name: save,
     ).paddingOnly(
@@ -461,7 +473,17 @@ class AddJobScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return _taxedNonTaxedItem(
                     controller.taxedItems[index],
-                  );
+                    onRemoveClick: () {
+                      controller.removeTaxedItem(controller.taxedItems[index]);
+
+                    },
+                  ).onClick(() {
+                    "onTaxItemClick".debugPrint;
+                    showTaxedItems(
+                      context,
+                      defaultItem: controller.taxedItems[index],
+                    );
+                  });
                 },
               ),
               _iconTextButton(
@@ -490,7 +512,8 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _taxedNonTaxedItem(TaxedNonTaxedModel item) {
+  Widget _taxedNonTaxedItem(TaxedNonTaxedModel item,
+      {GestureTapCallback? onRemoveClick}) {
     return Column(
       children: [
         Row(
@@ -502,7 +525,7 @@ class AddJobScreen extends StatelessWidget {
                     path: Assets.iconsMinusIcon,
                     height: 20.sh(),
                     width: 20.sw(),
-                  ),
+                  ).onClick(onRemoveClick ?? () {}),
                   item.type.text(fontSize: 16).paddingOnly(
                         left: 10.sw(),
                       )
@@ -561,7 +584,13 @@ class AddJobScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return _taxedNonTaxedItem(
                     controller.nonTaxedItems[index],
-                  );
+                    onRemoveClick: (){
+                      controller.removeNonTaxedItem(controller.nonTaxedItems[index]);
+                    }
+                  ).onClick(() {
+                    showNonTaxItems(context,
+                        defaultItem: controller.nonTaxedItems[index]);
+                  });
                 },
               ),
               _iconTextButton(
@@ -958,14 +987,25 @@ class AddJobScreen extends StatelessWidget {
         textInputType: inputType);
   }
 
-  void showNonTaxItems(BuildContext context) {
+  void showNonTaxItems(BuildContext context,
+      {TaxedNonTaxedModel? defaultItem}) {
     fMDialog(
       context: context,
       horizontalPadding: 16,
-      child: NonTaxItemDialog(onAddClick: (item) {
-        controller.nonTaxedItems.add(item);
-        controller.update();
-      }),
+      child: NonTaxItemDialog(
+          defaultSelectedItem: defaultItem,
+          onAddClick: (model) {
+            if (model.id != null) {
+              var index = controller.nonTaxedItems
+                  .indexWhere((element) => element.id == model.id);
+              controller.nonTaxedItems.removeAt(index);
+              controller.nonTaxedItems.insert(index, model);
+              controller.update();
+            } else {
+              controller.nonTaxedItems.add(model);
+              controller.update();
+            }
+          }),
     ).whenComplete(
       () {
         Get.find<NonTaxItemDialogController>().whenDialogClose();
@@ -975,14 +1015,23 @@ class AddJobScreen extends StatelessWidget {
 
   void showHoursDropDown() {}
 
-  void showTaxedItems(BuildContext context) {
+  void showTaxedItems(BuildContext context, {TaxedNonTaxedModel? defaultItem}) {
     fMDialog(
       context: context,
       horizontalPadding: 16,
       child: TaxItemDialog(
+        defaultSelectedItem: defaultItem,
         onAddClick: (TaxedNonTaxedModel model) {
-          controller.taxedItems.add(model);
-          controller.update();
+          if (model.id != null) {
+            var index = controller.taxedItems
+                .indexWhere((element) => element.id == model.id);
+            controller.taxedItems.removeAt(index);
+            controller.taxedItems.insert(index, model);
+            controller.update();
+          } else {
+            controller.taxedItems.add(model);
+            controller.update();
+          }
         },
       ),
     ).whenComplete(

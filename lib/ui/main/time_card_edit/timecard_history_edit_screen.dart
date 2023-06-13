@@ -35,7 +35,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
             () async {
               await controller.getAllDayTypeList();
               controller.getAllCountryFromRaw(context);
-              controller.getWorkHistory(jobId, changeFormat(date));
+              controller.getWorkHistory(jobId, date ?? "");
             },
           );
         }, builder: (ctrl) {
@@ -92,7 +92,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
             ontap: () {
               controller.saveEditTimeCard(
                 jobId ?? -1,
-                changeFormat(date),
+                date ?? "",
                 context,
               );
             },
@@ -450,7 +450,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
     );
   }
 
-  String changeFormat(String? date) {
+  /*String changeFormat(String? date) {
     if (date != null) {
       DateTime tempDate = DateFormat("yyyy-MM-dd hh:mm:ss").parse(date);
       String formattedDate = DateFormat('yyyy-MM-dd').format(tempDate);
@@ -458,11 +458,11 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
     } else {
       return "";
     }
-  }
+  }*/
 
   String changeToTextDateFormat(String? date) {
     if (date != null) {
-      DateTime tempDate = DateFormat("yyyy-MM-dd hh:mm:ss").parse(date);
+      DateTime tempDate = DateFormat("yyyy-MM-dd").parse(date);
       return DateFormat('EEEE, MMM dd,yyyy').format(tempDate);
     } else {
       return "";

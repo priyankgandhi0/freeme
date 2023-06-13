@@ -14,13 +14,21 @@ class NonTaxItemDialog extends StatelessWidget {
   NonTaxItemDialog({
     Key? key,
     required this.onAddClick,
+    this.defaultSelectedItem
   }) : super(key: key);
+
+  TaxedNonTaxedModel? defaultSelectedItem;
 
   final controller = Get.put(NonTaxItemDialogController());
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NonTaxItemDialogController>(
+      initState: (initState){
+        if (defaultSelectedItem != null) {
+          controller.selectItemForEdit(defaultSelectedItem!);
+        }
+      },
       builder: (ctrl) {
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -230,7 +238,7 @@ class NonTaxItemDialog extends StatelessWidget {
                     TaxedNonTaxedModel(
                         type: controller.selectedTaxedItemType.text,
                         per: controller.selectedPerTime.text,
-                        amount: controller.amountController.text),
+                        amount: controller.amountController.text, id: defaultSelectedItem?.id),
                   );
                   Navigator.of(context, rootNavigator: true).pop();
                 }
@@ -358,6 +366,17 @@ class NonTaxItemDialogController extends GetxController {
     selectedTaxedItemType = MenuItem(text: "Select Type");
     selectedPerTime = MenuItem(text: "Day", id: 1);
     amountController.clear();
+    update();
+  }
+
+  void selectItemForEdit(TaxedNonTaxedModel item) {
+    selectedTaxedItemType =
+        typeList.firstWhereOrNull((element) => element.text == item.type) ??
+            MenuItem(text: "Select Type");
+    selectedPerTime =
+        perHourList.firstWhereOrNull((element) => element.text == item.per) ??
+            MenuItem(text: "Day", id: 1);
+    amountController.text = item.amount.toString();
     update();
   }
 }

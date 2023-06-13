@@ -78,6 +78,8 @@ class TimeCardController extends GetxController{
 
   }
 
+  void lunchStart() {}
+
 }
 
 class ClockTime {

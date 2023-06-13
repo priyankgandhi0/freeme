@@ -11,16 +11,20 @@ import 'dropdown.dart';
 class TaxItemDialog extends StatelessWidget {
   Function(TaxedNonTaxedModel model) onAddClick;
 
-  TaxItemDialog({
-    Key? key,
-    required this.onAddClick,
-  }) : super(key: key);
+  TaxItemDialog({Key? key, required this.onAddClick, this.defaultSelectedItem})
+      : super(key: key);
 
+  TaxedNonTaxedModel? defaultSelectedItem;
   final controller = Get.put(TaxedItemDialogController());
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<TaxedItemDialogController>(
+      initState: (initState) {
+        if (defaultSelectedItem != null) {
+          controller.selectItemForEdit(defaultSelectedItem!);
+        }
+      },
       builder: (ctrl) {
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -109,12 +113,13 @@ class TaxItemDialog extends StatelessWidget {
                   context: context,
                 ).paddingOnly(
                   top: screenHPadding8.sh(),
-                ),ctrl.typeError != null
+                ),
+                ctrl.typeError != null
                     ? Row(
-                  children: [ctrl.typeError.text(fontColor: redColor)],
-                ).paddingOnly(
-                  top: 4,
-                )
+                        children: [ctrl.typeError.text(fontColor: redColor)],
+                      ).paddingOnly(
+                        top: 4,
+                      )
                     : Container(),
               ],
             ).paddingOnly(
@@ -227,9 +232,11 @@ class TaxItemDialog extends StatelessWidget {
                 if (controller.isValidate()) {
                   onAddClick(
                     TaxedNonTaxedModel(
-                        type: controller.selectedTaxedItemType.text,
-                        per: controller.selectedPerTime.text,
-                        amount: controller.amountController.text),
+                      type: controller.selectedTaxedItemType.text,
+                      per: controller.selectedPerTime.text,
+                      amount: controller.amountController.text,
+                      id: defaultSelectedItem?.id
+                    ),
                   );
                   Navigator.of(context, rootNavigator: true).pop();
                 }
@@ -357,6 +364,17 @@ class TaxedItemDialogController extends GetxController {
     selectedTaxedItemType = MenuItem(text: "Select Type");
     selectedPerTime = MenuItem(text: "Day", id: 1);
     amountController.clear();
+    update();
+  }
+
+  void selectItemForEdit(TaxedNonTaxedModel item) {
+    selectedTaxedItemType =
+        typeList.firstWhereOrNull((element) => element.text == item.type) ??
+            MenuItem(text: "Select Type");
+    selectedPerTime =
+        perHourList.firstWhereOrNull((element) => element.text == item.per) ??
+            MenuItem(text: "Day", id: 1);
+    amountController.text = item.amount.toString();
     update();
   }
 }
