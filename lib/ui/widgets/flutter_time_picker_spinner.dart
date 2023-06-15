@@ -176,8 +176,9 @@ class _TimePickerSpinnerState extends State<TimePickerSpinner> {
     int second = (currentSelectedSecondIndex -
             (isLoop(_getSecondCount()) ? _getSecondCount() : 1)) *
         widget.secondsInterval;
+    int finalMinute = (minute+1==60)?00:(minute+1);
     return DateTime(currentTime!.year, currentTime!.month, currentTime!.day,
-        hour, minute, second);
+        hour+1, finalMinute, second);
   }
 
   @override

@@ -126,43 +126,48 @@ class QuickEntryController extends GetxController {
   Future<void> finishButtonClick(BuildContext context) async {
     if (isSixthPageValidate()) {
       startLoading();
-      ResponseItem response = await QuickEntryRepo.quickEntrySubmit(
-        selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
-        description: descriptionController.text.trim(),
-        productionTitle: productionTitleController.text.trim(),
-        producer: producerController.text.trim(),
-        productionCompany: productionCompanyController.text.trim(),
-        companyAddressLine1: addressLIne1Controller.text.trim(),
-        companyAddressLine2: addressLIne2Controller.text.trim(),
-        city: cityController.text.trim(),
-        state: stateController.text.trim(),
-        zip: zipController.text.trim(),
-        rate: rateTextController.text.isNotEmpty
-            ? int.parse(rateTextController.text.trim().toString())
-            : null,
-        recommendedBy: recommendedByController.text.trim(),
-        hiredBy: hiredByController.text.trim(),
-        unionNonunion: selectedUnion.text,
-        department: selectedDepartment.text,
-        w2_1099: selectedW2Or1099.text,
-        guaranteedHours: selectedGuaranteedHour.text,
-        paidBy: selectedPaidBy.text,
-        terms: selectedTerm.text,
-        perHowManyHours: selectedPerHour.text,
-        countryCode: selectedCountry.countryCode,
-        type: selectedType.text,
-        position: selectedPosition.text,
-        nonTaxedItems: nonTaxedItems,
-        taxedItems: taxedItems,
-      );
-      if (response.status) {
-        Get.find<WorkHistoryController>().onInit();
-        Navigator.of(context).pop();
-        stopLoading();
-      } else {
-        response.message.errorSnack(context);
+      try{
+        ResponseItem response = await QuickEntryRepo.quickEntrySubmit(
+          selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
+          description: descriptionController.text.trim(),
+          productionTitle: productionTitleController.text.trim(),
+          producer: producerController.text.trim(),
+          productionCompany: productionCompanyController.text.trim(),
+          companyAddressLine1: addressLIne1Controller.text.trim(),
+          companyAddressLine2: addressLIne2Controller.text.trim(),
+          city: cityController.text.trim(),
+          state: stateController.text.trim(),
+          zip: zipController.text.trim(),
+          rate: rateTextController.text.isNotEmpty
+              ? int.parse(rateTextController.text.trim().toString())
+              : null,
+          recommendedBy: recommendedByController.text.trim(),
+          hiredBy: hiredByController.text.trim(),
+          unionNonunion: selectedUnion.text,
+          department: selectedDepartment.text,
+          w2_1099: selectedW2Or1099.text,
+          guaranteedHours: selectedGuaranteedHour.text,
+          paidBy: selectedPaidBy.text,
+          terms: selectedTerm.text,
+          perHowManyHours: selectedPerHour.text,
+          countryCode: selectedCountry.text,
+          type: selectedType.text,
+          position: selectedPosition.text,
+          nonTaxedItems: nonTaxedItems,
+          taxedItems: taxedItems,
+        );
+        if (response.status) {
+          await Get.find<WorkHistoryController>().getAllJob();
+          stopLoading();
+          Navigator.of(context).pop();
+        } else {
+          response.message.errorSnack(context);
+          stopLoading();
+        }
+      }catch(e){
         stopLoading();
       }
+
     }
   }
 
@@ -173,9 +178,10 @@ class QuickEntryController extends GetxController {
   }
 
   void moveToLastPage() {
-    if (_isFifthPageValidate()) {
-      pageController.jumpToPage(5);
-    }
+    pageController.jumpToPage(5);
+    /*if (_isFifthPageValidate()) {
+
+    }*/
   }
 
   void moveToFourthPage() {
@@ -202,7 +208,7 @@ class QuickEntryController extends GetxController {
   String? nonTaxedItemError;
 
   bool isSixthPageValidate() {
-    if (taxedItems.isEmpty || nonTaxedItems.isEmpty) {
+    /*if (taxedItems.isEmpty || nonTaxedItems.isEmpty) {
       if (taxedItems.isEmpty) {
         taxedItemError = "Please Add One Tax Item";
       } else {
@@ -218,7 +224,7 @@ class QuickEntryController extends GetxController {
     }
     taxedItemError = null;
     nonTaxedItemError = null;
-    update();
+    update();*/
     return true;
   }
 
@@ -254,7 +260,7 @@ class QuickEntryController extends GetxController {
   String? addressError;
 
   _isSecondPageValidate() {
-    if (descriptionController.text.trim().isEmpty ||
+    if (descriptionController.text.trim().isEmpty /*||
         productionTitleController.text.trim().isEmpty ||
         producerController.text.trim().isEmpty ||
         productionCompanyController.text.trim().isEmpty ||
@@ -262,13 +268,13 @@ class QuickEntryController extends GetxController {
         addressLIne2Controller.text.trim().isEmpty ||
         cityController.text.trim().isEmpty ||
         stateController.text.trim().isEmpty ||
-        zipController.text.trim().isEmpty) {
+        zipController.text.trim().isEmpty*/) {
       if (descriptionController.text.trim().isEmpty) {
         descriptionError = "Add Description";
       } else {
         descriptionError = null;
       }
-      if (productionTitleController.text.trim().isEmpty) {
+      /*if (productionTitleController.text.trim().isEmpty) {
         productionTitleError = "Add Production Title";
       } else {
         productionTitleError = null;
@@ -292,15 +298,15 @@ class QuickEntryController extends GetxController {
         addressError = "Add All Address Detail";
       } else {
         addressError = null;
-      }
+      }*/
       update();
       return false;
     }
     descriptionError = null;
-    productionTitleError = null;
+   /* productionTitleError = null;
     producerError = null;
     productionCompanyError = null;
-    addressError = null;
+    addressError = null;*/
     update();
     return true;
   }

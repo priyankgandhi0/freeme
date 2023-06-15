@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:freeme/api/api_globle.dart';
 import 'package:freeme/globle.dart';
 import 'package:freeme/ui/widgets/dropdown.dart';
 import 'package:get/get.dart';
@@ -41,54 +42,24 @@ class TimeCardEditController extends GetxController {
 
   Future<void> getWorkHistory(num? jobId, String date) async {
     startLoading();
-    ResponseItem response = await JobRepo.getWorkHistory(jobId ?? -1, date);
-    if (response.status) {
-      historyModel = WorkHistoryModel.fromJson(response.data);
-      if (historyModel != null) {
-        setUpData(historyModel!);
+    try {
+      ResponseItem response = await JobRepo.getWorkHistory(jobId ?? -1, date);
+      if (response.status) {
+        historyModel = WorkHistoryModel.fromJson(response.data);
+        if (historyModel != null) {
+          setUpData(historyModel!);
+        }
+        update();
+        stopLoading();
+      } else {
+        stopLoading();
       }
-      update();
-      stopLoading();
-    } else {
+    } catch (e) {
       stopLoading();
     }
   }
 
-  List<ClockTime> clockTimeList = [];
-
   void setUpData(WorkHistoryModel model) {
-    clockTimeList.clear();
-    clockTimeList.addAll([
-      ClockTime(
-        "Call Time:",
-        model.callTime.isNullOrEmpty ? "--:-- AM/PM" : model.callTime,
-      ),
-      ClockTime(
-        "1st Meal Start:",
-        model.firstMealStart.isNullOrEmpty
-            ? "--:-- AM/PM"
-            : model.firstMealStart,
-      ),
-      ClockTime(
-        "1st Meal End:",
-        model.firstMealEnd.isNullOrEmpty ? "--:-- AM/PM" : model.firstMealEnd,
-      ),
-      ClockTime(
-        "2nd Meal Start:",
-        model.secondMealStart.isNullOrEmpty
-            ? "--:-- AM/PM"
-            : model.secondMealStart,
-      ),
-      ClockTime(
-        "2nd Meal End:",
-        model.secondMealEnd.isNullOrEmpty ? "--:-- AM/PM" : model.secondMealEnd,
-      ),
-      ClockTime(
-        "Wrap:",
-        model.wrap.isNullOrEmpty ? "--:-- AM/PM" : model.wrap,
-      ),
-    ]);
-
     l1addressl1Controller.text = model.locations?[0].addressLine1 ?? "";
     l1addressl2Controller.text = model.locations?[0].addressLine2 ?? "";
     l1CityController.text = model.locations?[0].state ?? "";
@@ -182,30 +153,50 @@ class TimeCardEditController extends GetxController {
   }
 
   Future<void> saveEditTimeCard(
-      num jobId, String date, BuildContext context) async {
+    num jobId,
+    String date,
+    BuildContext context,
+  ) async {
     startLoading();
+    /*   try {*/
     List<Locations> locationList = [
       Locations(
-          addressLine1: l1addressl1Controller.text,
-          addressLine2: l1addressl2Controller.text,
-          city: l1CityController.text,
-          state: l1StateController.text,
-          country: locationOneCountry.text,
-          zip: int.parse(l1ZipController.text)),
+        locationId: (historyModel?.locations ?? []).isEmpty
+            ? null
+            : historyModel?.locations?[0].locationId,
+        addressLine1: l1addressl1Controller.text,
+        addressLine2: l1addressl2Controller.text,
+        city: l1CityController.text,
+        state: l1StateController.text,
+        country: locationOneCountry.text,
+        zip: l1ZipController.text.isEmpty
+            ? null
+            : int.parse(
+                l1ZipController.text.toString(),
+              ),
+      ),
       Locations(
+        locationId: (historyModel?.locations ?? []).length <= 1
+            ? null
+            : historyModel?.locations?[1].locationId,
         addressLine1: l2addressl1Controller.text,
         addressLine2: l2addressl2Controller.text,
         city: l2CityController.text,
         state: l2StateController.text,
         country: locationTwoCountry.text,
-        zip: int.parse(l2ZipController.text.toString())
+        zip: l2ZipController.text.isEmpty
+            ? null
+            : int.parse(
+                l2ZipController.text.toString(),
+              ),
       ),
     ];
     var request = EditTimecardRequest(
-        jobId: jobId,
-        locations: locationList,
-        date: date,
-        dayType: selectedDayType.text);
+      jobId: jobId,
+      locations: locationList,
+      date: date,
+      dayType: selectedDayType.text,
+    );
     ResponseItem response = await JobRepo.editWorkHistoryTimecard(
       request.toJson(),
     );
@@ -217,6 +208,9 @@ class TimeCardEditController extends GetxController {
     } else {
       stopLoading();
     }
+    /*} catch (e) {
+      stopLoading();
+    }*/
   }
 
   Future<void> clearAllFields() async {}
@@ -227,6 +221,7 @@ class TimeCardEditController extends GetxController {
     startLoading();
     ResponseItem response = await JobRepo.getAllDayTypes();
     if (response.status) {
+      dayTypeList.clear();
       dayTypeList.addAll(
         dayTypeListFromJson(response.data).map(
           (e) => MenuItem(id: e.dayTypeId, text: e.dayType),
@@ -254,5 +249,130 @@ class TimeCardEditController extends GetxController {
       }
     }
     update();
+  }
+///dialog
+
+
+  DateTime clockInTime = DateTime.now();
+  late String selectedDate;
+
+  Future<void> clockIn({
+    required ClockedTimes clockInTime,
+    required num jobId,
+    required String date,
+  }) async {
+    startLoading();
+    try {
+      var request = EditTimecardRequest(
+        jobId: jobId,
+        date: date,
+        clockedTimes: clockInTime,
+      );
+      ResponseItem response = await JobRepo.editWorkHistoryTimecard(
+        request.toJson(),
+      );
+      if (response.status) {
+        await getWorkHistory(jobId, date);
+        update();
+        stopLoading();
+      } else {
+        stopLoading();
+      }
+    } catch (e) {
+      stopLoading();
+    }
+  }
+
+
+  bool isLunchStartValidate(String time, BuildContext context) {
+    if(historyModel?.callTime!=null && historyModel?.date!=null){
+      var time1 = convertToMyTimeFormat(
+        historyModel?.callTime ?? "",
+        historyModel?.date ?? "",
+      );
+      var time2 = convertToMyTimeFormat(
+        time,
+        historyModel?.date ?? "",
+      );
+      if (time2.isAfter(time1)) {
+        return true;
+      } else {
+        lunchMustBeginAfterCallTime.errorSnack(context);
+        return false;
+      }
+    }
+    if(historyModel?.callTime!=null){
+      pleaseAddCallTimeFirst.errorSnack(context);
+    }
+    return false;
+  }
+
+  bool isLunchEndValidate(String time, BuildContext context) {
+    if(historyModel?.firstMealStart!=null && historyModel?.date!=null){
+      var time1 = convertToMyTimeFormat(
+        historyModel?.firstMealStart ?? "",
+        historyModel?.date ?? "",
+      );
+      var time2 = convertToMyTimeFormat(
+        time,
+        historyModel?.date ?? "",
+      );
+      if (time2.isAfter(time1)) {
+        return true;
+      } else {
+        lunchEndMustBeginAfterLunchStart.errorSnack(context);
+        return false;
+      }
+    }
+    return false;
+  }
+
+  bool isSecondMealStartValidate(String time, BuildContext context) {
+    if(historyModel?.firstMealEnd!=null && historyModel?.date!=null){
+      var time1 = convertToMyTimeFormat(
+        historyModel?.firstMealEnd ?? "",
+        historyModel?.date ?? "",
+      );
+      var time2 = convertToMyTimeFormat(
+        time,
+        historyModel?.date ?? "",
+      );
+      if (time2.isAfter(time1)) {
+        return true;
+      } else {
+        secondMealStartMustBeginAfterFirstMealEnd.errorSnack(context);
+        return false;
+      }
+    }
+    return false;
+  }
+
+  bool isSecondMealEndValidate(String time, BuildContext context) {
+    if(historyModel?.secondMealStart!=null && historyModel?.date!=null){
+      var time1 = convertToMyTimeFormat(
+        historyModel?.secondMealStart ?? "",
+        historyModel?.date ?? "",
+      );
+      var time2 = convertToMyTimeFormat(
+        time,
+        historyModel?.date ?? "",
+      );
+      if (time2.isAfter(time1)) {
+        return true;
+      } else {
+        secondMealEndMustBeginAfterSecondMealStart.errorSnack(context);
+        return false;
+      }
+    }
+    return false;
+  }
+
+  convertToMyTimeFormat(String time, String date) {
+    var now = date.split("-");
+    int hour = int.parse(time.split(":").first.toString());
+    int minute = int.parse(time.split(":").last.substring(0, 2));
+    bool isPm = time.contains("PM") ? true : false;
+    return DateTime.utc(int.parse(now[0]), int.parse(now[1]), int.parse(now[2]),
+        isPm ? hour + 12 : hour, minute, 0);
   }
 }

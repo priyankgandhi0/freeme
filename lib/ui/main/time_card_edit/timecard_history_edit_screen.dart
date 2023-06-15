@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:freeme/ui/main/time_card_edit/timecard__history_edit_controller.dart';
 import 'package:intl/intl.dart';
 import '../../../../../globle.dart';
+import '../../../models/edit_timecard_request.dart';
 import '../../widgets/dropdown.dart';
+import '../../widgets/flutter_time_picker_spinner.dart';
 import '../../widgets/fm_appbar.dart';
+import '../../widgets/fm_dialog.dart';
 
 class TimeCardEditHistoryScreen extends StatelessWidget {
   TimeCardEditHistoryScreen({
@@ -13,7 +16,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
   final controller = Get.put(TimeCardEditController());
 
   String? title;
-  num? jobId;
+  num jobId = -1;
   num? dayId;
   String? date;
 
@@ -25,6 +28,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
     jobId = arguments["job_id"] ?? -1;
     dayId = arguments["day_id"] ?? -1;
     date = arguments["date"] ?? "";
+    controller.selectedDate = date ?? "";
 
     return WillPopScope(
       child: Scaffold(
@@ -58,7 +62,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                       _dayTypeField(context, ctrl),
                       _addressLocationOne(context, ctrl),
                       _addressLocationTwo(context, ctrl),
-                      _clockedTimes(ctrl),
+                      _clockedTimes(ctrl, context),
                       _bottomButtons(context)
                     ],
                   ),
@@ -107,7 +111,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
         bottom: 24);
   }
 
-  Widget _clockedTimes(TimeCardEditController ctrl) {
+  Widget _clockedTimes(TimeCardEditController ctrl, BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -115,31 +119,67 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
           fontSize: 18,
           weight: FontWeight.w500,
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.black),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            children: [
-              ...ctrl.clockTimeList
-                  .map((e) => _clockTimeItem(
-                        e.title.toString(),
-                        e.time.toString(),
-                      ))
-                  .toList()
-
-              /*_clockTimeItem(
-                "Wrap:",
-                "--:-- AM/PM",
-                showBottomLine: false,
-              ),*/
-            ],
-          ),
-        ).paddingOnly(
-          top: screenHPadding8.sh(),
-        )
+        ctrl.historyModel != null
+            ? Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(color: Colors.black),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    _clockTimeItem(
+                        "Call Time",
+                        ctrl.historyModel!.callTime.isNullOrEmpty
+                            ? "--:-- AM/PM"
+                            : ctrl.historyModel?.callTime ?? "", onclick: () {
+                      showSelectTimeDialog(context, "Call Time");
+                    }),
+                    _clockTimeItem(
+                        "1st Meal Start:",
+                        ctrl.historyModel!.firstMealStart.isNullOrEmpty
+                            ? "--:-- AM/PM"
+                            : ctrl.historyModel?.firstMealStart ?? "",
+                        onclick: () {
+                      showSelectTimeDialog(context,"1st Meal Start");
+                    }),
+                    _clockTimeItem(
+                        "1st Meal End:",
+                        ctrl.historyModel!.firstMealEnd.isNullOrEmpty
+                            ? "--:-- AM/PM"
+                            : ctrl.historyModel?.firstMealEnd ?? "",
+                        onclick: () {
+                      showSelectTimeDialog(context,"1st Meal End");
+                    }),
+                    _clockTimeItem(
+                        "2nd Meal Start:",
+                        ctrl.historyModel!.secondMealStart.isNullOrEmpty
+                            ? "--:-- AM/PM"
+                            : ctrl.historyModel?.secondMealStart ?? "",
+                        onclick: () {
+                      showSelectTimeDialog(context,"2nd Meal Start");
+                    }),
+                    _clockTimeItem(
+                        "2nd Meal End:",
+                        ctrl.historyModel!.secondMealEnd.isNullOrEmpty
+                            ? "--:-- AM/PM"
+                            : ctrl.historyModel?.secondMealEnd ?? "",
+                        onclick: () {
+                      showSelectTimeDialog(context,"2nd Meal End");
+                    }),
+                    _clockTimeItem(
+                        "Wrap:",
+                        ctrl.historyModel!.wrap.isNullOrEmpty
+                            ? "--:-- AM/PM"
+                            : ctrl.historyModel?.wrap ?? "", onclick: () {
+                      showSelectTimeDialog(context,"Wrap");
+                    })
+                  ],
+                ),
+              ).paddingOnly(
+                top: screenHPadding8.sh(),
+              )
+            : Container()
       ],
     ).paddingOnly(
       left: screenWPadding16.sw(),
@@ -149,7 +189,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
   }
 
   Widget _clockTimeItem(String title, String value,
-      {bool showBottomLine = false}) {
+      {bool showBottomLine = false, GestureTapCallback? onclick}) {
     return Container(
       decoration: BoxDecoration(
         border: Border(
@@ -177,7 +217,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                   top: 5.sh(),
                   bottom: 5.sh(),
                 ),
-          )
+          ).onClick(onclick ?? () {})
         ],
       ).paddingOnly(
         left: screenWPadding16.sw(),
@@ -467,5 +507,348 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
     } else {
       return "";
     }
+  }
+
+  ///dialog
+  ///
+  ///
+
+  showSelectTimeDialog(
+    BuildContext context,
+    String time,
+  ) {
+    fMDialog(
+      context: context,
+      horizontalPadding: screenWPadding64.sw(),
+      child: GetBuilder<TimeCardEditController>(
+        builder: (ctrl) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      "Select Time"
+                          .text(
+                            fontSize: 18,
+                            weight: FontWeight.w500,
+                          )
+                          .paddingOnly(
+                            top: screenHPadding16.sh(),
+                            bottom: screenHPadding8.sh(),
+                          ),
+                    ],
+                  ),
+                  FmImage.assetImage(
+                    path: Assets.iconsCloseIcon,
+                    fit: BoxFit.fill,
+                    size: 12,
+                  )
+                      .onTap(
+                        () {
+                          Navigator.of(context, rootNavigator: true).pop();
+                        },
+                      )
+                      .paddingOnly(
+                        top: 20.sh(),
+                        bottom: 20.sh(),
+                        left: 20.sh(),
+                        right: screenWPadding16.sw(),
+                      )
+                      .positioned(right: 0)
+                ],
+              ),
+              Container(
+                width: Get.width,
+                height: 1,
+                color: bottomLineGreyColor,
+              ),
+              TimePickerSpinner(
+                isForce2Digits: true,
+                normalTextStyle: const TextStyle(
+                  fontFamily: sfPro,
+                  fontSize: 18,
+                  color: greyTextColor,
+                ),
+                highlightedTextStyle: const TextStyle(
+                    fontFamily: sfPro,
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500),
+                itemHeight: 36,
+                is24HourMode: false,
+                onTimeChange: (time) {
+                  controller.clockInTime = time;
+                },
+              ),
+              time == "Call Time"
+                  ? _callTimeButton(context)
+                  : time == "1st Meal Start"
+                      ? _lunchStartWrapButtons(context)
+                      : time == "1st Meal End"
+                          ? _lunchEndWrapButtons(context)
+                          : time == "2nd Meal Start"
+                              ? _secondMealStartWrapButtons(context)
+                              : time == "2nd Meal End"
+                                  ? _secondMealEndWrapButtons(context)
+                                  : time == "Wrap"
+                                      ? _wrapWrapButtons(context)
+                                      : Container(),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _callTimeButton(BuildContext context) {
+    return FmButton(
+      ontap: () {
+        controller.clockIn(
+          clockInTime: ClockedTimes(
+            callTime: changeToMyTimeFormat(controller.clockInTime),
+          ),
+          date: controller.selectedDate,
+          jobId: jobId,
+        );
+        Navigator.of(context, rootNavigator: true).pop();
+      },
+      name: clockIn,
+      type: ButtonType.greenCircular,
+    ).paddingOnly(
+      left: screenWPadding32.sw(),
+      right: screenWPadding32.sw(),
+      bottom: 24.sh(),
+      top: 24.sh(),
+    );
+  }
+
+  Widget _lunchStartWrapButtons(BuildContext context) {
+    return Column(
+      children: [
+        FmButton(
+          ontap: () {
+            if (controller.isLunchStartValidate(
+                changeToMyTimeFormat(controller.clockInTime), context)) {
+              controller.clockIn(
+                clockInTime: ClockedTimes(
+                  firstMealStart: changeToMyTimeFormat(controller.clockInTime),
+                ),
+                date: controller.selectedDate,
+                jobId: jobId,
+              );
+            }
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          name: lunchStart,
+          type: ButtonType.yellow,
+        ).paddingOnly(
+          left: screenWPadding32.sw(),
+          right: screenWPadding32.sw(),
+          top: 24.sh(),
+        ),
+        FmButton(
+          ontap: () {
+            controller.clockIn(
+              clockInTime: ClockedTimes(
+                wrap: changeToMyTimeFormat(controller.clockInTime),
+              ),
+              date: controller.selectedDate,
+              jobId: jobId,
+            );
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          name: wrap,
+          type: ButtonType.red,
+        ).paddingOnly(
+            left: screenWPadding32.sw(),
+            right: screenWPadding32.sw(),
+            bottom: 24.sh(),
+            top: screenHPadding16.sh())
+      ],
+    );
+  }
+
+  Widget _lunchEndWrapButtons(BuildContext context) {
+    return Column(
+      children: [
+        FmButton(
+          ontap: () {
+            if (controller.isLunchEndValidate(
+              changeToMyTimeFormat(controller.clockInTime),
+              context,
+            )) {
+              controller.clockIn(
+                clockInTime: ClockedTimes(
+                  firstMealEnd: changeToMyTimeFormat(controller.clockInTime),
+                ),
+                date: controller.selectedDate,
+                jobId: jobId,
+              );
+            }
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          name: lunchEnd,
+          type: ButtonType.yellow,
+        ).paddingOnly(
+          left: screenWPadding32.sw(),
+          right: screenWPadding32.sw(),
+          top: 24.sh(),
+        ),
+        FmButton(
+          ontap: () {
+            controller.clockIn(
+              clockInTime: ClockedTimes(
+                wrap: changeToMyTimeFormat(controller.clockInTime),
+              ),
+              date: controller.selectedDate,
+              jobId: jobId,
+            );
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          name: wrap,
+          type: ButtonType.red,
+        ).paddingOnly(
+            left: screenWPadding32.sw(),
+            right: screenWPadding32.sw(),
+            bottom: 24.sh(),
+            top: screenHPadding16.sh())
+      ],
+    );
+  }
+
+  Widget _secondMealStartWrapButtons(BuildContext context) {
+    return Column(
+      children: [
+        FmButton(
+          ontap: () {
+            if (controller.isSecondMealStartValidate(
+              changeToMyTimeFormat(controller.clockInTime),
+              context,
+            )) {
+              controller.clockIn(
+                clockInTime: ClockedTimes(
+                  secondMealStart: changeToMyTimeFormat(controller.clockInTime),
+                ),
+                date: controller.selectedDate,
+                jobId: jobId,
+              );
+            }
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          name: secondMealStart,
+          type: ButtonType.yellow,
+        ).paddingOnly(
+          left: screenWPadding32.sw(),
+          right: screenWPadding32.sw(),
+          top: 24.sh(),
+        ),
+        FmButton(
+          ontap: () {
+            controller.clockIn(
+              clockInTime: ClockedTimes(
+                wrap: changeToMyTimeFormat(controller.clockInTime),
+              ),
+              date: controller.selectedDate,
+              jobId: jobId,
+            );
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          name: wrap,
+          type: ButtonType.red,
+        ).paddingOnly(
+            left: screenWPadding32.sw(),
+            right: screenWPadding32.sw(),
+            bottom: 24.sh(),
+            top: screenHPadding16.sh())
+      ],
+    );
+  }
+
+  Widget _secondMealEndWrapButtons(BuildContext context) {
+    return Column(
+      children: [
+        FmButton(
+          ontap: () {
+            if (controller.isSecondMealEndValidate(
+              changeToMyTimeFormat(controller.clockInTime),
+              context,
+            )) {
+              controller.clockIn(
+                clockInTime: ClockedTimes(
+                  secondMealEnd: changeToMyTimeFormat(controller.clockInTime),
+                ),
+                date: controller.selectedDate,
+                jobId: jobId,
+              );
+            }
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          name: secondMealEnd,
+          type: ButtonType.yellow,
+        ).paddingOnly(
+          left: screenWPadding32.sw(),
+          right: screenWPadding32.sw(),
+          top: 24.sh(),
+        ),
+        FmButton(
+          ontap: () {
+            controller.clockIn(
+              clockInTime: ClockedTimes(
+                wrap: changeToMyTimeFormat(controller.clockInTime),
+              ),
+              date: controller.selectedDate,
+              jobId: jobId,
+            );
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          name: wrap,
+          type: ButtonType.red,
+        ).paddingOnly(
+            left: screenWPadding32.sw(),
+            right: screenWPadding32.sw(),
+            bottom: 24.sh(),
+            top: screenHPadding16.sh())
+      ],
+    );
+  }
+
+  Widget _wrapWrapButtons(BuildContext context) {
+    return Column(
+      children: [
+        FmButton(
+          ontap: () {
+            controller.clockIn(
+              clockInTime: ClockedTimes(
+                wrap: changeToMyTimeFormat(controller.clockInTime),
+              ),
+              date: controller.selectedDate,
+              jobId: jobId,
+            );
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          name: wrap,
+          type: ButtonType.red,
+        ).paddingOnly(
+            left: screenWPadding32.sw(),
+            right: screenWPadding32.sw(),
+            bottom: 24.sh(),
+            top: screenHPadding16.sh())
+      ],
+    );
+  }
+
+  String changeToMyTimeFormat(DateTime clockInTime) {
+    if (clockInTime.hour == 12) {
+      return "12:${clockInTime.minute.toString().length == 1 ? "0${clockInTime.minute}" : clockInTime.minute} AM";
+    }
+
+    if (clockInTime.hour == 0) {
+      return "12:${clockInTime.minute.toString().length == 1 ? "0${clockInTime.minute}" : clockInTime.minute} PM";
+    }
+    String formattedDate = DateFormat('hh:mm aa').format(clockInTime);
+    return formattedDate;
   }
 }

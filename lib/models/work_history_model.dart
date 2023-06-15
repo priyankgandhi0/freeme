@@ -72,7 +72,7 @@ class Location {
     _country = json['country'];
   }
 
-  num? _locationId;
+  int? _locationId;
   num? _jobId;
   String? _date;
   String? _addressLine1;
@@ -82,7 +82,7 @@ class Location {
   num? _zip;
   String? _country;
 
-  num? get locationId => _locationId;
+  int? get locationId => _locationId;
 
   num? get jobId => _jobId;
 

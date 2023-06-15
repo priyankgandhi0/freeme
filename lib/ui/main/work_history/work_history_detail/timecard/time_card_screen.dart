@@ -9,6 +9,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../../../../constant/app_string.dart';
 import '../../../../../constant/space_constant.dart';
 import '../../../../../generated/assets.dart';
+import '../../../../../models/edit_timecard_request.dart';
 import '../../../../../theme/app_colors.dart';
 import '../../../../../utils/route_manager.dart';
 import '../../../../widgets/app_calender.dart';
@@ -33,17 +34,21 @@ class TimeCardTabScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    controller.selectedDate = date;
     return SingleChildScrollView(
       child: GetBuilder<TimeCardController>(
         initState: (initState) {
           Future.delayed(Duration.zero, () {
-            controller.getWorkHistory(jobId, date);
+            controller.getWorkHistory(jobId, controller.selectedDate);
+            controller.getJobInfo(
+              jobId: jobId.toInt(),
+            );
           });
         },
         builder: (ctrl) {
           return Column(
             children: [
-              _timeAddressCard(),
+              _timeAddressCard(controller.selectedDate),
               dataTableCard(),
               _duplicateTimeButton(context).paddingOnly(bottom: 124.sh()),
               _buttons(context, ctrl),
@@ -66,11 +71,28 @@ class TimeCardTabScreen extends StatelessWidget {
         return _secondMealStartWrapButton(context);
       } else if (ctrl.historyModel?.secondMealEnd.isNullOrEmpty ?? false) {
         return _secondMealEndWrapButton(context);
+      } else if (ctrl.historyModel?.wrap.isNullOrEmpty ?? false) {
+        return _wrapButton(context);
+      } else {
+        return Container();
       }
-      return _clockInButton(context);
     } else {
       return Container();
     }
+  }
+
+  Widget _wrapButton(BuildContext context) {
+    return FmButton(
+      ontap: () {
+        showSelectTimeDialog(context);
+      },
+      name: wrap,
+      type: ButtonType.red,
+    ).paddingOnly(
+      left: 16,
+      right: 16,
+      bottom: 24,
+    );
   }
 
   Widget _secondMealEndWrapButton(BuildContext context) {
@@ -209,13 +231,22 @@ class TimeCardTabScreen extends StatelessWidget {
                 itemHeight: 36,
                 is24HourMode: false,
                 onTimeChange: (time) {
-                  time.debugPrint;
+                  controller.clockInTime = time;
                 },
               ),
-
               (ctrl.historyModel?.callTime.isNullOrEmpty ?? false)
                   ? FmButton(
-                      ontap: () {},
+                      ontap: () {
+                        controller.clockIn(
+                          clockInTime: ClockedTimes(
+                            callTime:
+                                changeToMyTimeFormat(controller.clockInTime),
+                          ),
+                          date: controller.selectedDate,
+                          jobId: jobId,
+                        );
+                        Navigator.of(context, rootNavigator: true).pop();
+                      },
                       name: clockIn,
                       type: ButtonType.greenCircular,
                     ).paddingOnly(
@@ -235,11 +266,36 @@ class TimeCardTabScreen extends StatelessWidget {
                                           .isNullOrEmpty ??
                                       false)
                                   ? _secondMealEndWrapButtons(context)
-                                  : Container(),
+                                  : _wrapWrapButtons(context),
             ],
           );
         },
       ),
+    );
+  }
+
+  Widget _wrapWrapButtons(BuildContext context) {
+    return Column(
+      children: [
+        FmButton(
+          ontap: () {
+            controller.clockIn(
+              clockInTime: ClockedTimes(
+                wrap: changeToMyTimeFormat(controller.clockInTime),
+              ),
+              date: controller.selectedDate,
+              jobId: jobId,
+            );
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+          name: wrap,
+          type: ButtonType.red,
+        ).paddingOnly(
+            left: screenWPadding32.sw(),
+            right: screenWPadding32.sw(),
+            bottom: 24.sh(),
+            top: screenHPadding16.sh())
+      ],
     );
   }
 
@@ -248,7 +304,19 @@ class TimeCardTabScreen extends StatelessWidget {
       children: [
         FmButton(
           ontap: () {
-
+            if (controller.isSecondMealStartValidate(
+              changeToMyTimeFormat(controller.clockInTime),
+              context,
+            )) {
+              controller.clockIn(
+                clockInTime: ClockedTimes(
+                  secondMealStart: changeToMyTimeFormat(controller.clockInTime),
+                ),
+                date: controller.selectedDate,
+                jobId: jobId,
+              );
+            }
+            Navigator.of(context, rootNavigator: true).pop();
           },
           name: secondMealStart,
           type: ButtonType.yellow,
@@ -258,7 +326,16 @@ class TimeCardTabScreen extends StatelessWidget {
           top: 24.sh(),
         ),
         FmButton(
-          ontap: () {},
+          ontap: () {
+            controller.clockIn(
+              clockInTime: ClockedTimes(
+                wrap: changeToMyTimeFormat(controller.clockInTime),
+              ),
+              date: controller.selectedDate,
+              jobId: jobId,
+            );
+            Navigator.of(context, rootNavigator: true).pop();
+          },
           name: wrap,
           type: ButtonType.red,
         ).paddingOnly(
@@ -275,7 +352,19 @@ class TimeCardTabScreen extends StatelessWidget {
       children: [
         FmButton(
           ontap: () {
-
+            if (controller.isSecondMealEndValidate(
+              changeToMyTimeFormat(controller.clockInTime),
+              context,
+            )) {
+              controller.clockIn(
+                clockInTime: ClockedTimes(
+                  secondMealEnd: changeToMyTimeFormat(controller.clockInTime),
+                ),
+                date: controller.selectedDate,
+                jobId: jobId,
+              );
+            }
+            Navigator.of(context, rootNavigator: true).pop();
           },
           name: secondMealEnd,
           type: ButtonType.yellow,
@@ -285,7 +374,16 @@ class TimeCardTabScreen extends StatelessWidget {
           top: 24.sh(),
         ),
         FmButton(
-          ontap: () {},
+          ontap: () {
+            controller.clockIn(
+              clockInTime: ClockedTimes(
+                wrap: changeToMyTimeFormat(controller.clockInTime),
+              ),
+              date: controller.selectedDate,
+              jobId: jobId,
+            );
+            Navigator.of(context, rootNavigator: true).pop();
+          },
           name: wrap,
           type: ButtonType.red,
         ).paddingOnly(
@@ -302,7 +400,17 @@ class TimeCardTabScreen extends StatelessWidget {
       children: [
         FmButton(
           ontap: () {
-             controller.lunchStart();
+            if (controller.isLunchStartValidate(
+                changeToMyTimeFormat(controller.clockInTime), context)) {
+              controller.clockIn(
+                clockInTime: ClockedTimes(
+                  firstMealStart: changeToMyTimeFormat(controller.clockInTime),
+                ),
+                date: controller.selectedDate,
+                jobId: jobId,
+              );
+            }
+            Navigator.of(context, rootNavigator: true).pop();
           },
           name: lunchStart,
           type: ButtonType.yellow,
@@ -312,7 +420,16 @@ class TimeCardTabScreen extends StatelessWidget {
           top: 24.sh(),
         ),
         FmButton(
-          ontap: () {},
+          ontap: () {
+            controller.clockIn(
+              clockInTime: ClockedTimes(
+                wrap: changeToMyTimeFormat(controller.clockInTime),
+              ),
+              date: controller.selectedDate,
+              jobId: jobId,
+            );
+            Navigator.of(context, rootNavigator: true).pop();
+          },
           name: wrap,
           type: ButtonType.red,
         ).paddingOnly(
@@ -329,7 +446,19 @@ class TimeCardTabScreen extends StatelessWidget {
       children: [
         FmButton(
           ontap: () {
-
+            if (controller.isLunchEndValidate(
+              changeToMyTimeFormat(controller.clockInTime),
+              context,
+            )) {
+              controller.clockIn(
+                clockInTime: ClockedTimes(
+                  firstMealEnd: changeToMyTimeFormat(controller.clockInTime),
+                ),
+                date: controller.selectedDate,
+                jobId: jobId,
+              );
+            }
+            Navigator.of(context, rootNavigator: true).pop();
           },
           name: lunchEnd,
           type: ButtonType.yellow,
@@ -339,7 +468,16 @@ class TimeCardTabScreen extends StatelessWidget {
           top: 24.sh(),
         ),
         FmButton(
-          ontap: () {},
+          ontap: () {
+            controller.clockIn(
+              clockInTime: ClockedTimes(
+                wrap: changeToMyTimeFormat(controller.clockInTime),
+              ),
+              date: controller.selectedDate,
+              jobId: jobId,
+            );
+            Navigator.of(context, rootNavigator: true).pop();
+          },
           name: wrap,
           type: ButtonType.red,
         ).paddingOnly(
@@ -432,7 +570,7 @@ class TimeCardTabScreen extends StatelessWidget {
     );
   }
 
-  Widget _timeAddressCard() {
+  Widget _timeAddressCard(String date) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -447,13 +585,20 @@ class TimeCardTabScreen extends StatelessWidget {
             path: Assets.iconsBackwordIcon,
             height: 15,
             width: 15,
-          ).paddingOnly(
+          )
+              .paddingOnly(
             left: screenHPadding16.sw(),
-          ),
+            top: screenHPadding16.sw(),
+            bottom: screenHPadding16.sw(),
+          )
+              .onTap(() {
+            "left icon click".debugPrint;
+            controller.changeDateToLeft(date);
+          }),
           Expanded(
             child: Column(
               children: [
-                "Thursday, July 21, 2022"
+                changeToTimeCardDateFormat(date)
                     .text(
                       fontSize: 16,
                       weight: FontWeight.w500,
@@ -474,9 +619,15 @@ class TimeCardTabScreen extends StatelessWidget {
             path: Assets.iconsForwardIcon,
             height: 15,
             width: 15,
-          ).paddingOnly(
-            right: screenHPadding16.sw(),
           )
+              .paddingOnly(
+            right: screenHPadding16.sw(),
+            top: screenHPadding16.sw(),
+            bottom: screenHPadding16.sw(),
+          )
+              .onTap(() {
+            controller.changeDateToRight(date);
+          })
         ],
       ),
     ).paddingOnly(
@@ -579,13 +730,20 @@ class TimeCardTabScreen extends StatelessWidget {
     );
   }
 
-  /*String changeFormat(String? date) {
-    if (date != null) {
-      DateTime tempDate = DateFormat("yyyy-MM-dd hh:mm:ss").parse(date);
-      String formattedDate = DateFormat('yyyy-MM-dd').format(tempDate);
-      return formattedDate;
-    } else {
-      return "";
+  String changeToMyTimeFormat(DateTime clockInTime) {
+    if (clockInTime.hour == 12) {
+      return "12:${clockInTime.minute.toString().length == 1 ? "0${clockInTime.minute}" : clockInTime.minute} AM";
     }
-  }*/
+
+    if (clockInTime.hour == 0) {
+      return "12:${clockInTime.minute.toString().length == 1 ? "0${clockInTime.minute}" : clockInTime.minute} PM";
+    }
+    String formattedDate = DateFormat('hh:mm aa').format(clockInTime);
+    return formattedDate;
+  }
+
+  String changeToTimeCardDateFormat(String date) {
+    DateTime tempDate = DateFormat("yyyy-MM-dd").parse(date);
+    return DateFormat('EEEE, MMM dd, yyyy').format(tempDate);
+  }
 }

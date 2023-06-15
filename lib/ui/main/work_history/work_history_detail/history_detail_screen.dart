@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 
 import '../../../../globle.dart';
 import '../../../widgets/fm_appbar.dart';
+import '../../profile/timecard/timecard_controller.dart';
 import '../../profile/timecard/timecard_screen.dart';
 import 'history_detail_controller.dart';
 import 'job_info/job_info_screen.dart';
@@ -47,16 +48,20 @@ class WorkHistoryDetailScreen extends StatelessWidget {
                   },
                   onTrailingClick: () {
                     if (controller.tabIndex == 1) {
-                      Navigator.pushNamed(
-                        context,
-                        Routes.timeCardEditHistoryScreen,
-                        arguments: {
-                          "date": date,
-                          "job_id": jobId,
-                          "day_id": dayId,
-                          "title": title,
-                        },
-                      );
+                      try{
+                        Navigator.pushNamed(
+                          context,
+                          Routes.timeCardEditHistoryScreen,
+                          arguments: {
+                            "date": Get.find<TimeCardController>().selectedDate,
+                            "job_id": jobId,
+                            "day_id": dayId,
+                            "title": title,
+                          },
+                        );
+                      }catch(e){
+                        e.debugPrint;
+                      }
                     } else if (controller.tabIndex == 2) {
                       Navigator.pushNamed(
                         context,

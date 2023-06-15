@@ -22,6 +22,7 @@ import '../../../models/term_model.dart';
 import '../../../models/type_model.dart';
 import '../../widgets/dropdown.dart';
 import '../navigator/main_controller.dart';
+import '../work_history/history/work_history_controller.dart';
 import '../work_history/work_history_detail/job_info/job_info_controller.dart';
 
 class AddJobController extends GetxController {
@@ -451,52 +452,56 @@ class AddJobController extends GetxController {
 
   Future<void> addJobButtonClick(BuildContext context, {int? jobId}) async {
     if (_isValidate(context)) {
-    startLoading();
-    ResponseItem response = await QuickEntryRepo.addJobSubmit(
-      jobId: jobId,
-      selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
-      description: descriptionController.text.trim(),
-      productionTitle: productionTitleController.text.trim(),
-      producer: producerController.text.trim(),
-      productionCompany: productionCompanyController.text.trim(),
-      companyAddressLine1: addressLIne1Controller.text.trim(),
-      companyAddressLine2: addressLIne2Controller.text.trim(),
-      city: cityController.text.trim(),
-      state: stateController.text.trim(),
-      zip: zipController.text.trim(),
-      rate: rateTextController.text.isNotEmpty
-          ? int.parse(rateTextController.text.trim().toString())
-          : null,
-      recommendedBy: recommendedByController.text.trim(),
-      hiredBy: hiredByController.text.trim(),
-      unionNonunion: selectedUnion.text,
-      department: selectedDepartment.text,
-      w2_1099: selectedW2Or1099.text,
-      guaranteedHours: selectedGuaranteedHour.text,
-      paidBy: selectedPaidBy.text,
-      terms: selectedTerm.text,
-      perHowManyHours: selectedPerHour.text,
-      countryCode: selectedCountry.countryCode,
-      type: selectedType.text,
-      position: selectedPosition.text,
-      nonTaxedItems: nonTaxedItems,
-      taxedItems: taxedItems,
-      removeNonTaxedItems: nonTaxedItemRemoveList,
-      removeTaxedItems: taxedItemRemoveList,
-    );
-    if (response.status) {
-      if (jobId != null) {
-        Future.delayed(Duration.zero, () {
-          Get.find<JobInfoController>().getJobInfo(jobId: jobId);
-        });
+      startLoading();
+      try{
+        ResponseItem response = await QuickEntryRepo.addJobSubmit(
+          jobId: jobId,
+          selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
+          description: descriptionController.text.trim(),
+          productionTitle: productionTitleController.text.trim(),
+          producer: producerController.text.trim(),
+          productionCompany: productionCompanyController.text.trim(),
+          companyAddressLine1: addressLIne1Controller.text.trim(),
+          companyAddressLine2: addressLIne2Controller.text.trim(),
+          city: cityController.text.trim(),
+          state: stateController.text.trim(),
+          zip: zipController.text.trim(),
+          rate: rateTextController.text.isNotEmpty
+              ? int.parse(rateTextController.text.trim().toString())
+              : null,
+          recommendedBy: recommendedByController.text.trim(),
+          hiredBy: hiredByController.text.trim(),
+          unionNonunion: selectedUnion.text,
+          department: selectedDepartment.text,
+          w2_1099: selectedW2Or1099.text,
+          guaranteedHours: selectedGuaranteedHour.text,
+          paidBy: selectedPaidBy.text,
+          terms: selectedTerm.text,
+          perHowManyHours: selectedPerHour.text,
+          countryCode: selectedCountry.countryCode,
+          type: selectedType.text,
+          position: selectedPosition.text,
+          nonTaxedItems: nonTaxedItems,
+          taxedItems: taxedItems,
+          removeNonTaxedItems: nonTaxedItemRemoveList,
+          removeTaxedItems: taxedItemRemoveList,
+        );
+        if (response.status) {
+          if (jobId != null) {
+            await Get.find<JobInfoController>().getJobInfo(jobId: jobId);
+            Get.find<JobInfoController>().update();
+          }
+          stopLoading();
+          await Get.find<WorkHistoryController>().getAllJob();
+          Navigator.of(context).pop();
+        } else {
+          stopLoading();
+          response.message.errorSnack(context);
+        }
+      }catch(e){
+        stopLoading();
       }
-      Navigator.of(context).pop();
-      stopLoading();
-    } else {
-      response.message.errorSnack(context);
-      stopLoading();
     }
-     }
   }
 
   String convertToMyFormat(DateTime e) {
@@ -510,21 +515,21 @@ class AddJobController extends GetxController {
   String? jobClassificationError;
 
   bool _isValidate(BuildContext context) {
-    if(selectedDays.isEmpty){
+    if (selectedDays.isEmpty) {
       "Please Select Days".errorSnack(context);
       return false;
     }
-    if(descriptionController.text.isEmpty){
+    if (descriptionController.text.isEmpty) {
       "Please enter description".errorSnack(context);
       return false;
     }
 
-    if(selectedDepartment.id==null || selectedPosition.id==null){
-      if(selectedDepartment.id==null){
+    if (selectedDepartment.id == null || selectedPosition.id == null) {
+      if (selectedDepartment.id == null) {
         "Please select department".errorSnack(context);
         return false;
       }
-      if(selectedPosition.id==null){
+      if (selectedPosition.id == null) {
         "Please select position".errorSnack(context);
         return false;
       }
@@ -581,7 +586,7 @@ class AddJobController extends GetxController {
         allTerms.firstWhere((element) => element.text == jobInfo.terms);
     selectedDepartment = allJobClassificationList
         .firstWhere((element) => element.text == jobInfo.department);
-    //selectedPosition = allSubJobList.firstWhere((element) => element.text==jobInfo.position);
+
     selectedType =
         allTypes.firstWhere((element) => element.text == jobInfo.type);
     selectedUnion = unionNonUnionList
@@ -620,6 +625,14 @@ class AddJobController extends GetxController {
                 id: e.nonTaxId),
           ) ??
           [],
+    );
+
+    getAllSubJobList(selectedDepartment.id ?? -1).then(
+      (value) {
+        selectedPosition = allSubJobList
+            .firstWhere((element) => element.text == jobInfo.position);
+        update();
+      },
     );
   }
 

@@ -35,13 +35,13 @@ class _AccountNavigatorState extends State<AccountNavigator> {
               case Routes.editProfileScreen:
                 return EditProfileScreen();
               case Routes.timeCardInfoScreen:
-                return TimeCardInfoScreen();
+                return const TimeCardInfoScreen();
               case Routes.editTimeCardScreen:
                 return EditTimeCardScreen();
               case Routes.accountSettingScreen:
                 return AccountSettingScreen();
               case Routes.changePasswordScreen:
-                return ChangePasswordScreen();
+                return const ChangePasswordScreen();
             }
             return Container();
           },

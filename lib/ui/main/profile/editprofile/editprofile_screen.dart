@@ -40,23 +40,11 @@ class EditProfileScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                nameCard().paddingOnly(top: screenHPadding32.sh()),
-                contentCard(
-                  "Add Phone",
-                  ["1-000-000-0000"],
-                  onAddClick: () {},
-                  textController: ctrl.addPhoneController,
-                ).paddingOnly(
-                  top: screenHPadding16.sh(),
+                nameCard().paddingOnly(
+                  top: screenHPadding32.sh(),
                 ),
-                contentCard(
-                  addEmail,
-                  ["Work_email@gmail.com"],
-                  onAddClick: () {},
-                  textController: ctrl.addEmailController,
-                ).paddingOnly(
-                  top: screenHPadding16.sh(),
-                ),
+                _addPhone(),
+                _email(),
                 contentCard(
                   textController: ctrl.addUnionController,
                   union,
@@ -73,38 +61,10 @@ class EditProfileScreen extends StatelessWidget {
                 ).paddingOnly(
                   top: screenHPadding16.sh(),
                 ),
-                contentCard(
-                  addAddress,
-                  [],
-                  textController: ctrl.addAddressController,
-                  onAddClick: () {},
-                ).paddingOnly(
-                  top: screenHPadding16.sh(),
-                ),
-                contentCard(
-                  addWebsite,
-                  [],
-                  textController: ctrl.addAddressController,
-                  onAddClick: () {},
-                ).paddingOnly(
-                  top: screenHPadding16.sh(),
-                ),
-                contentCard(
-                  addSocialMedia,
-                  [],
-                  onAddClick: () {},
-                  textController: ctrl.addSocialMediaController,
-                ).paddingOnly(
-                  top: screenHPadding16.sh(),
-                ),
-                contentCard(
-                  addBirthday,
-                  [],
-                  onAddClick: () {},
-                  textController: ctrl.addBirthDayController,
-                ).paddingOnly(
-                  top: screenHPadding16.sh(),
-                ),
+                _addAddress(),
+                _addWebsite(),
+                _socialMedia(),
+                _addBirthDay(),
                 aboutMeCard(ctrl),
                 FmButton(
                   ontap: () {
@@ -112,10 +72,11 @@ class EditProfileScreen extends StatelessWidget {
                   },
                   name: save,
                 ).paddingOnly(
-                    left: screenWPadding16.sw(),
-                    right: screenWPadding16.sw(),
-                    bottom: screenHPadding16.sw(),
-                    top: screenHPadding32.sh())
+                  left: screenWPadding16.sw(),
+                  right: screenWPadding16.sw(),
+                  bottom: screenHPadding16.sw(),
+                  top: screenHPadding32.sh(),
+                )
               ],
             ),
           );
@@ -124,6 +85,145 @@ class EditProfileScreen extends StatelessWidget {
       onWillPop: () async {
         return false;
       },
+    );
+  }
+
+  Widget _addAddress() {
+    return multiTextFieldCard(
+      onItemRemove: (index) {
+        controller.addAddress.removeAt(index);
+        controller.update();
+      },
+      itemList: controller.addAddress,
+      onAddItemTap: () {
+        if (controller.addAddress.isEmpty) {
+          controller.addAddress.add(TextEditingController());
+        }
+        if (controller.addAddress.last.text.isNotEmpty) {
+          controller.addAddress.add(TextEditingController());
+        }
+        controller.update();
+      },
+      hint: "Add Address",
+      buttonName: "Add Address",
+    ).paddingOnly(
+      top: screenHPadding16.sh(),
+    );
+  }
+
+  Widget _addWebsite() {
+    return multiTextFieldCard(
+      onItemRemove: (index) {
+        controller.addWebsite.removeAt(index);
+        controller.update();
+      },
+      itemList: controller.addWebsite,
+      onAddItemTap: () {
+        if (controller.addWebsite.isEmpty) {
+          controller.addWebsite.add(TextEditingController());
+        }
+        if (controller.addWebsite.last.text.isNotEmpty) {
+          controller.addWebsite.add(TextEditingController());
+        }
+        controller.update();
+      },
+      hint: "Add Website",
+      buttonName: "Add Website",
+    ).paddingOnly(
+      top: screenHPadding16.sh(),
+    );
+  }
+
+  Widget _socialMedia() {
+    return multiTextFieldCard(
+      onItemRemove: (index) {
+        controller.socialMediaList.removeAt(index);
+        controller.update();
+      },
+      itemList: controller.socialMediaList,
+      onAddItemTap: () {
+        if (controller.socialMediaList.isEmpty) {
+          controller.socialMediaList.add(TextEditingController());
+        }
+        if (controller.socialMediaList.last.text.isNotEmpty) {
+          controller.socialMediaList.add(TextEditingController());
+        }
+        controller.update();
+      },
+      hint: "Add Social Media",
+      buttonName: "Add Social Media",
+    ).paddingOnly(
+      top: screenHPadding16.sh(),
+    );
+  }
+
+  Widget _addBirthDay() {
+    return multiTextFieldCard(
+      onItemRemove: (index) {
+        controller.birthDayList.removeAt(index);
+        controller.update();
+      },
+      itemList: controller.birthDayList,
+      onAddItemTap: () {
+        if (controller.birthDayList.isEmpty) {
+          controller.birthDayList.add(TextEditingController());
+        }
+        if (controller.birthDayList.last.text.isNotEmpty) {
+          controller.birthDayList.add(TextEditingController());
+        }
+        controller.update();
+      },
+      hint: "Add BirthDay",
+      buttonName: "Add BirthDay",
+    ).paddingOnly(
+      top: screenHPadding16.sh(),
+    );
+  }
+
+  Widget _addPhone() {
+    return multiTextFieldCard(
+      onItemRemove: (index) {
+        controller.phoneList.removeAt(index);
+        controller.update();
+      },
+      itemList: controller.phoneList,
+      onAddItemTap: () {
+        if (controller.phoneList.isEmpty) {
+          controller.phoneList.add(TextEditingController());
+        }
+        if (controller.phoneList.last.text.isNotEmpty) {
+          controller.phoneList.add(TextEditingController());
+        }
+        controller.update();
+      },
+      hint: "Add Phone",
+      buttonName: "Add Phone",
+    ).paddingOnly(
+      top: screenHPadding16.sh(),
+    );
+  }
+
+  Widget _email() {
+    return multiTextFieldCard(
+            onItemRemove: (index) {
+              controller.emailList.removeAt(index);
+              controller.update();
+            },
+            itemList: controller.emailList,
+            onAddItemTap: () {
+              if (controller.emailList.isEmpty) {
+                controller.emailList.add(TextEditingController());
+              }
+              if (controller.emailList.last.text.isNotEmpty) {
+                controller.emailList.add(TextEditingController());
+              }
+              controller.update();
+            },
+            hint: addEmail,
+            buttonName: addEmail,
+            inputType: TextInputType.number)
+        .paddingOnly(
+      top: screenHPadding16.sh(),
     );
   }
 
@@ -327,6 +427,101 @@ class EditProfileScreen extends StatelessWidget {
       right: screenWPadding16.sw(),
       top: screenHPadding16.sh(),
       bottom: screenHPadding16.sh(),
+    );
+  }
+
+  Widget multiTextFieldCard(
+      {required Function(int index) onItemRemove,
+      required List<TextEditingController> itemList,
+      required GestureTapCallback onAddItemTap,
+      String? hint,
+      required String buttonName,
+      TextInputType? inputType}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            offset: Offset(2, 3),
+            blurRadius: 10.0,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: itemList.length,
+            itemBuilder: (context, index) {
+              return childItem(
+                index: index,
+                hint: hint,
+                inputType: inputType,
+                textController: itemList[index],
+                onRemoveClick: () {
+                  onItemRemove(index);
+                },
+              );
+            },
+          ),
+          Row(
+            children: [
+              FmImage.assetImage(
+                path: Assets.iconsPlusicon,
+                height: 20.sh(),
+                width: 20.sw(),
+              ),
+              buttonName
+                  .text(
+                    fontColor: greyTextColor,
+                    fontSize: 16,
+                  )
+                  .paddingOnly(left: 10.sw())
+            ],
+          )
+              .paddingOnly(
+                left: screenWPadding16.sw(),
+                top: screenHPadding16,
+                bottom: screenHPadding16,
+              )
+              .onTap(onAddItemTap)
+        ],
+      ),
+    ).paddingOnly(
+      left: 16.sw(),
+      right: 16.sw(),
+    );
+  }
+
+  childItem(
+      {required int index,
+      required TextEditingController textController,
+      required GestureTapCallback onRemoveClick,
+      String? hint,
+      TextInputType? inputType}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        FmImage.assetImage(
+          path: Assets.iconsMinusIcon,
+          height: 20.sh(),
+          width: 20.sw(),
+        ).onClick(onRemoveClick),
+        Expanded(
+          child: FmEmptyTextField(
+            controller: textController,
+            hintText: hint,
+            textInputType: inputType,
+          ).paddingOnly(left: 10.sw()),
+        )
+      ],
+    ).paddingOnly(
+      left: screenWPadding16.sw(),
+      top: screenHPadding16,
+      bottom: screenHPadding16,
     );
   }
 }

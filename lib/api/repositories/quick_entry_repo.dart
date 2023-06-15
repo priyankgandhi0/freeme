@@ -46,7 +46,7 @@ class QuickEntryRepo {
     var reqData = {
       "days": [...selectedDays ?? []],
       "description": description,
-      "production_tital": productionTitle,
+      "production_title": productionTitle,
       "producer": producer,
       "production_company": productionCompany,
       "company_address_line1": companyAddressLine1,
@@ -126,7 +126,7 @@ class QuickEntryRepo {
     var reqData = {
       "days": [...selectedDays ?? []],
       "description": description,
-      "production_tital": productionTitle,
+      "production_title": productionTitle,
       "producer": producer,
       "production_company": productionCompany,
       "company_address_line1": companyAddressLine1,

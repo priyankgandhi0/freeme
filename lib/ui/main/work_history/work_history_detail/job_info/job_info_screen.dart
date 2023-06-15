@@ -297,10 +297,7 @@ class JobInfoScreen extends StatelessWidget {
           ),
           detailItem(
             title: companyAddress,
-            desc: "${ctrl.jobInfo?.companyAddressLine1 ?? ""}"
-                "\m${ctrl.jobInfo?.companyAddressLine2 ?? ""}"
-                "\n${ctrl.jobInfo?.city ?? ""}${ctrl.jobInfo?.state ?? ""}"
-                "${ctrl.jobInfo?.zip ?? ""}\n${ctrl.jobInfo?.country ?? ""}",
+            desc: createCompanyAddress(ctrl),
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding16.sh(),
@@ -401,5 +398,12 @@ class JobInfoScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  createCompanyAddress(JobInfoController ctrl) {
+   return "${ctrl.jobInfo?.companyAddressLine1 ?? ""}"
+        "\n${ctrl.jobInfo?.companyAddressLine2 ?? ""}"
+        "\n${ctrl.jobInfo?.city ?? ""}${ctrl.jobInfo?.state ?? ""}"
+        "${ctrl.jobInfo?.zip==0?"":ctrl.jobInfo?.zip}\n${ctrl.jobInfo?.country ?? ""}";
   }
 }

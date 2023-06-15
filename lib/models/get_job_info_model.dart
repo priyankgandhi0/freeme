@@ -10,7 +10,7 @@ class GetJobInfoModel {
     _jobId = json['job_id'];
     _userToken = json['user_token'];
     _description = json['description'];
-    _productionTital = json['production_tital'];
+    _productionTital = json['production_title'];
     _producer = json['producer'];
     _productionCompany = json['production_company'];
     _companyAddressLine1 = json['company_address_line1'];

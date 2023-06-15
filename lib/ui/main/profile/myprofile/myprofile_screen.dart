@@ -12,78 +12,80 @@ class MyProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      child: GetBuilder<MyProfileController>(
-
-          builder: (ctrl) {
-            return Scaffold(
-              backgroundColor: backGroundWhiteColor,
-              appBar: fMAppBar(
-                myProfile,
-                onBackClick: () {
-                  Navigator.of(context).pop();
-                },
-                onTrailingClick: () {
-                  Navigator.pushNamed(context, Routes.editProfileScreen);
-                },
-              ),
-              body: SingleChildScrollView(
-                child: Column(
+      child: GetBuilder<MyProfileController>(builder: (ctrl) {
+        return Scaffold(
+          backgroundColor: backGroundWhiteColor,
+          appBar: fMAppBar(
+            myProfile,
+            onBackClick: () {
+              Navigator.of(context).pop();
+            },
+            onTrailingClick: () {
+              Navigator.pushNamed(context, Routes.editProfileScreen);
+            },
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        profileImage(
-                          103,
-                          103,
-                          horizontalPadding: 36,
-                          verticlePadding: 34,
-                        ).paddingOnly(
-                          top: 24.sh(),
-                          left: screenWPadding16.sw(),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            "${ctrl.userModel?.firstName ?? ""} ${ctrl.userModel?.lastName ?? ""}"
-                                .text(
-                                  fontSize: 20,
-                                  weight: FontWeight.w500,
-                                )
-                                .paddingOnly(top: 16),
-                            "IATSE Local 600"
-                                .text(
-                                  fontSize: 16,
-                                )
-                                .paddingOnly(top: 8),
-                            (ctrl.userModel?.primaryPosition ?? "")
-                                .text(
-                                  fontSize: 16,
-                                  fontColor: greyTextColor,
-                                )
-                                .paddingOnly(top: 8),
-                          ],
-                        ).paddingOnly(
-                          left: 24.sw(),
-                        )
-                      ],
+                    profileImage(
+                      103,
+                      103,
+                      horizontalPadding: 36,
+                      verticlePadding: 34,
+                    ).paddingOnly(
+                      top: 24.sh(),
+                      left: screenWPadding16.sw(),
                     ),
-                    contentCard("Mobile", (ctrl.userModel?.mobile?[0].mobile ?? "-"),
-                            textColor: blueTextColor)
-                        .paddingOnly(top: 32),
-                    contentCard("E-mail", (ctrl.userModel?.email?[0].email ?? "-"),
-                            textColor: blueTextColor)
-                        .paddingOnly(top: 16),
-                    contentCard("Website", (ctrl.userModel?.website ?? "-"),
-                            textColor: blueTextColor)
-                        .paddingOnly(top: 16),
-                    contentCard(
-                      "About Me",
-                      (ctrl.userModel?.about ?? "-"),
-                    ).paddingOnly(top: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        "${ctrl.userModel?.firstName ?? ""} ${ctrl.userModel?.lastName ?? ""}"
+                            .text(
+                              fontSize: 20,
+                              weight: FontWeight.w500,
+                            )
+                            .paddingOnly(top: 16),
+                        "IATSE Local 600"
+                            .text(
+                              fontSize: 16,
+                            )
+                            .paddingOnly(top: 8),
+                        (ctrl.userModel?.primaryPosition ?? "")
+                            .text(
+                              fontSize: 16,
+                              fontColor: greyTextColor,
+                            )
+                            .paddingOnly(top: 8),
+                      ],
+                    ).paddingOnly(
+                      left: 24.sw(),
+                    )
                   ],
                 ),
-              ),
-            );
-          }),
+                ctrl.userModel?.mobile != null &&
+                        ctrl.userModel!.mobile!.isNotEmpty
+                    ? contentCard("Mobile",
+                            (ctrl.userModel?.mobile?[0].mobile ?? "-"),
+                            textColor: blueTextColor)
+                        .paddingOnly(top: 32)
+                    : Container(),
+                contentCard("E-mail", (ctrl.userModel?.email?[0].email ?? "-"),
+                        textColor: blueTextColor)
+                    .paddingOnly(top: 16),
+                contentCard("Website", (ctrl.userModel?.website ?? "-"),
+                        textColor: blueTextColor)
+                    .paddingOnly(top: 16),
+                contentCard(
+                  "About Me",
+                  (ctrl.userModel?.about ?? "-"),
+                ).paddingOnly(top: 16),
+              ],
+            ),
+          ),
+        );
+      }),
       onWillPop: () async {
         return false;
       },

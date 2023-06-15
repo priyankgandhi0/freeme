@@ -103,6 +103,7 @@ class ClockedTimes {
 
 class Locations {
   Locations({
+    int? locationId,
     String? addressLine1,
     String? addressLine2,
     String? city,
@@ -110,6 +111,7 @@ class Locations {
     num? zip,
     String? country,
   }) {
+    _locationId = locationId;
     _addressLine1 = addressLine1;
     _addressLine2 = addressLine2;
     _city = city;
@@ -118,12 +120,15 @@ class Locations {
     _country = country;
   }
 
+  int? _locationId;
   String? _addressLine1;
   String? _addressLine2;
   String? _city;
   String? _state;
   num? _zip;
   String? _country;
+
+  int? get locationId => _locationId;
 
   String? get addressLine1 => _addressLine1;
 
@@ -139,6 +144,7 @@ class Locations {
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
+    map['location_id'] = _locationId;
     map['address_line1'] = _addressLine1;
     map['address_line2'] = _addressLine2;
     map['city'] = _city;

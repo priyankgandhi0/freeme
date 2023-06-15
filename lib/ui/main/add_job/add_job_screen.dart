@@ -35,10 +35,10 @@ class AddJobScreen extends StatelessWidget {
         ),
         body: SingleChildScrollView(
           child: GetBuilder<AddJobController>(
-            initState: (initState) {
+            initState: (initState) async {
+              await controller.loadAllDropDown();
               if (isForEdit) {
                 Future.delayed(Duration.zero, () async {
-                  await controller.loadAllDropDown();
                   controller.getJobInfo(
                     jobId: jobId,
                   );
@@ -315,10 +315,13 @@ class AddJobScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _detailItem("Rate*",
-              hint: "\$750",
-              controller: controller.rateTextController,
-              color: redColor),
+          _detailItem(
+            "Rate*",
+            hint: "\$750",
+            controller: controller.rateTextController,
+            color: redColor,
+              textInputType:TextInputType.number
+          ),
           fmDropDown(
             child: _detailItemWithDropDown(
               per,
@@ -475,7 +478,6 @@ class AddJobScreen extends StatelessWidget {
                     controller.taxedItems[index],
                     onRemoveClick: () {
                       controller.removeTaxedItem(controller.taxedItems[index]);
-
                     },
                   ).onClick(() {
                     "onTaxItemClick".debugPrint;
@@ -582,12 +584,11 @@ class AddJobScreen extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return _taxedNonTaxedItem(
-                    controller.nonTaxedItems[index],
-                    onRemoveClick: (){
-                      controller.removeNonTaxedItem(controller.nonTaxedItems[index]);
-                    }
-                  ).onClick(() {
+                  return _taxedNonTaxedItem(controller.nonTaxedItems[index],
+                      onRemoveClick: () {
+                    controller
+                        .removeNonTaxedItem(controller.nonTaxedItems[index]);
+                  }).onClick(() {
                     showNonTaxItems(context,
                         defaultItem: controller.nonTaxedItems[index]);
                   });

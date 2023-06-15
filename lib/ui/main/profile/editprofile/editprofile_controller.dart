@@ -98,4 +98,13 @@ class EditProfileController extends GetxController {
       selectedImage = image?.path;
     }
   }
+
+
+  List<TextEditingController> phoneList = [];
+  List<TextEditingController> emailList = [];
+  List<TextEditingController> birthDayList = [];
+  List<TextEditingController> socialMediaList = [];
+  List<TextEditingController> addWebsite = [];
+  List<TextEditingController> addAddress = [];
+
 }
