@@ -47,6 +47,7 @@ class AddJobController extends GetxController {
     await getAllTerms();
     await getAllTypes();
     await getAllJobClassifications();
+    update();
   }
 
   bool isExpanded = false;
@@ -161,7 +162,12 @@ class AddJobController extends GetxController {
     if (response.status) {
       allPerHour.clear();
       allPerHour.addAll(perHourModelFromJson(response.data)
-          .map((e) => MenuItem(text: e.hours, id: e.hoursId, isSelected: false))
+          .map(
+            (e) => MenuItem(
+                text: e.hours,
+                id: e.hoursId,
+                isSelected: e.hours == "10 Hours" ? true : false),
+          )
           .toList());
     } else {}
   }
@@ -236,7 +242,8 @@ class AddJobController extends GetxController {
   ///
   ///
   ///
-  MenuItem selectedPerHour = MenuItem(text: "10 hours");
+  MenuItem selectedPerHour =
+      MenuItem(text: "10 hours", isSelected: true, id: 3);
 
   void onPerHourDropDownTap(MenuItem item) {
     for (int i = 0; i < allPerHour.length; i++) {
@@ -453,7 +460,7 @@ class AddJobController extends GetxController {
   Future<void> addJobButtonClick(BuildContext context, {int? jobId}) async {
     if (_isValidate(context)) {
       startLoading();
-      try{
+      try {
         ResponseItem response = await QuickEntryRepo.addJobSubmit(
           jobId: jobId,
           selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
@@ -478,7 +485,7 @@ class AddJobController extends GetxController {
           paidBy: selectedPaidBy.text,
           terms: selectedTerm.text,
           perHowManyHours: selectedPerHour.text,
-          countryCode: selectedCountry.countryCode,
+          countryCode: selectedCountry.text,
           type: selectedType.text,
           position: selectedPosition.text,
           nonTaxedItems: nonTaxedItems,
@@ -498,7 +505,7 @@ class AddJobController extends GetxController {
           stopLoading();
           response.message.errorSnack(context);
         }
-      }catch(e){
+      } catch (e) {
         stopLoading();
       }
     }
@@ -662,6 +669,21 @@ class AddJobController extends GetxController {
       nonTaxedItems.remove(item);
     }
     update();
+  }
+
+  Future<void> autoPopulatelastEntry() async {
+    startLoading();
+    ResponseItem response = await JobRepo.getJobLastEntry();
+    if (response.status) {
+      setUpData(GetJobInfoModel.fromJson(response.data));
+      stopLoading();
+    } else {
+      stopLoading();
+    }
+  }
+
+  setUpData(GetJobInfoModel model) {
+    setJobData(model);
   }
 }
 

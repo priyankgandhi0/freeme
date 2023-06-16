@@ -75,7 +75,8 @@ class JobRepo {
     return ResponseItem(data: data, message: message, status: status);
   }
 
-  static Future<ResponseItem> editWorkHistoryTimecard(Map<String, dynamic> json) async {
+  static Future<ResponseItem> editWorkHistoryTimecard(
+      Map<String, dynamic> json) async {
     ResponseItem result;
     bool status = true;
     dynamic data;
@@ -97,7 +98,7 @@ class JobRepo {
     return ResponseItem(data: data, message: message, status: status);
   }
 
-  static Future<ResponseItem> getAllDayTypes( ) async {
+  static Future<ResponseItem> getAllDayTypes() async {
     ResponseItem result;
     bool status = true;
     dynamic data;
@@ -110,6 +111,73 @@ class JobRepo {
       requestUrl: AppUrls.baseUrl,
       queryParam: queryParameters,
       requestData: {},
+      passAuthToken: true,
+      isMultipart: false,
+    );
+    status = result.status;
+    data = result.data;
+    message = result.message;
+    return ResponseItem(data: data, message: message, status: status);
+  }
+
+  static Future<ResponseItem> getJobLastEntry() async {
+    ResponseItem result;
+    bool status = true;
+    dynamic data;
+    String message = '';
+    var queryParameters = {
+      RequestParam.service: MethodNames.getJobLastEntry,
+      RequestParam.showError: false,
+    };
+    result = await BaseApiHelper.postRequest(
+      requestUrl: AppUrls.baseUrl,
+      queryParam: queryParameters,
+      requestData: {},
+      passAuthToken: true,
+      isMultipart: false,
+    );
+    status = result.status;
+    data = result.data;
+    message = result.message;
+    return ResponseItem(data: data, message: message, status: status);
+  }
+
+  static Future<ResponseItem> getNotes({required int jobId}) async {
+    ResponseItem result;
+    bool status = true;
+    dynamic data;
+    String message = '';
+    var queryParameters = {
+      RequestParam.service: MethodNames.getNotes,
+      RequestParam.showError: false,
+    };
+    result = await BaseApiHelper.postRequest(
+      requestUrl: AppUrls.baseUrl,
+      queryParam: queryParameters,
+      requestData: {"job_id": jobId},
+      passAuthToken: true,
+      isMultipart: false,
+    );
+    status = result.status;
+    data = result.data;
+    message = result.message;
+    return ResponseItem(data: data, message: message, status: status);
+  }
+
+  static Future<ResponseItem> editNotes(
+      {required int jobId, required String notes}) async {
+    ResponseItem result;
+    bool status = true;
+    dynamic data;
+    String message = '';
+    var queryParameters = {
+      RequestParam.service: MethodNames.editNotes,
+      RequestParam.showError: false,
+    };
+    result = await BaseApiHelper.postRequest(
+      requestUrl: AppUrls.baseUrl,
+      queryParam: queryParameters,
+      requestData: {"job_id": jobId, "notes": notes},
       passAuthToken: true,
       isMultipart: false,
     );

@@ -70,7 +70,9 @@ class AddJobScreen extends StatelessWidget {
 
   Widget _autoPopulatedlastEntryButton() {
     return FmButton(
-      ontap: () {},
+      ontap: () {
+        controller.autoPopulatelastEntry();
+      },
       name: autoPopulateLastEntry,
     ).paddingOnly(
       top: 24.sh(),
@@ -315,16 +317,15 @@ class AddJobScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _detailItem(
-            "Rate*",
-            hint: "\$750",
-            controller: controller.rateTextController,
-            color: redColor,
-              textInputType:TextInputType.number
-          ),
+          _detailItem("Rate*",
+              hint: "\$750",
+              controller: controller.rateTextController,
+              color: redColor,
+              textInputType: TextInputType.number),
           fmDropDown(
             child: _detailItemWithDropDown(
-              per,
+              perStar,
+              labelColor: redColor,
               hint: controller.selectedPerHour.text,
             ),
             onDropDownTap: (item) {
@@ -781,7 +782,7 @@ class AddJobScreen extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    companyAddressStar.text(
+                    companyAddress.text(
                       fontSize: 16,
                     )
                   ],
@@ -861,6 +862,7 @@ class AddJobScreen extends StatelessWidget {
         return Column(
           children: [
             ExpansionTile(
+              initiallyExpanded: true,
               title: Row(
                 children: [
                   Column(
@@ -898,7 +900,8 @@ class AddJobScreen extends StatelessWidget {
                 ),
                 fmDropDown(
                   child: _detailItemWithDropDown(
-                    department,
+                    departmentStar,
+                    labelColor: redColor,
                     hint: ctrl.selectedDepartment.text,
                   ),
                   onDropDownTap: (item) {
@@ -912,7 +915,7 @@ class AddJobScreen extends StatelessWidget {
                 ),
                 fmDropDown(
                   child: _detailItemWithDropDown(
-                    position,
+                    positionStar,labelColor: redColor,
                     hint: controller.selectedPosition.text,
                     showBorder: false,
                   ),

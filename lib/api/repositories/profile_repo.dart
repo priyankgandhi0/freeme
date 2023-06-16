@@ -68,4 +68,34 @@ class ProfileRepo {
     message = result.message;
     return ResponseItem(data: data, message: message, status: status);
   }
+
+  static Future<ResponseItem> changePassword({String? oldPassword,String? newPassword}) async {
+    ResponseItem result;
+    bool status = true;
+    dynamic data;
+    String message = '';
+
+    var queryParameters = {
+      RequestParam.service: MethodNames.changePassword,
+      RequestParam.showError: false,
+    };
+    result = await BaseApiHelper.postRequest(
+      requestUrl: AppUrls.baseUrl,
+      queryParam: queryParameters,
+      requestData: {
+        "old_password": oldPassword,
+        "new_password" : newPassword
+      },
+      passAuthToken: true,
+      isMultipart: false,
+    );
+    status = result.status;
+    data = result.data;
+    message = result.message;
+    return ResponseItem(
+      data: data,
+      message: message,
+      status: status,
+    );
+  }
 }

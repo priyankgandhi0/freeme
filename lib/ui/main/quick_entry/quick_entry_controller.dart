@@ -126,7 +126,7 @@ class QuickEntryController extends GetxController {
   Future<void> finishButtonClick(BuildContext context) async {
     if (isSixthPageValidate()) {
       startLoading();
-      try{
+      try {
         ResponseItem response = await QuickEntryRepo.quickEntrySubmit(
           selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
           description: descriptionController.text.trim(),
@@ -164,10 +164,9 @@ class QuickEntryController extends GetxController {
           response.message.errorSnack(context);
           stopLoading();
         }
-      }catch(e){
+      } catch (e) {
         stopLoading();
       }
-
     }
   }
 
@@ -260,7 +259,9 @@ class QuickEntryController extends GetxController {
   String? addressError;
 
   _isSecondPageValidate() {
-    if (descriptionController.text.trim().isEmpty /*||
+    if (descriptionController.text
+            .trim()
+            .isEmpty /*||
         productionTitleController.text.trim().isEmpty ||
         producerController.text.trim().isEmpty ||
         productionCompanyController.text.trim().isEmpty ||
@@ -268,7 +269,8 @@ class QuickEntryController extends GetxController {
         addressLIne2Controller.text.trim().isEmpty ||
         cityController.text.trim().isEmpty ||
         stateController.text.trim().isEmpty ||
-        zipController.text.trim().isEmpty*/) {
+        zipController.text.trim().isEmpty*/
+        ) {
       if (descriptionController.text.trim().isEmpty) {
         descriptionError = "Add Description";
       } else {
@@ -303,7 +305,7 @@ class QuickEntryController extends GetxController {
       return false;
     }
     descriptionError = null;
-   /* productionTitleError = null;
+    /* productionTitleError = null;
     producerError = null;
     productionCompanyError = null;
     addressError = null;*/
@@ -312,6 +314,7 @@ class QuickEntryController extends GetxController {
   }
 
   List<MenuItem> allTypes = [];
+
   Future getAllTypes() async {
     ResponseItem response = await QuickEntryRepo.getAllTypesList();
     if (response.status) {
@@ -323,6 +326,7 @@ class QuickEntryController extends GetxController {
   }
 
   List<MenuItem> allTerms = [];
+
   Future getAllTerms() async {
     ResponseItem response = await QuickEntryRepo.getAllTermsList();
     if (response.status) {
@@ -334,6 +338,7 @@ class QuickEntryController extends GetxController {
   }
 
   List<MenuItem> allPaidBy = [];
+
   Future getAllPaidBy() async {
     ResponseItem response = await QuickEntryRepo.getAllPaidByList();
     if (response.status) {
@@ -346,6 +351,7 @@ class QuickEntryController extends GetxController {
   }
 
   List<MenuItem> allGuaranteedHour = [];
+
   Future getAllGuaranteedHour() async {
     ResponseItem response = await QuickEntryRepo.getAllGuaranteedHourList();
     if (response.status) {
@@ -360,17 +366,23 @@ class QuickEntryController extends GetxController {
   }
 
   List<MenuItem> allPerHour = [];
+
   Future getAllPerHour() async {
     ResponseItem response = await QuickEntryRepo.allPerHourList();
     if (response.status) {
       allPerHour.clear();
       allPerHour.addAll(perHourModelFromJson(response.data)
-          .map((e) => MenuItem(text: e.hours, id: e.hoursId, isSelected: false))
+          .map((e) => MenuItem(
+                text: e.hours,
+                id: e.hoursId,
+                isSelected: e.hours=="10 Hours"?true:false,
+              ))
           .toList());
     } else {}
   }
 
   List<MenuItem> allJobClassificationList = [];
+
   Future<void> getAllJobClassifications() async {
     ResponseItem response = await QuickEntryRepo.allJobClassificationsList();
     if (response.status) {
@@ -389,6 +401,7 @@ class QuickEntryController extends GetxController {
   }
 
   List<MenuItem> allSubJobList = [];
+
   Future<void> getAllSubJobList(num id) async {
     ResponseItem response =
         await QuickEntryRepo.allSubJobClassificationList(id);
@@ -412,6 +425,7 @@ class QuickEntryController extends GetxController {
   ///
   ///
   MenuItem selectedGuaranteedHour = MenuItem(text: "Not Sure");
+
   void guaranteedHourClick(MenuItem item) {
     for (int i = 0; i < allGuaranteedHour.length; i++) {
       if (allGuaranteedHour[i].text == item.text) {
@@ -429,13 +443,14 @@ class QuickEntryController extends GetxController {
     update();
   }
 
-  MenuItem selectedPerHour = MenuItem(text: "10 hours");
+  MenuItem selectedPerHour = MenuItem(text: "10 Hours",id: 3);
+
   void onPerHourDropDownTap(MenuItem item) {
     for (int i = 0; i < allPerHour.length; i++) {
       if (allPerHour[i].text == item.text) {
         if (allPerHour[i].isSelected) {
           allPerHour[i].isSelected = false;
-          selectedPerHour = MenuItem(text: "10 hours");
+          selectedPerHour = MenuItem(text: "10 Hours");
         } else {
           allPerHour[i].isSelected = true;
           selectedPerHour = allPerHour[i];
@@ -448,6 +463,7 @@ class QuickEntryController extends GetxController {
   }
 
   MenuItem selectedPaidBy = MenuItem(text: "Not Sure");
+
   void onPaidByDropDownTap(MenuItem item) {
     for (int i = 0; i < allPaidBy.length; i++) {
       if (allPaidBy[i].text == item.text) {
@@ -466,6 +482,7 @@ class QuickEntryController extends GetxController {
   }
 
   MenuItem selectedTerm = MenuItem(text: "Not Sure");
+
   void onTermsDropDownTap(MenuItem item) {
     for (int i = 0; i < allTerms.length; i++) {
       if (allTerms[i].text == item.text) {
@@ -484,6 +501,7 @@ class QuickEntryController extends GetxController {
   }
 
   MenuItem selectedType = MenuItem(text: "Not Sure");
+
   void onTypeDropDownTap(MenuItem item) {
     for (int i = 0; i < allTypes.length; i++) {
       if (allTypes[i].text == item.text) {
@@ -502,6 +520,7 @@ class QuickEntryController extends GetxController {
   }
 
   MenuItem selectedDepartment = MenuItem(text: "Select Department");
+
   void onDepartmentTap(MenuItem item) {
     for (int i = 0; i < allJobClassificationList.length; i++) {
       if (allJobClassificationList[i].text == item.text) {
@@ -524,6 +543,7 @@ class QuickEntryController extends GetxController {
   }
 
   MenuItem selectedPosition = MenuItem(text: "Select Position");
+
   void onPositionTap(MenuItem item) {
     for (int i = 0; i < allSubJobList.length; i++) {
       if (allSubJobList[i].text == item.text) {

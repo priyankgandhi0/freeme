@@ -7,6 +7,7 @@ import '../../../api/response_item.dart';
 import '../../../models/industry_model.dart';
 import '../../../models/user_login_model.dart';
 import '../../../utils/app_constant.dart';
+import '../../widgets/dropdown.dart';
 
 class RegisterController extends GetxController {
   bool showPassword = false;
@@ -50,21 +51,44 @@ class RegisterController extends GetxController {
     update();
   }
 
-  List<IndustryModel> industryList = [];
+  //List<IndustryModel> industryList = [];
+  List<MenuItem> industryList = [];
 
   Future<void> getAllIndustry(BuildContext context) async {
     startLoading();
     ResponseItem response = await AuthRepo.getAllIndustry();
     if (response.status) {
       industryList.clear();
-      industryList.addAll(
-        allIndustryList(response.data),
-      );
+      industryList.addAll(allIndustryList(response.data)
+          .map(
+            (e) => MenuItem(
+                text: e.industryName, id: e.industryId, isSelected: false),
+          )
+          .toList());
       stopLoading();
     } else {
       response.message.errorSnack(context);
       stopLoading();
     }
+  }
+
+  MenuItem selectedIndustry = MenuItem(text: "Film Industry",id: 1,isSelected: true);
+
+  void onSelectIndustry(MenuItem item) {
+    for (int i = 0; i < industryList.length; i++) {
+      if (industryList[i].text == item.text) {
+        if (industryList[i].isSelected) {
+          /*allGuaranteedHour[i].isSelected = false;
+          selectedGuaranteedHour = MenuItem(text: "Not Sure");*/
+        } else {
+          industryList[i].isSelected = true;
+          selectedIndustry = industryList[i];
+        }
+      } else {
+        industryList[i].isSelected = false;
+      }
+    }
+    update();
   }
 
   Future<void> performRegister(BuildContext context) async {
@@ -75,7 +99,7 @@ class RegisterController extends GetxController {
         lastName: lastNameController.text.trim(),
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
-        industryId: selectedIndustry?.industryId.toString(),
+        industryId: selectedIndustry.id.toString(),
       );
       if (response.status) {
         UserModel responseData = UserModel.fromJson(response.data);
@@ -160,15 +184,8 @@ class RegisterController extends GetxController {
     return true;
   }
 
-  IndustryModel? selectedIndustry;
-
-  void onSelectIndustry(IndustryModel e) {
-    selectedIndustry = e;
-    update();
-  }
 
   clearAllData() {
-    selectedIndustry = null;
     firstNameController.clear();
     lastNameController.clear();
     emailController.clear();

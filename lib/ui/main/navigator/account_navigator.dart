@@ -41,7 +41,7 @@ class _AccountNavigatorState extends State<AccountNavigator> {
               case Routes.accountSettingScreen:
                 return AccountSettingScreen();
               case Routes.changePasswordScreen:
-                return const ChangePasswordScreen();
+                return ChangePasswordScreen();
             }
             return Container();
           },

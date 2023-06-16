@@ -22,6 +22,7 @@ class MethodNames {
   static const logout = 'logout';
   static const myProfile = 'myProfile';
   static const editProfile = 'editProfile';
+  static const changePassword = 'changePassword';
   static const quickEntry = 'quickEntry';
   static const getAllTypes = 'getAllTypes';
   static const getAllTerms = 'getAllTerms';
@@ -39,6 +40,9 @@ class MethodNames {
   static const getWorkHistory = 'getWorkHistory';
   static const editWorkHistoryTimecard = 'editWorkHistoryTimecard';
   static const getAllDayTypes = 'getAllDayTypes';
+  static const getJobLastEntry = 'getJobLastEntry';
+  static const getNotes = 'getNotes';
+  static const editNotes = 'editNotes';
 
 }
 

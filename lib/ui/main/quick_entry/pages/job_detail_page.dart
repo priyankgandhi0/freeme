@@ -147,7 +147,7 @@ class JobDetailPage extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            companyAddressStar.text(
+                            companyAddress.text(
                                 fontSize: 16,
                                 fontColor: ctrl.isExpanded
                                     ? Colors.black

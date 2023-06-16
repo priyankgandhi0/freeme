@@ -13,50 +13,49 @@ Widget fmDropDown<T>(
   children.clear();
 
   for (int i = 0; i < (items ?? []).length; i++) {
-    if(i==(items ?? []).length-1){
-      children.add(DropdownMenuItem<MenuItem>(
-        value: items?[i],
-        onTap: () {
-          onDropDownTap(items[i]);
-        },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            buildItem(items![i], context),
-          ],
+    if (i == (items ?? []).length - 1) {
+      children.add(
+        DropdownMenuItem<MenuItem>(
+          value: items?[i],
+          onTap: () {
+            onDropDownTap(items[i]);
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              buildItem(items![i], context),
+            ],
+          ),
         ),
-      ));
-    }else{
-      children.add(DropdownMenuItem<MenuItem>(
-        value: items?[i],
-        onTap: () {
-          onDropDownTap(items[i]);
-        },
-        child: Column(
-          children: [
-            Expanded(child: Container()),
-            buildItem(items![i], context),
-            Expanded(child: Container()),
-            Container(
-              color: borderGreyColor,
-              width: Get.width,
-              height: 1,
-            )
-          ],
+      );
+    } else {
+      children.add(
+        DropdownMenuItem<MenuItem>(
+          value: items?[i],
+          onTap: () {
+            onDropDownTap(items[i]);
+          },
+          child: Column(
+            children: [
+              Expanded(child: Container()),
+              buildItem(items![i], context),
+              Expanded(child: Container()),
+              Container(
+                color: borderGreyColor,
+                width: Get.width,
+                height: 1,
+              )
+            ],
+          ),
         ),
-      ));
+      );
     }
-
   }
   return DropdownButtonHideUnderline(
     child: DropdownButton2(
       customButton: child,
-      items: [
-        ...children
-      ],
-      onChanged: (value) {
-
-      },
+      items: [...children],
+      onChanged: (value) {},
       dropdownStyleData: DropdownStyleData(
         width: width ?? Get.width / 2,
         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
@@ -67,12 +66,13 @@ Widget fmDropDown<T>(
         maxHeight: 400,
         elevation: 3,
         offset: Offset(Get.width - (33 + (width ?? Get.width / 2)), 8),
-        scrollPadding: const EdgeInsets.all(4),
+        scrollPadding: const EdgeInsets.only(right: 0),
         scrollbarTheme: const ScrollbarThemeData(
           radius: Radius.circular(50),
         ),
       ),
-      menuItemStyleData: MenuItemStyleData(padding: EdgeInsets.zero, height: 58),
+      menuItemStyleData:
+          MenuItemStyleData(padding: EdgeInsets.zero, height: 58),
     ),
   );
 }
@@ -103,40 +103,6 @@ Widget buildItem(
       )
     ],
   );
-  /* return Column(
-    mainAxisAlignment: MainAxisAlignment.spaceAround,
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      Row(
-        children: [
-          item.isSelected
-              ? FmImage.assetImage(
-                  path: Assets.iconsTrueIcon,
-                  height: 20.sh(),
-                  width: 20.sw(),
-                ).paddingOnly(
-                  right: screenWPadding16.sw(),
-                  left: screenWPadding16.sw(),
-                )
-              : Container(
-                  width: 52.sw(),
-                ),
-          Text(
-            item.text ?? "",
-            style: const TextStyle(
-              color: Colors.black,
-            ),
-          )
-        ],
-      ),
-
-      Container(
-        color: borderGreyColor,
-        width: Get.width,
-        height: 1,
-      )
-    ],
-  );*/
 }
 
 class MenuItem {

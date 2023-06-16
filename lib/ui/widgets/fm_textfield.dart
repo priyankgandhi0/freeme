@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:freeme/globle.dart';
 
 class FmTextField extends StatefulWidget {
@@ -53,7 +54,7 @@ class FmTextField extends StatefulWidget {
       this.readOnly = false,
       this.showCurson = true,
       this.headerColor = Colors.black,
-      this.textInputAction,
+      this.textInputAction = TextInputAction.done,
       this.enabled});
 
   @override
@@ -85,6 +86,15 @@ class _FmTextFieldState extends State<FmTextField> {
         SizedBox(
           height: 51.sh(),
           child: TextField(
+
+            inputFormatters: widget.inputType != null &&
+                    widget.inputType == TextInputType.number &&
+                    widget.inputType == TextInputType.emailAddress &&
+                    widget.inputType == TextInputType.phone
+                ? <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
+                  ]
+                : null,
             textInputAction: widget.textInputAction,
             focusNode: widget.focusNode,
             textAlign: widget.align!,
@@ -168,6 +178,7 @@ class FmEmptyTextField extends StatelessWidget {
     this.maxLines,
     this.textInputType,
     this.controller,
+    this.onchange
   }) : super(key: key);
   TextInputType? textInputType;
 
@@ -175,10 +186,25 @@ class FmEmptyTextField extends StatelessWidget {
   Widget? suffixIcon;
   int? maxLines;
   TextEditingController? controller;
+  ValueChanged<String>? onchange;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      textInputAction: TextInputAction.done,
+      inputFormatters: textInputType != null &&
+              textInputType == TextInputType.number &&
+              textInputType == TextInputType.emailAddress &&
+              textInputType == TextInputType.phone
+          ? <TextInputFormatter>[
+              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
+            ]
+          : null,
+      onChanged: (text) {
+        if ( onchange != null) {
+           onchange!(text);
+        }
+      },
       controller: controller,
       maxLines: maxLines ?? 1,
       keyboardType: textInputType,

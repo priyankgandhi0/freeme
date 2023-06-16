@@ -126,7 +126,9 @@ class WorkHistoryDetailScreen extends StatelessWidget {
                       JobInfoScreen(
                         jobId: jobId?.toInt() ?? -1,
                       ),
-                      NotesScreen(),
+                      NotesScreen(
+                        jobId: jobId?.toInt() ?? -1,
+                      ),
                     ],
                   ),
                 )

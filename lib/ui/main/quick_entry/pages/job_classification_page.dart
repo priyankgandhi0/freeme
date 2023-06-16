@@ -91,7 +91,7 @@ class JobClassificationPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        department.text(fontSize: 16, fontColor: redColor),
+        departmentStar.text(fontSize: 16, fontColor: redColor),
         fmDropDown(
           width: 300,
           child: _departmentDropDownItem(ctrl.selectedDepartment),

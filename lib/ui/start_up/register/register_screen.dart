@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:freeme/globle.dart';
 import 'package:freeme/ui/start_up/register/register_controller.dart';
 
+import '../../widgets/dropdown.dart';
+
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({Key? key}) : super(key: key);
 
@@ -69,73 +71,18 @@ class RegisterScreen extends StatelessWidget {
                 ),
           ],
         ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
-            borderRadius: BorderRadius.circular(5),
-            color: Colors.white,
+        fmDropDown(
+          child: _industryDropDownItem(
+            guarHours,
+            hint: controller.selectedIndustry.text,
           ),
-          child: GetBuilder<RegisterController>(
-            builder: (ctrl) {
-              return ListTileTheme(
-                dense: true,
-                key: UniqueKey(),
-                horizontalTitleGap: 0.0,
-                minLeadingWidth: 0,
-                child: ExpansionTile(
-                  childrenPadding: EdgeInsets.zero,
-                  title: ctrl.selectedIndustry?.industryName.text(
-                        fontSize: 16,
-                      ) ??
-                      selectIndustry.text(
-                        fontSize: 16,
-                      ),
-                  initiallyExpanded: ctrl.isShowExpanded,
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      controller.isExpanded
-                          ? FmImage.assetImage(
-                              path: Assets.iconsDownIcon,
-                              height: 20.sh(),
-                              width: 15.sw(),
-                            )
-                          : FmImage.assetImage(
-                              path: Assets.iconsForwardIcon,
-                              height: 15.sh(),
-                              width: 8.sw(),
-                            )
-                    ],
-                  ),
-                  onExpansionChanged: (value) {
-                    value.debugPrint;
-                    // controller.expansionChange(value);
-                  },
-                  children: [
-                    Container(
-                      width: Get.width,
-                      height: 1,
-                      color: Colors.black,
-                    ),
-                    ...ctrl.industryList.map(
-                      (e) => expandedChildItem(e.industryName ?? "", context)
-                          .onClick(
-                        () {
-                          ctrl.isShowExpanded = false;
-                          ctrl.update();
-                          ctrl.onSelectIndustry(e);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ).paddingOnly(
-            left: screenHPadding16.sw(),
-            right: screenHPadding16.sw(),
-            top: screenHPadding8.sh()),
+          onDropDownTap: (item) {
+            controller.onSelectIndustry(item);
+          },
+          items: controller.industryList,
+          context: context,
+          width: 200
+        ),
         ctrl.industryError != null
             ? Row(
                 children: [
@@ -151,6 +98,50 @@ class RegisterScreen extends StatelessWidget {
             : Container()
       ],
     );
+  }
+
+  Widget _industryDropDownItem(
+    String lable, {
+    bool showBorder = true,
+    String? hint,
+    bool showDownIcon = true,
+    Color labelColor = Colors.black,
+    Widget? customSuffix,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black),
+        borderRadius: BorderRadius.circular(5),
+        color: Colors.white,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          hint.text(
+            fontColor: Colors.black,
+            fontSize: 16,
+            overFlow: TextOverflow.ellipsis,
+          ).paddingOnly(left: 16),
+          showDownIcon
+              ? customSuffix ??
+                  FmImage.assetImage(
+                    path: Assets.iconsDownIcon,
+                    height: 15.sh(),
+                    width: 15.sw(),
+                    color: Colors.black,
+                  ).paddingOnly(
+                    right: screenWPadding16.sw(),
+                  )
+              : Container()
+        ],
+      ).paddingOnly(
+        top: screenHPadding16.sh(),
+        bottom: 16.sh(),
+      ),
+    ).paddingOnly(
+        left: screenHPadding16.sw(),
+        right: screenHPadding16.sw(),
+        top: screenHPadding8.sh());
   }
 
   Widget expandedChildItem(String name, BuildContext context) {

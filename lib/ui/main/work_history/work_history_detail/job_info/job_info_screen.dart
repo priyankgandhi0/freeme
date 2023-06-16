@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:freeme/globle.dart';
+import 'package:freeme/models/get_job_info_model.dart';
 
 import '../../../../widgets/app_calender.dart';
 import '../../../../widgets/fm_dialog.dart';
 import 'job_info_controller.dart';
 
 class JobInfoScreen extends StatelessWidget {
-  JobInfoScreen({Key? key,required this.jobId}) : super(key: key);
+  JobInfoScreen({Key? key, required this.jobId}) : super(key: key);
 
   final controller = Get.put(JobInfoController());
   int jobId;
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<JobInfoController>(
@@ -42,7 +44,7 @@ class JobInfoScreen extends StatelessWidget {
       currentDay: controller.currentDay,
       focusDay: controller.focusedDay,
       onDaySelected: (selectedDay, focusDay) {
-       // controller.onDaySelect(selectedDay, focusDay);
+        // controller.onDaySelect(selectedDay, focusDay);
       },
       onMonthChange: (date) {},
       selectedDays: ctrl.selectedDays,
@@ -215,7 +217,9 @@ class JobInfoScreen extends StatelessWidget {
               desc: "\$${ctrl.jobInfo?.rate}/${ctrl.jobInfo?.perHowManyHours}",
               titleColor: redTextColor,
               onIbuttonClick: () {
-                showDialogOnIButtonClick(context);
+                if (ctrl.jobInfo != null) {
+                  showDialogOnIButtonClick(context, ctrl.jobInfo!);
+                }
               }).paddingOnly(
             top: screenHPadding16.sh(),
             bottom: screenHPadding8.sh(),
@@ -351,7 +355,21 @@ class JobInfoScreen extends StatelessWidget {
     );
   }
 
-  void showDialogOnIButtonClick(BuildContext context) {
+  void showDialogOnIButtonClick(
+    BuildContext context,
+    GetJobInfoModel jobInfo,
+  ) {
+    num hour = (jobInfo.perHowManyHours.toString().toLowerCase() == "10 hours"
+        ? 10
+        : jobInfo.perHowManyHours.toString().toLowerCase() == "Hourly"
+            ? 1
+            : jobInfo.perHowManyHours.toString().toLowerCase() == "8 hours"
+                ? 8
+                : jobInfo.perHowManyHours.toString().toLowerCase() == "12 hours"
+                    ? 12
+                    : 0);
+    num perHourRate = int.parse(jobInfo.rate.toString()) / hour;
+
     fMDialog(
       context: context,
       horizontalPadding: 48,
@@ -364,7 +382,7 @@ class JobInfoScreen extends StatelessWidget {
         children: [
           detailItem(
             title: rateStar,
-            desc: "750 / 10",
+            desc: "\$${jobInfo.rate}/$hour",
           ).paddingOnly(
             top: screenHPadding16.sh(),
             bottom: screenHPadding16.sh(),
@@ -376,21 +394,21 @@ class JobInfoScreen extends StatelessWidget {
           ),
           detailItem(
             title: hourly,
-            desc: "59.0909",
+            desc: perHourRate.toStringAsFixed(2),
           ).paddingOnly(
             top: screenHPadding16.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: hourlyX15,
-            desc: "88.6363",
+            desc: (perHourRate * 1.5).toStringAsFixed(2),
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: Hourly20,
-            desc: "88.6363",
+            desc: (perHourRate * 2).toStringAsFixed(2),
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
@@ -400,10 +418,14 @@ class JobInfoScreen extends StatelessWidget {
     );
   }
 
+  calculateAmount(int amount, String perHowManyHours) {}
+
   createCompanyAddress(JobInfoController ctrl) {
-   return "${ctrl.jobInfo?.companyAddressLine1 ?? ""}"
+    return "${ctrl.jobInfo?.companyAddressLine1 ?? ""}"
         "\n${ctrl.jobInfo?.companyAddressLine2 ?? ""}"
         "\n${ctrl.jobInfo?.city ?? ""}${ctrl.jobInfo?.state ?? ""}"
-        "${ctrl.jobInfo?.zip==0?"":ctrl.jobInfo?.zip}\n${ctrl.jobInfo?.country ?? ""}";
+        "${ctrl.jobInfo?.zip == 0 ? "" : ctrl.jobInfo?.zip}\n${ctrl.jobInfo?.country ?? ""}";
   }
 }
+
+
