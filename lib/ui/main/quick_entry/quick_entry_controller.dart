@@ -387,16 +387,22 @@ class QuickEntryController extends GetxController {
     ResponseItem response = await QuickEntryRepo.allJobClassificationsList();
     if (response.status) {
       allJobClassificationList.clear();
-      allJobClassificationList
-          .addAll(jobClassificationModelFromJson(response.data)
-              .map(
-                (e) => MenuItem(
-                  text: e.jobClassificationCategory,
-                  id: e.jobClassificationId,
-                  isSelected: false,
-                ),
-              )
-              .toList());
+      allJobClassificationList.addAll(
+        jobClassificationModelFromJson(response.data)
+            .map(
+              (e) => MenuItem(
+            text: (e.jobClassificationCategory?.contains("-") ?? false)
+                ? e.jobClassificationCategory?.split("-").first
+                : e.jobClassificationCategory,
+            subText: (e.jobClassificationCategory?.contains("-") ?? false)
+                ? e.jobClassificationCategory?.split("-").last
+                : null,
+            id: e.jobClassificationId,
+            isSelected: false,
+          ),
+        )
+            .toList(),
+      );
     } else {}
   }
 

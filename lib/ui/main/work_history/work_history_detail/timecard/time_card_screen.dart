@@ -233,6 +233,7 @@ class TimeCardTabScreen extends StatelessWidget {
                 onTimeChange: (time) {
                   controller.clockInTime = time;
                 },
+                alignment: Alignment.center,
               ),
               (ctrl.historyModel?.callTime.isNullOrEmpty ?? false)
                   ? FmButton(

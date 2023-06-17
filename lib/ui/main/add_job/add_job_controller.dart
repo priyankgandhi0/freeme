@@ -519,34 +519,50 @@ class AddJobController extends GetxController {
 
   String? descriptionError;
   String? rateError;
-  String? jobClassificationError;
+  String? departmentError;
+  String? positionError;
+  String? daysError;
 
   bool _isValidate(BuildContext context) {
-    if (selectedDays.isEmpty) {
-      "Please Select Days".errorSnack(context);
-      return false;
-    }
-    if (descriptionController.text.isEmpty) {
-      "Please enter description".errorSnack(context);
-      return false;
-    }
+    if (descriptionController.text.isEmpty ||
+        rateTextController.text.isEmpty ||
+        selectedDepartment.id == null ||
+        selectedPosition.id == null ||
+        selectedDays.isEmpty) {
+      if (descriptionController.text.isEmpty) {
+        descriptionError = "";
+      } else {
+        descriptionError = null;
+      }
+      if (rateTextController.text.isEmpty) {
+        rateError = "";
+      } else {
+        rateError = null;
+      }
 
-    if (selectedDepartment.id == null || selectedPosition.id == null) {
       if (selectedDepartment.id == null) {
-        "Please select department".errorSnack(context);
-        return false;
+        departmentError = "";
+      } else {
+        departmentError = null;
       }
       if (selectedPosition.id == null) {
-        "Please select position".errorSnack(context);
-        return false;
+        positionError = "";
+      } else {
+        positionError = null;
       }
+      if (selectedDays.isEmpty) {
+        daysError = "";
+      } else {
+        daysError = null;
+      }
+      update();
       return false;
     }
-
-    if (rateTextController.text.isEmpty) {
-      "Please enter rate".errorSnack(context);
-      return false;
-    }
+    descriptionError = null;
+    rateError = null;
+    departmentError = null;
+    positionError = null;
+    daysError = null;
     update();
     return true;
   }
@@ -581,8 +597,11 @@ class AddJobController extends GetxController {
     recommendedByController.text = jobInfo.recommendedBy ?? "";
     hiredByController.text = jobInfo.hiredBy ?? "";
 
-    selectedPerHour = allPerHour
-        .firstWhere((element) => element.text == jobInfo.perHowManyHours);
+    selectedPerHour = allPerHour.firstWhereOrNull(
+            (element) => element.text == jobInfo.perHowManyHours) ??
+        MenuItem(text: "10 hours", isSelected: true, id: 3);
+    onPerHourDropDownTap(selectedPerHour);
+
     selectedGuaranteedHour = allGuaranteedHour
         .firstWhere((element) => element.text == jobInfo.guaranteedHours);
     selectedW2Or1099 =

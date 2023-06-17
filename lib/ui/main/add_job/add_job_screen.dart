@@ -201,9 +201,21 @@ class AddJobScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Expanded(
-            child: daysStar.text(
-              fontColor: redTextColor,
-              fontSize: 16,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                daysStar.text(
+                  fontColor: redTextColor,
+                  fontSize: 16,
+                ),
+                controller.daysError != null
+                    ? FmImage.assetImage(
+                        path: Assets.iconsErrorIcon,
+                        height: 15.sh(),
+                        width: 15.sw(),
+                      ).paddingOnly(right: 12)
+                    : Container()
+              ],
             ),
           ),
           Expanded(
@@ -267,7 +279,8 @@ class AddJobScreen extends StatelessWidget {
               _detailItem(descriptionStar,
                   hint: "Commercial with Joey",
                   color: redTextColor,
-                  controller: controller.descriptionController),
+                  controller: controller.descriptionController,
+                  error: controller.descriptionError),
               _detailItem(title,
                   hint: "Commercial#1234",
                   controller: controller.productionTitleController),
@@ -321,7 +334,8 @@ class AddJobScreen extends StatelessWidget {
               hint: "\$750",
               controller: controller.rateTextController,
               color: redColor,
-              textInputType: TextInputType.number),
+              textInputType: TextInputType.number,
+              error: controller.rateError),
           fmDropDown(
             child: _detailItemWithDropDown(
               perStar,
@@ -378,7 +392,7 @@ class AddJobScreen extends StatelessWidget {
             },
             items: controller.allTerms,
             context: context,
-            width: 250,
+            width: 180,
           ),
         ],
       ),
@@ -657,6 +671,7 @@ class AddJobScreen extends StatelessWidget {
   Widget _detailItem(String lable,
       {bool showBorder = true,
       String? hint,
+      String? error,
       double? leftPadding,
       double? rightPadding,
       Color? color = Colors.black,
@@ -677,13 +692,21 @@ class AddJobScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 lable
                     .text(
                       fontColor: color,
                       fontSize: 16,
                     )
-                    .paddingOnly(left: 20.sw())
+                    .paddingOnly(left: 20.sw()),
+                error != null
+                    ? FmImage.assetImage(
+                        path: Assets.iconsErrorIcon,
+                        height: 15.sh(),
+                        width: 15.sw(),
+                      ).paddingOnly(right: 12)
+                    : Container()
               ],
             ),
           ),
@@ -704,14 +727,13 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  Widget _detailItemWithDropDown(
-    String lable, {
-    bool showBorder = true,
-    String? hint,
-    bool showDownIcon = true,
-    Color labelColor = Colors.black,
-    Widget? customSuffix,
-  }) {
+  Widget _detailItemWithDropDown(String title,
+      {bool showBorder = true,
+      String? hint,
+      bool showDownIcon = true,
+      Color labelColor = Colors.black,
+      Widget? customSuffix,
+      String? error}) {
     return Container(
       decoration: BoxDecoration(
         border: showBorder
@@ -727,13 +749,23 @@ class AddJobScreen extends StatelessWidget {
         children: [
           Expanded(
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                lable
+                title
                     .text(
                       fontColor: labelColor,
                       fontSize: 16,
                     )
-                    .paddingOnly(left: 20.sw())
+                    .paddingOnly(
+                      left: 20.sw(),
+                    ),
+                error != null
+                    ? FmImage.assetImage(
+                        path: Assets.iconsErrorIcon,
+                        height: 15.sh(),
+                        width: 15.sw(),
+                      ).paddingOnly(right: 12)
+                    : Container()
               ],
             ),
           ),
@@ -899,26 +931,25 @@ class AddJobScreen extends StatelessWidget {
                   color: borderGreyColor,
                 ),
                 fmDropDown(
-                  child: _detailItemWithDropDown(
-                    departmentStar,
-                    labelColor: redColor,
-                    hint: ctrl.selectedDepartment.text,
-                  ),
+                  child: _detailItemWithDropDown(departmentStar,
+                      labelColor: redColor,
+                      hint: ctrl.selectedDepartment.text,
+                      error: controller.departmentError),
                   onDropDownTap: (item) {
                     controller.onDepartmentTap(item);
                   },
                   items: controller.allJobClassificationList,
                   context: context,
-                  width: 300,
+                  width: 215,
                 ).paddingOnly(
                   left: screenWPadding8.sw(),
                 ),
                 fmDropDown(
-                  child: _detailItemWithDropDown(
-                    positionStar,labelColor: redColor,
-                    hint: controller.selectedPosition.text,
-                    showBorder: false,
-                  ),
+                  child: _detailItemWithDropDown(positionStar,
+                      labelColor: redColor,
+                      hint: controller.selectedPosition.text,
+                      showBorder: false,
+                      error: controller.positionError),
                   onDropDownTap: (item) {
                     controller.onPositionTap(item);
                   },

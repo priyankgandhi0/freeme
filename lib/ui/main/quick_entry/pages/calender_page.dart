@@ -35,8 +35,9 @@ class CalenderPage extends StatelessWidget {
                 },
                 onMonthChange: (date) {},
                 selectedDays: ctrl.selectedDays,
+                error: ctrl.calenderError,
               ),
-              Row(
+              /*Row(
                 children: [
                   controller.calenderError != null
                       ? controller.calenderError.text(fontColor: redColor)
@@ -45,7 +46,7 @@ class CalenderPage extends StatelessWidget {
               ).paddingOnly(
                 left: screenWPadding16.sw(),
                 top: screenHPadding8.sh(),
-              ),
+              ),*/
               FmButton(
                 ontap: () {
                   controller.moveToSecondPage();

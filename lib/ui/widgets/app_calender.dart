@@ -15,6 +15,7 @@ class AppCalender extends StatefulWidget {
   Function? calenderBuildCompleted;
   Set<DateTime>? selectedDays;
   CalendarFormat? calenderFormat;
+  String? error;
 
   AppCalender({
     this.currentDay,
@@ -25,6 +26,7 @@ class AppCalender extends StatefulWidget {
     this.focusDay,
     this.selectedDays,
     this.calenderFormat,
+    this.error,
     Key? key,
   }) : super(key: key);
 
@@ -50,7 +52,10 @@ class _AppCalenderState extends State<AppCalender> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Colors.white,
-        border: Border.all(width: 1),
+        border: Border.all(
+          width: 1,
+          color: widget.error != null ? redColor : Colors.black,
+        ),
       ),
       child: TableCalendar(
         firstDay: DateTime.utc(2010, 10, 20),
@@ -143,7 +148,7 @@ class _AppCalenderState extends State<AppCalender> {
     );
   }
 
-  CalendarStyle calenderStyle(){
+  CalendarStyle calenderStyle() {
     return CalendarStyle(
       outsideDaysVisible: false,
       cellMargin: EdgeInsets.all(3),
@@ -172,6 +177,7 @@ class _AppCalenderState extends State<AppCalender> {
       todayDecoration: todaysDecoration(),
     );
   }
+
   BoxDecoration todaysDecoration() {
     return BoxDecoration(
       shape: BoxShape.circle,
@@ -183,7 +189,6 @@ class _AppCalenderState extends State<AppCalender> {
     );
   }
 }
-
 
 class WeeklyCalender extends StatefulWidget {
   OnDaySelected? onDaySelected;
@@ -242,7 +247,7 @@ class _WeeklyCalenderState extends State<WeeklyCalender> {
       daysOfWeekVisible: true,
       sixWeekMonthsEnforced: false,
       rowHeight: 82,
-      daysOfWeekHeight:10,
+      daysOfWeekHeight: 10,
       onCalendarCreated: (controller) {
         pageController = controller;
       },

@@ -86,15 +86,14 @@ class _FmTextFieldState extends State<FmTextField> {
         SizedBox(
           height: 51.sh(),
           child: TextField(
-
-            inputFormatters: widget.inputType != null &&
-                    widget.inputType == TextInputType.number &&
-                    widget.inputType == TextInputType.emailAddress &&
-                    widget.inputType == TextInputType.phone
-                ? <TextInputFormatter>[
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
-                  ]
-                : null,
+            inputFormatters: <TextInputFormatter>[
+              if (widget.inputType != null &&
+                  (widget.inputType == TextInputType.number ||
+                      widget.inputType == TextInputType.emailAddress ||
+                      widget.inputType == TextInputType.phone)) ...[
+                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
+              ]
+            ],
             textInputAction: widget.textInputAction,
             focusNode: widget.focusNode,
             textAlign: widget.align!,
@@ -136,13 +135,23 @@ class _FmTextFieldState extends State<FmTextField> {
                 fontWeight: FontWeight.normal,
               ),
               border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black, width: 1.0),
-                  borderRadius: BorderRadius.circular(widget.radius ?? 5)),
+                borderSide: BorderSide(
+                  color: widget.error != null ? redColor : Colors.black,
+                  width: 1.0,
+                ),
+                borderRadius: BorderRadius.circular(
+                  widget.radius ?? 5,
+                ),
+              ),
               enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black, width: 1.0),
+                  borderSide: BorderSide(
+                      color: widget.error != null ? redColor : Colors.black,
+                      width: 1.0),
                   borderRadius: BorderRadius.circular(widget.radius ?? 5)),
               focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black, width: 1.0),
+                  borderSide: BorderSide(
+                      color: widget.error != null ? redColor : Colors.black,
+                      width: 1.0),
                   borderRadius: BorderRadius.circular(widget.radius ?? 5)),
               fillColor: Colors.white,
               filled: true,
@@ -158,30 +167,30 @@ class _FmTextFieldState extends State<FmTextField> {
             ),
           ),
         ),
-        widget.error != null
+        /*  widget.error != null
             ? Row(
                 children: [
                   widget.error.text(fontColor: redColor),
                 ],
               )
-            : Container()
+            : Container()*/
       ],
     );
   }
 }
 
 class FmEmptyTextField extends StatelessWidget {
-  FmEmptyTextField({
-    Key? key,
-    this.hintText,
-    this.suffixIcon,
-    this.maxLines,
-    this.textInputType,
-    this.controller,
-    this.onchange
-  }) : super(key: key);
-  TextInputType? textInputType;
+  FmEmptyTextField(
+      {Key? key,
+      this.hintText,
+      this.suffixIcon,
+      this.maxLines,
+      this.textInputType,
+      this.controller,
+      this.onchange})
+      : super(key: key);
 
+  TextInputType? textInputType;
   String? hintText;
   Widget? suffixIcon;
   int? maxLines;
@@ -192,17 +201,17 @@ class FmEmptyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       textInputAction: TextInputAction.done,
-      inputFormatters: textInputType != null &&
-              textInputType == TextInputType.number &&
-              textInputType == TextInputType.emailAddress &&
-              textInputType == TextInputType.phone
-          ? <TextInputFormatter>[
-              FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
-            ]
-          : null,
+      inputFormatters: <TextInputFormatter>[
+        if (textInputType != null &&
+            (textInputType == TextInputType.number ||
+                textInputType == TextInputType.emailAddress ||
+                textInputType == TextInputType.phone)) ...[
+          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
+        ]
+      ],
       onChanged: (text) {
-        if ( onchange != null) {
-           onchange!(text);
+        if (onchange != null) {
+          onchange!(text);
         }
       },
       controller: controller,

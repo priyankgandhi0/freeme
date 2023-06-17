@@ -95,11 +95,24 @@ Widget buildItem(
           : Container(
               width: 52.sw(),
             ),
-      Text(
-        item.text ?? "",
-        style: const TextStyle(
-          color: Colors.black,
-        ),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (item.text?.contains("-") ?? false) ...[
+            (item.text?.split("-").first ?? "").text(
+              fontColor: Colors.black,
+              fontSize: 16,
+            ),
+            (item.text?.split("-").last ?? "").text(
+              fontColor: greyTextColor,
+            ),
+          ] else ...[
+            (item.text ?? "").text(
+              fontColor: Colors.black,
+              fontSize: 16,
+            )
+          ]
+        ],
       )
     ],
   );
@@ -107,12 +120,14 @@ Widget buildItem(
 
 class MenuItem {
   String? text;
+  String? subText;
   num? id;
   bool isSelected;
   String? countryCode;
 
   MenuItem({
     this.text,
+    this.subText,
     this.id,
     this.countryCode,
     this.isSelected = false,

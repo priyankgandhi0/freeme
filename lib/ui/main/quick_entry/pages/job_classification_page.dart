@@ -76,9 +76,9 @@ class JobClassificationPage extends StatelessWidget {
           items: controller.allSubJobList,
           context: context,
         ),
-        ctrl.positionError != null
+     /*   ctrl.positionError != null
             ? ctrl.positionError.text(fontColor: redColor).paddingOnly(top: 8)
-            : Container()
+            : Container()*/
       ],
     ).paddingOnly(
       left: screenWPadding16.sw(),
@@ -93,7 +93,7 @@ class JobClassificationPage extends StatelessWidget {
       children: [
         departmentStar.text(fontSize: 16, fontColor: redColor),
         fmDropDown(
-          width: 300,
+          width: 210,
           child: _departmentDropDownItem(ctrl.selectedDepartment),
           onDropDownTap: (item) {
             controller.onDepartmentTap(item);
@@ -101,9 +101,9 @@ class JobClassificationPage extends StatelessWidget {
           items: controller.allJobClassificationList,
           context: context,
         ),
-        ctrl.departmentError != null
+        /*ctrl.departmentError != null
             ? ctrl.departmentError.text(fontColor: redColor).paddingOnly(top: 8)
-            : Container()
+            : Container()*/
       ],
     ).paddingOnly(
       left: screenWPadding16.sw(),
@@ -116,7 +116,7 @@ class JobClassificationPage extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.black,
+            color: controller.departmentError != null ? redColor : Colors.black,
           ),
           borderRadius: BorderRadius.circular(10),
           color: Colors.white),
@@ -149,7 +149,7 @@ class JobClassificationPage extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           border: Border.all(
-            color: Colors.black,
+            color: controller.positionError != null ? redColor : Colors.black,
           ),
           borderRadius: BorderRadius.circular(10),
           color: Colors.white),
