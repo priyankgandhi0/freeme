@@ -89,7 +89,6 @@ class _FmTextFieldState extends State<FmTextField> {
             inputFormatters: <TextInputFormatter>[
               if (widget.inputType != null &&
                   (widget.inputType == TextInputType.number ||
-                      widget.inputType == TextInputType.emailAddress ||
                       widget.inputType == TextInputType.phone)) ...[
                 FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
               ]

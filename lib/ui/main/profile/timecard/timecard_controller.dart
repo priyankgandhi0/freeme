@@ -22,7 +22,6 @@ class TimeCardController extends GetxController {
 
   DateTime clockInTime = DateTime.now();
 
-
   final Set<DateTime> selectedDays = LinkedHashSet<DateTime>(
     equals: isSameDay,
     hashCode: getHashCode,
@@ -58,19 +57,15 @@ class TimeCardController extends GetxController {
 
   Future<void> getWorkHistory(num? jobId, String date) async {
     startLoading();
-    try {
-      ResponseItem response = await JobRepo.getWorkHistory(jobId ?? -1, date);
-      if (response.status) {
-        historyModel = WorkHistoryModel.fromJson(response.data);
-        if (historyModel != null) {
-          setUpData(historyModel!);
-        }
-        update();
-        stopLoading();
-      } else {
-        stopLoading();
+    ResponseItem response = await JobRepo.getWorkHistory(jobId ?? -1, date);
+    if (response.status) {
+      historyModel = WorkHistoryModel.fromJson(response.data);
+      if (historyModel != null) {
+        setUpData(historyModel!);
       }
-    } catch (e) {
+      update();
+      stopLoading();
+    } else {
       stopLoading();
     }
   }
@@ -169,7 +164,7 @@ class TimeCardController extends GetxController {
   }
 
   bool isLunchStartValidate(String time, BuildContext context) {
-    if(historyModel?.callTime!=null && historyModel?.date!=null){
+    if (historyModel?.callTime != null && historyModel?.date != null) {
       var time1 = convertToMyTimeFormat(
         historyModel?.callTime ?? "",
         historyModel?.date ?? "",
@@ -189,7 +184,7 @@ class TimeCardController extends GetxController {
   }
 
   bool isLunchEndValidate(String time, BuildContext context) {
-    if(historyModel?.firstMealStart!=null && historyModel?.date!=null){
+    if (historyModel?.firstMealStart != null && historyModel?.date != null) {
       var time1 = convertToMyTimeFormat(
         historyModel?.firstMealStart ?? "",
         historyModel?.date ?? "",
@@ -209,7 +204,7 @@ class TimeCardController extends GetxController {
   }
 
   bool isSecondMealStartValidate(String time, BuildContext context) {
-    if(historyModel?.firstMealEnd!=null && historyModel?.date!=null){
+    if (historyModel?.firstMealEnd != null && historyModel?.date != null) {
       var time1 = convertToMyTimeFormat(
         historyModel?.firstMealEnd ?? "",
         historyModel?.date ?? "",
@@ -229,7 +224,7 @@ class TimeCardController extends GetxController {
   }
 
   bool isSecondMealEndValidate(String time, BuildContext context) {
-    if(historyModel?.secondMealStart!=null && historyModel?.date!=null){
+    if (historyModel?.secondMealStart != null && historyModel?.date != null) {
       var time1 = convertToMyTimeFormat(
         historyModel?.secondMealStart ?? "",
         historyModel?.date ?? "",

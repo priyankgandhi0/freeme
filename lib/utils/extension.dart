@@ -108,3 +108,21 @@ extension extOnString on String? {
     );
   }
 }
+
+
+String makeStringDoubleLine(String title) {
+  if (title.isNotEmpty) {
+    int index = title.indexOf(' ');
+    index = title.indexOf(' ', index + 1);
+    if(index==-1){
+      return title;
+    }
+    return replaceCharAt(title, index, "\n");
+  }
+  return "";
+}
+
+String replaceCharAt(String oldString, int index, String newChar) {
+  return oldString.substring(0, index) + newChar +
+      oldString.substring(index + 1);
+}

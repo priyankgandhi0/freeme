@@ -34,6 +34,7 @@ class RegisterController extends GetxController {
   }
 
   TextEditingController firstNameController = TextEditingController();
+  TextEditingController industryController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -72,7 +73,8 @@ class RegisterController extends GetxController {
     }
   }
 
-  MenuItem selectedIndustry = MenuItem(text: "Film Industry",id: 1,isSelected: true);
+  MenuItem selectedIndustry =
+      MenuItem(text: "Film Industry", id: 1, isSelected: true);
 
   void onSelectIndustry(MenuItem item) {
     for (int i = 0; i < industryList.length; i++) {
@@ -96,6 +98,7 @@ class RegisterController extends GetxController {
       startLoading();
       ResponseItem response = await AuthRepo.userRegister(
         firstName: firstNameController.text.trim(),
+        industryName: industryController.text.trim(),
         lastName: lastNameController.text.trim(),
         email: emailController.text.trim(),
         password: passwordController.text.trim(),
@@ -119,6 +122,7 @@ class RegisterController extends GetxController {
   String? firstNameError;
   String? lastNameError;
   String? industryError;
+  String? industryTextFieldError;
 
   bool _isValidate() {
     if (emailController.text.trim().isEmpty ||
@@ -161,6 +165,12 @@ class RegisterController extends GetxController {
       } else {
         industryError = null;
       }
+
+      if (industryController.text.isEmpty) {
+        industryTextFieldError = "Please Enter Industry";
+      } else {
+        industryTextFieldError = null;
+      }
       if (firstNameController.text.trim().isEmpty) {
         firstNameError = "Please Enter Firstname";
       } else {
@@ -174,16 +184,26 @@ class RegisterController extends GetxController {
       update();
       return false;
     }
+    if (selectedIndustry.text == "other industry") {
+      if (industryController.text.isEmpty) {
+        industryTextFieldError = "Please Enter Industry";
+        update();
+        return false;
+      }
+      industryTextFieldError = null;
+      update();
+      return true;
+    }
     emailError = null;
     passwordError = null;
     confirmPasswordError = null;
     firstNameError = null;
     lastNameError = null;
     industryError = null;
+    industryTextFieldError = null;
     update();
     return true;
   }
-
 
   clearAllData() {
     firstNameController.clear();

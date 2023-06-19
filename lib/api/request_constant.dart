@@ -43,6 +43,7 @@ class MethodNames {
   static const getJobLastEntry = 'getJobLastEntry';
   static const getNotes = 'getNotes';
   static const editNotes = 'editNotes';
+  static const getSummary = 'getSummary';
 
 }
 

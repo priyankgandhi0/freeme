@@ -84,6 +84,15 @@ class PaymentDetailPage extends StatelessWidget {
           items: ctrl.allTerms,
           context: context,
         ),
+        if(ctrl.selectedTerm.text=="Other")...[
+          FmTextField(
+            hint: cardBrandJob,
+            header: "Terms (Add Manually)",
+            inputType: TextInputType.text,
+            radius: 10,
+            controller: ctrl.termsManualController,
+          ).paddingOnly(top: screenHPadding8.sw(),),
+        ]
       ],
     ).paddingOnly(
       left: screenWPadding16.sw(),
@@ -139,6 +148,17 @@ class PaymentDetailPage extends StatelessWidget {
             items: ctrl.allPaidBy,
             context: context,
             width: 245),
+        if(ctrl.selectedPaidBy.text=="Other")...[
+          FmTextField(
+            hint: cardBrandJob,
+            header: "Paid By (Add Manually)",
+            inputType: TextInputType.text,
+            radius: 10,
+            controller: ctrl.paidByManualController,
+          ).paddingOnly(   top: screenHPadding8.sw(),),
+        ]
+
+
       ],
     ).paddingOnly(
       left: screenWPadding16.sw(),

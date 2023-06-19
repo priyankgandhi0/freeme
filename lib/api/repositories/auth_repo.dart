@@ -32,6 +32,7 @@ class AuthRepo {
   static Future<ResponseItem> userRegister({
     String? industryId,
     String? firstName,
+    String? industryName,
     String? lastName,
     String? email,
     String? password,
@@ -50,6 +51,7 @@ class AuthRepo {
       queryParam: queryParameters,
       requestData: {
         "industry_id": industryId,
+        "industry_name": industryName,
         "first_name": firstName,
         "last_name": lastName,
         "email": email,

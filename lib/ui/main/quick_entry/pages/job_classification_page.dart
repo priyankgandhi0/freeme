@@ -66,9 +66,12 @@ class JobClassificationPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        positionStar.text(fontSize: 16, fontColor: redColor),
+        positionStar.text(
+          fontSize: 16,
+          fontColor: redColor,
+        ),
         fmDropDown(
-          width: 300,
+          width: 230,
           child: _positionDropDownItem(ctrl.selectedPosition),
           onDropDownTap: (item) {
             controller.onPositionTap(item);
@@ -76,7 +79,7 @@ class JobClassificationPage extends StatelessWidget {
           items: controller.allSubJobList,
           context: context,
         ),
-     /*   ctrl.positionError != null
+        /*ctrl.positionError != null
             ? ctrl.positionError.text(fontColor: redColor).paddingOnly(top: 8)
             : Container()*/
       ],

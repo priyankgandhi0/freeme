@@ -66,7 +66,7 @@ class RegisterScreen extends StatelessWidget {
       children: [
         Row(
           children: [
-            "Industry".text(fontSize: 16).paddingOnly(
+            industry.text(fontSize: 16).paddingOnly(
                   left: screenWPadding16.sw(),
                 ),
           ],
@@ -75,53 +75,57 @@ class RegisterScreen extends StatelessWidget {
           child: _industryDropDownItem(
             guarHours,
             hint: controller.selectedIndustry.text,
+            error: ctrl.industryError
           ),
           onDropDownTap: (item) {
-            controller.onSelectIndustry(item);
+            controller.onSelectIndustry(item); //other industry
           },
           items: controller.industryList,
           context: context,
           width: 200
         ),
-        ctrl.industryError != null
-            ? Row(
-                children: [
-                  ctrl.industryError
-                      .text(
-                        fontColor: redColor,
-                      )
-                      .paddingOnly(
-                        left: screenWPadding16.sw(),
-                      ),
-                ],
-              )
-            : Container()
+        if (controller.selectedIndustry.text == "other industry") ...[
+          FmTextField(
+            hint: "Please Enter Industry",
+            header: "Industry (Add Manually)",
+            controller: ctrl.industryController,
+            inputType: TextInputType.text,
+            error: ctrl.industryTextFieldError,
+          ).paddingOnly(
+            left: screenHPadding16.sw(),
+            right: screenHPadding16.sw(),
+            top: 8.sh(),
+          )
+        ]
       ],
     );
   }
 
-  Widget _industryDropDownItem(
-    String lable, {
-    bool showBorder = true,
-    String? hint,
-    bool showDownIcon = true,
-    Color labelColor = Colors.black,
-    Widget? customSuffix,
-  }) {
+  Widget _industryDropDownItem(String lable,
+      {bool showBorder = true,
+      String? hint,
+      bool showDownIcon = true,
+      Color labelColor = Colors.black,
+      Widget? customSuffix,
+      String? error}) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black),
+        border: Border.all(
+          color: error != null ? redColor : Colors.black,
+        ),
         borderRadius: BorderRadius.circular(5),
         color: Colors.white,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          hint.text(
-            fontColor: Colors.black,
-            fontSize: 16,
-            overFlow: TextOverflow.ellipsis,
-          ).paddingOnly(left: 16),
+          hint
+              .text(
+                fontColor: Colors.black,
+                fontSize: 16,
+                overFlow: TextOverflow.ellipsis,
+              )
+              .paddingOnly(left: 16),
           showDownIcon
               ? customSuffix ??
                   FmImage.assetImage(

@@ -9,22 +9,33 @@ import '../../../../../constant/space_constant.dart';
 import '../../../../widgets/fm_dialog.dart';
 
 class SummeryScreen extends StatelessWidget {
-  SummeryScreen({Key? key}) : super(key: key);
+  SummeryScreen({
+    Key? key,
+    required this.jobId,
+  }) : super(key: key);
 
   final controller = Get.put(SummeryController());
+  num jobId;
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          _summeryCard(),
-          _indicators(),
-          _grossEnrningCard(),
-          _comments(),
-          _buttons(context)
-        ],
-      ),
+    return GetBuilder<SummeryController>(
+      initState: (initState) {
+        controller.getSummery(jobId);
+      },
+      builder: (ctrl) {
+        return SingleChildScrollView(
+          child: Column(
+            children: [
+              _summeryCard(),
+              _indicators(),
+              _grossEnrningCard(ctrl),
+              _comments(),
+              _buttons(context)
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -139,7 +150,7 @@ class SummeryScreen extends StatelessWidget {
             (index) => InkWell(
               onTap: () {
                 controller.pageController.animateToPage(index,
-                    duration: const Duration(milliseconds: 300),
+                    duration: Duration(milliseconds: 300),
                     curve: Curves.easeIn);
               },
               child: Container(
@@ -162,7 +173,7 @@ class SummeryScreen extends StatelessWidget {
     });
   }
 
-  Widget _grossEnrningCard() {
+  Widget _grossEnrningCard(SummeryController ctrl) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -175,7 +186,9 @@ class SummeryScreen extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
               color: darkGreenColor2,
               border: Border.all(
                 color: Colors.black,
@@ -211,13 +224,19 @@ class SummeryScreen extends StatelessWidget {
               ],
             ).paddingAll(16),
           ),
-          _grossEarningItem(name: "Wages", quantity: "750/10", price: "\$250"),
+          ...(ctrl.summery?.grossEarnings ?? []).map(
+            (e) => _grossEarningItem(
+                name: e.taxtType,
+                quantity: "${e.taxtAmount}/${e.taxtPer}",
+                price: "\$250"),
+          ),
+          /*_grossEarningItem(name: "Wages", quantity: "750/10", price: "\$250"),
           _grossEarningItem(
               name: "Monitor", quantity: "250/Day", price: "\750"),
           _grossEarningItem(name: "Kit Fee", quantity: "75/Day", price: "\150"),
           _grossEarningItem(
               name: "Cart Fee", quantity: "50/Day", price: "\$200"),
-          _grossEarningItem(name: "Mileage", quantity: " ", price: "\82.50"),
+          _grossEarningItem(name: "Mileage", quantity: " ", price: "\82.50"),*/
           Container(
             width: Get.width,
             height: 1,
@@ -366,7 +385,7 @@ class SummeryScreen extends StatelessWidget {
             child: Row(
               children: [
                 "Tenths".text(),
-                const SizedBox(
+                SizedBox(
                   width: 38,
                 ),
                 FmImage.assetImage(
@@ -667,7 +686,7 @@ class SummeryScreen extends StatelessWidget {
 }
 
 class SummeryDataTableSecond extends StatelessWidget {
-  const SummeryDataTableSecond({Key? key}) : super(key: key);
+  SummeryDataTableSecond({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -1077,7 +1096,7 @@ class SummeryDataTableFirst extends StatelessWidget {
               child: Row(
                 children: [
                   "Tenths".text(fontSize: 16),
-                  const SizedBox(
+                  SizedBox(
                     width: 38,
                   ),
                   FmImage.assetImage(

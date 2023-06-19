@@ -214,7 +214,16 @@ class AdditionalInfoPage extends StatelessWidget {
             },
             items: ctrl.allTypes,
             context: context,
-            width: 210)
+            width: 210),
+        if(ctrl.selectedType.text=="Other")...[
+          FmTextField(
+            hint: cardBrandJob,
+            header: "Type (Add Manually)",
+            inputType: TextInputType.text,
+            radius: 10,
+            controller: ctrl.typeManualController,
+          ).paddingOnly(top: screenHPadding8.sw(),),
+        ]
       ],
     ).paddingOnly(
       left: screenWPadding16.sw(),

@@ -33,6 +33,9 @@ class QuickEntryRepo {
     String? hiredBy,
     List<TaxedNonTaxedModel>? taxedItems,
     List<TaxedNonTaxedModel>? nonTaxedItems,
+    String? paidByManual,
+    String? termsManual,
+    String? typeManual,
   }) async {
     ResponseItem result;
     bool status = true;
@@ -67,6 +70,9 @@ class QuickEntryRepo {
       "union_nonunion": unionNonunion,
       "recommended_by": recommendedBy,
       "hired_by": hiredBy,
+      "paid_by_manual": paidByManual,
+      "terms_manual": termsManual,
+      "type_manual":typeManual,
       "taxed_items": taxedItems?.map((e) => e.toTaxedJson()).toList(),
       "non_taxed_items": nonTaxedItems?.map((e) => e.toNonTaxedJson()).toList()
     };
@@ -102,10 +108,13 @@ class QuickEntryRepo {
     String? guaranteedHours,
     String? w2_1099,
     String? paidBy,
+    String? paidByManual,
     String? terms,
+    String? termsManual,
     String? department,
     String? position,
     String? type,
+    String? typeManual,
     String? unionNonunion,
     String? recommendedBy,
     String? hiredBy,
@@ -140,10 +149,13 @@ class QuickEntryRepo {
       "guaranteed_hours": guaranteedHours,
       "w2_1099": w2_1099,
       "paid_by": paidBy,
+      "paid_by_manual": paidByManual,
       "terms": terms,
+      "terms_manual": termsManual,
       "department": department,
       "position": position,
       "type": type,
+      "type_manual":typeManual,
       "union_nonunion": unionNonunion,
       "recommended_by": recommendedBy,
       "hired_by": hiredBy,

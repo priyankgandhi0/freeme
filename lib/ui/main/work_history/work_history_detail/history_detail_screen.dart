@@ -48,7 +48,7 @@ class WorkHistoryDetailScreen extends StatelessWidget {
                   },
                   onTrailingClick: () {
                     if (controller.tabIndex == 1) {
-                      try{
+                      try {
                         Navigator.pushNamed(
                           context,
                           Routes.timeCardEditHistoryScreen,
@@ -59,7 +59,7 @@ class WorkHistoryDetailScreen extends StatelessWidget {
                             "title": title,
                           },
                         );
-                      }catch(e){
+                      } catch (e) {
                         e.debugPrint;
                       }
                     } else if (controller.tabIndex == 2) {
@@ -117,7 +117,9 @@ class WorkHistoryDetailScreen extends StatelessWidget {
                   child: TabBarView(
                     controller: controller.tabController,
                     children: [
-                      SummeryScreen(),
+                      SummeryScreen(
+                        jobId: jobId ?? -1,
+                      ),
                       TimeCardTabScreen(
                         jobId: jobId ?? -1,
                         dayId: dayId ?? -1,
@@ -142,5 +144,4 @@ class WorkHistoryDetailScreen extends StatelessWidget {
       },
     );
   }
-
 }

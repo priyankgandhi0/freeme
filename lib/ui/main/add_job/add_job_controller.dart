@@ -36,6 +36,10 @@ class AddJobController extends GetxController {
   TextEditingController stateController = TextEditingController();
   TextEditingController zipController = TextEditingController();
 
+  TextEditingController paidByManualController = TextEditingController();
+  TextEditingController termsManualController = TextEditingController();
+  TextEditingController typeManualController = TextEditingController();
+
   TextEditingController rateTextController = TextEditingController();
   TextEditingController recommendedByController = TextEditingController();
   TextEditingController hiredByController = TextEditingController();
@@ -201,7 +205,7 @@ class AddJobController extends GetxController {
       allSubJobList.addAll(subJobClassificationModelFromJson(response.data)
           .map(
             (e) => MenuItem(
-              text: e.subJobClassificationsCategory,
+              text: makeStringDoubleLine(e.subJobClassificationsCategory ??""),
               id: e.subJobClassificationsId,
               isSelected: false,
             ),
@@ -492,6 +496,9 @@ class AddJobController extends GetxController {
           taxedItems: taxedItems,
           removeNonTaxedItems: nonTaxedItemRemoveList,
           removeTaxedItems: taxedItemRemoveList,
+          paidByManual: paidByManualController.text.trim(),
+          termsManual: termsManualController.text.trim(),
+          typeManual: typeManualController.text.trim(),
         );
         if (response.status) {
           if (jobId != null) {
@@ -597,26 +604,31 @@ class AddJobController extends GetxController {
     recommendedByController.text = jobInfo.recommendedBy ?? "";
     hiredByController.text = jobInfo.hiredBy ?? "";
 
-    selectedPerHour = allPerHour.firstWhereOrNull(
-            (element) => element.text == jobInfo.perHowManyHours) ??
+    selectedPerHour = allPerHour.firstWhereOrNull((element) =>
+            element.text?.toLowerCase() ==
+            jobInfo.perHowManyHours?.toLowerCase()) ??
         MenuItem(text: "10 hours", isSelected: true, id: 3);
     onPerHourDropDownTap(selectedPerHour);
 
-    selectedGuaranteedHour = allGuaranteedHour
-        .firstWhere((element) => element.text == jobInfo.guaranteedHours);
-    selectedW2Or1099 =
-        w21099List.firstWhere((element) => element.text == jobInfo.w21099);
-    selectedPaidBy =
-        allPaidBy.firstWhere((element) => element.text == jobInfo.paidBy);
-    selectedTerm =
-        allTerms.firstWhere((element) => element.text == jobInfo.terms);
-    selectedDepartment = allJobClassificationList
-        .firstWhere((element) => element.text == jobInfo.department);
+    selectedGuaranteedHour = allGuaranteedHour.firstWhereOrNull((element) =>
+            element.text?.toLowerCase() ==
+            jobInfo.guaranteedHours?.toLowerCase()) ??
+        MenuItem(text: "Not Sure");
+    selectedW2Or1099 = w21099List.firstWhere((element) =>
+        element.text?.toLowerCase() == jobInfo.w21099?.toLowerCase());
+    selectedPaidBy = allPaidBy.firstWhereOrNull((element) =>
+            element.text?.toLowerCase() == jobInfo.paidBy?.toLowerCase()) ??
+        MenuItem(text: "Not Sure");
+    selectedTerm = allTerms.firstWhereOrNull((element) =>
+        element.text?.toLowerCase() == jobInfo.terms?.toLowerCase()) ?? MenuItem(text: "Not Sure");
+    selectedDepartment = allJobClassificationList.firstWhere((element) =>
+        element.text?.toLowerCase() == jobInfo.department?.toLowerCase());
+    selectedType = allTypes.firstWhereOrNull((element) =>
+            element.text?.toLowerCase() == jobInfo.type?.toLowerCase()) ??
+        MenuItem(text: "Not Sure");
 
-    selectedType =
-        allTypes.firstWhere((element) => element.text == jobInfo.type);
-    selectedUnion = unionNonUnionList
-        .firstWhere((element) => element.text == jobInfo.unionNonunion);
+    selectedUnion = unionNonUnionList.firstWhere((element) =>
+        element.text?.toLowerCase() == jobInfo.unionNonunion?.toLowerCase());
 
     selectedDays.clear();
     jobInfo.days?.forEach((element) {

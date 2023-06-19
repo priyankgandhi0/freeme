@@ -223,10 +223,7 @@ class AddJobScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: (controller.selectedDays.isNotEmpty
-                          ? controller.selectedDays
-                              .map((e) => "${e.day}-${e.month}")
-                              .toList()
-                              .join(",")
+                          ? getDaysMonthWise(controller.selectedDays)
                           : selectDays)
                       .text(
                           fontColor: greyTextColor,
@@ -256,6 +253,23 @@ class AddJobScreen extends StatelessWidget {
       left: screenWPadding16.sw(),
       right: screenWPadding16.sw(),
     );
+  }
+
+  getDaysMonthWise(Set<DateTime> selectedDays){
+
+    var coreMonths = selectedDays.toList().map((e) => e.month);
+    List<int> months = coreMonths.toSet().toList();
+    String strMonth = "";
+   /* months.forEach((element) {
+      List<DateTime> ss = selectedDays.map((e) => e.month==element).toList();
+      ss.map((e) => e)
+      strMonth = strMonth +
+    });
+   return selectedDays
+        .map((e) => "${e.day}")
+        .toList()
+        .join(",");*/
+
   }
 
   Widget _discriptionCard(BuildContext context) {
@@ -382,6 +396,13 @@ class AddJobScreen extends StatelessWidget {
             context: context,
             width: 250,
           ),
+          if (controller.selectedPaidBy.text == "Other") ...[
+            _detailItem(
+              "Paid By(Manually)",
+              hint: "Enter Paid By",
+              controller: controller.paidByManualController,
+            ),
+          ],
           fmDropDown(
             child: _detailItemWithDropDown(
               terms,
@@ -394,6 +415,13 @@ class AddJobScreen extends StatelessWidget {
             context: context,
             width: 180,
           ),
+          if (controller.selectedTerm.text == "Other") ...[
+            _detailItem(
+              "Terms(Manually)",
+              hint: "Enter Terms",
+              controller: controller.termsManualController,
+            ),
+          ],
         ],
       ),
     ).paddingOnly(
@@ -432,6 +460,13 @@ class AddJobScreen extends StatelessWidget {
             context: context,
             width: 210,
           ),
+          if (controller.selectedType.text == "Other") ...[
+            _detailItem(
+              "Type(Manually)",
+              hint: "Enter Type",
+              controller: controller.typeManualController,
+            ),
+          ],
           fmDropDown(
             child: _detailItemWithDropDown(
               unionNonUnion,
@@ -955,7 +990,7 @@ class AddJobScreen extends StatelessWidget {
                   },
                   items: controller.allSubJobList,
                   context: context,
-                  width: 260,
+                  width: 230,
                 ).paddingOnly(
                   left: screenWPadding8.sw(),
                 ),

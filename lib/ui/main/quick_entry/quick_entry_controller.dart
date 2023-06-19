@@ -123,6 +123,10 @@ class QuickEntryController extends GetxController {
   TextEditingController recommendedByController = TextEditingController();
   TextEditingController hiredByController = TextEditingController();
 
+  TextEditingController paidByManualController = TextEditingController();
+  TextEditingController termsManualController = TextEditingController();
+  TextEditingController typeManualController = TextEditingController();
+
   Future<void> finishButtonClick(BuildContext context) async {
     if (isSixthPageValidate()) {
       startLoading();
@@ -155,6 +159,9 @@ class QuickEntryController extends GetxController {
           position: selectedPosition.text,
           nonTaxedItems: nonTaxedItems,
           taxedItems: taxedItems,
+          typeManual: typeManualController.text.trim(),
+          termsManual: termsManualController.text.trim(),
+          paidByManual: paidByManualController.text.trim(),
         );
         if (response.status) {
           await Get.find<WorkHistoryController>().getAllJob();
@@ -375,7 +382,7 @@ class QuickEntryController extends GetxController {
           .map((e) => MenuItem(
                 text: e.hours,
                 id: e.hoursId,
-                isSelected: e.hours=="10 Hours"?true:false,
+                isSelected: e.hours == "10 Hours" ? true : false,
               ))
           .toList());
     } else {}
@@ -387,22 +394,16 @@ class QuickEntryController extends GetxController {
     ResponseItem response = await QuickEntryRepo.allJobClassificationsList();
     if (response.status) {
       allJobClassificationList.clear();
-      allJobClassificationList.addAll(
-        jobClassificationModelFromJson(response.data)
-            .map(
-              (e) => MenuItem(
-            text: (e.jobClassificationCategory?.contains("-") ?? false)
-                ? e.jobClassificationCategory?.split("-").first
-                : e.jobClassificationCategory,
-            subText: (e.jobClassificationCategory?.contains("-") ?? false)
-                ? e.jobClassificationCategory?.split("-").last
-                : null,
-            id: e.jobClassificationId,
-            isSelected: false,
-          ),
-        )
-            .toList(),
-      );
+      allJobClassificationList
+          .addAll(jobClassificationModelFromJson(response.data)
+          .map(
+            (e) => MenuItem(
+          text: e.jobClassificationCategory,
+          id: e.jobClassificationId,
+          isSelected: false,
+        ),
+      )
+          .toList());
     } else {}
   }
 
@@ -416,7 +417,7 @@ class QuickEntryController extends GetxController {
       allSubJobList.addAll(subJobClassificationModelFromJson(response.data)
           .map(
             (e) => MenuItem(
-              text: e.subJobClassificationsCategory,
+              text: makeStringDoubleLine(e.subJobClassificationsCategory ?? ""),
               id: e.subJobClassificationsId,
               isSelected: false,
             ),
@@ -426,7 +427,9 @@ class QuickEntryController extends GetxController {
     } else {}
   }
 
-  ///
+
+
+    ///
   ///
   ///
   ///
@@ -449,7 +452,7 @@ class QuickEntryController extends GetxController {
     update();
   }
 
-  MenuItem selectedPerHour = MenuItem(text: "10 Hours",id: 3);
+  MenuItem selectedPerHour = MenuItem(text: "10 Hours", id: 3);
 
   void onPerHourDropDownTap(MenuItem item) {
     for (int i = 0; i < allPerHour.length; i++) {
