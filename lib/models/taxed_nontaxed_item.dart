@@ -3,8 +3,9 @@ class TaxedNonTaxedModel{
   String? amount;
   String? per;
   num? id;
+  String? taxedTypeNote;
+  num? taxedItemId;
 
-  TaxedNonTaxedModel({this.type, this.amount, this.per,this.id});
 
   Map<String, dynamic> toTaxedJson() {
     final map = <String, dynamic>{};
@@ -12,6 +13,8 @@ class TaxedNonTaxedModel{
     map['taxt_type'] = type;
     map['taxt_amount'] = amount;
     map['taxt_per'] = per;
+    map['taxed_item_id'] = taxedItemId;
+    map['taxed_type_note'] = taxedTypeNote;
     return map;
   }
 
@@ -21,7 +24,16 @@ class TaxedNonTaxedModel{
     map['non_taxt_type'] = type;
     map['non_taxt_amount'] = amount;
     map['non_taxt_per'] = per;
+    map['taxed_item_id'] = taxedItemId;
+    map['taxed_type_note'] = taxedTypeNote;
     return map;
   }
 
+  TaxedNonTaxedModel(
+      {this.type,
+      this.amount,
+      this.per,
+      this.id,
+      this.taxedTypeNote,
+      this.taxedItemId});
 }

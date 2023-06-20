@@ -21,6 +21,8 @@ import '../../../models/taxed_nontaxed_item.dart';
 import '../../../models/term_model.dart';
 import '../../../models/type_model.dart';
 import '../../widgets/dropdown.dart';
+import '../../widgets/non_tax_item_dialog.dart';
+import '../../widgets/tax_item_dialog.dart';
 import '../navigator/main_controller.dart';
 import '../work_history/history/work_history_controller.dart';
 import '../work_history/work_history_detail/job_info/job_info_controller.dart';
@@ -205,7 +207,7 @@ class AddJobController extends GetxController {
       allSubJobList.addAll(subJobClassificationModelFromJson(response.data)
           .map(
             (e) => MenuItem(
-              text: makeStringDoubleLine(e.subJobClassificationsCategory ??""),
+              text: makeStringDoubleLine(e.subJobClassificationsCategory ?? ""),
               id: e.subJobClassificationsId,
               isSelected: false,
             ),
@@ -464,7 +466,7 @@ class AddJobController extends GetxController {
   Future<void> addJobButtonClick(BuildContext context, {int? jobId}) async {
     if (_isValidate(context)) {
       startLoading();
-      try {
+     /* try {*/
         ResponseItem response = await QuickEntryRepo.addJobSubmit(
           jobId: jobId,
           selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
@@ -507,14 +509,16 @@ class AddJobController extends GetxController {
           }
           stopLoading();
           await Get.find<WorkHistoryController>().getAllJob();
+
+          clearAllData();
           Navigator.of(context).pop();
         } else {
           stopLoading();
           response.message.errorSnack(context);
         }
-      } catch (e) {
+     /* } catch (e) {
         stopLoading();
-      }
+      }*/
     }
   }
 
@@ -620,7 +624,8 @@ class AddJobController extends GetxController {
             element.text?.toLowerCase() == jobInfo.paidBy?.toLowerCase()) ??
         MenuItem(text: "Not Sure");
     selectedTerm = allTerms.firstWhereOrNull((element) =>
-        element.text?.toLowerCase() == jobInfo.terms?.toLowerCase()) ?? MenuItem(text: "Not Sure");
+            element.text?.toLowerCase() == jobInfo.terms?.toLowerCase()) ??
+        MenuItem(text: "Not Sure");
     selectedDepartment = allJobClassificationList.firstWhere((element) =>
         element.text?.toLowerCase() == jobInfo.department?.toLowerCase());
     selectedType = allTypes.firstWhereOrNull((element) =>
@@ -648,7 +653,8 @@ class AddJobController extends GetxController {
                 type: e.taxType,
                 amount: e.taxAmount.toString(),
                 per: e.taxPer,
-                id: e.taxId),
+                id: e.taxId,
+                taxedItemId: e.taxtTypeId),
           ) ??
           [],
     );
@@ -657,10 +663,12 @@ class AddJobController extends GetxController {
     nonTaxedItems.addAll(
       jobInfo.nonTaxes?.map(
             (e) => TaxedNonTaxedModel(
-                type: e.nonTaxtType,
-                amount: e.nonTaxtAmount.toString(),
-                per: e.nonTaxtPer,
-                id: e.nonTaxId),
+              type: e.nonTaxtType,
+              amount: e.nonTaxtAmount.toString(),
+              per: e.nonTaxtPer,
+              id: e.nonTaxId,
+              taxedItemId: e.taxtTypeId,
+            ),
           ) ??
           [],
     );
@@ -677,6 +685,34 @@ class AddJobController extends GetxController {
   clearAllData() {
     taxedItemRemoveList.clear();
     nonTaxedItemRemoveList.clear();
+    selectedDays.clear();
+    descriptionController.clear();
+    productionTitleController.clear();
+    producerController.clear();
+    productionCompanyController.clear();
+    addressLIne1Controller.clear();
+    addressLIne2Controller.clear();
+    cityController.clear();
+    zipController.clear();
+    rateTextController.clear();
+    recommendedByController.clear();
+    hiredByController.clear();
+    selectedDays.clear();
+    taxedItemRemoveList.clear();
+    nonTaxedItemRemoveList.clear();
+    taxedItems.clear();
+    nonTaxedItems.clear();
+
+    selectedCountry = MenuItem(text: "United States", countryCode: "US");
+    selectedPerHour = MenuItem(text: "10 hours", isSelected: true, id: 3);
+    selectedGuaranteedHour = MenuItem(text: "Not Sure");
+    selectedW2Or1099 = MenuItem(text: "Not Sure");
+    selectedPaidBy = MenuItem(text: "Not Sure");
+    selectedTerm = MenuItem(text: "Not Sure");
+    selectedDepartment = MenuItem(text: "Select Department");
+    selectedPosition = MenuItem(text: "Select Position");
+    selectedType = MenuItem(text: "Not Sure");
+    selectedUnion = MenuItem(text: "Not Sure", isSelected: true);
   }
 
   List<String> taxedItemRemoveList = [];

@@ -141,7 +141,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                             ? "--:-- AM/PM"
                             : ctrl.historyModel?.firstMealStart ?? "",
                         onclick: () {
-                      showSelectTimeDialog(context,"1st Meal Start");
+                      showSelectTimeDialog(context, "1st Meal Start");
                     }),
                     _clockTimeItem(
                         "1st Meal End:",
@@ -149,7 +149,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                             ? "--:-- AM/PM"
                             : ctrl.historyModel?.firstMealEnd ?? "",
                         onclick: () {
-                      showSelectTimeDialog(context,"1st Meal End");
+                      showSelectTimeDialog(context, "1st Meal End");
                     }),
                     _clockTimeItem(
                         "2nd Meal Start:",
@@ -157,7 +157,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                             ? "--:-- AM/PM"
                             : ctrl.historyModel?.secondMealStart ?? "",
                         onclick: () {
-                      showSelectTimeDialog(context,"2nd Meal Start");
+                      showSelectTimeDialog(context, "2nd Meal Start");
                     }),
                     _clockTimeItem(
                         "2nd Meal End:",
@@ -165,14 +165,14 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                             ? "--:-- AM/PM"
                             : ctrl.historyModel?.secondMealEnd ?? "",
                         onclick: () {
-                      showSelectTimeDialog(context,"2nd Meal End");
+                      showSelectTimeDialog(context, "2nd Meal End");
                     }),
                     _clockTimeItem(
                         "Wrap:",
                         ctrl.historyModel!.wrap.isNullOrEmpty
                             ? "--:-- AM/PM"
                             : ctrl.historyModel?.wrap ?? "", onclick: () {
-                      showSelectTimeDialog(context,"Wrap");
+                      showSelectTimeDialog(context, "Wrap");
                     })
                   ],
                 ),

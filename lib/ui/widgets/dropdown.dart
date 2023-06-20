@@ -122,6 +122,7 @@ class MenuItem {
   String? text;
   String? subText;
   num? id;
+
   bool isSelected;
   String? countryCode;
 

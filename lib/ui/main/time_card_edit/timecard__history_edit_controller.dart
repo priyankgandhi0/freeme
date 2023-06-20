@@ -250,8 +250,8 @@ class TimeCardEditController extends GetxController {
     }
     update();
   }
-///dialog
 
+  ///dialog
 
   DateTime clockInTime = DateTime.now();
   late String selectedDate;
@@ -283,9 +283,8 @@ class TimeCardEditController extends GetxController {
     }
   }
 
-
   bool isLunchStartValidate(String time, BuildContext context) {
-    if(historyModel?.callTime!=null && historyModel?.date!=null){
+    if (historyModel?.callTime != null && historyModel?.date != null) {
       var time1 = convertToMyTimeFormat(
         historyModel?.callTime ?? "",
         historyModel?.date ?? "",
@@ -301,14 +300,14 @@ class TimeCardEditController extends GetxController {
         return false;
       }
     }
-    if(historyModel?.callTime!=null){
+    if (historyModel?.callTime != null) {
       pleaseAddCallTimeFirst.errorSnack(context);
     }
     return false;
   }
 
   bool isLunchEndValidate(String time, BuildContext context) {
-    if(historyModel?.firstMealStart!=null && historyModel?.date!=null){
+    if (historyModel?.firstMealStart != null && historyModel?.date != null) {
       var time1 = convertToMyTimeFormat(
         historyModel?.firstMealStart ?? "",
         historyModel?.date ?? "",
@@ -328,7 +327,7 @@ class TimeCardEditController extends GetxController {
   }
 
   bool isSecondMealStartValidate(String time, BuildContext context) {
-    if(historyModel?.firstMealEnd!=null && historyModel?.date!=null){
+    if (historyModel?.firstMealEnd != null && historyModel?.date != null) {
       var time1 = convertToMyTimeFormat(
         historyModel?.firstMealEnd ?? "",
         historyModel?.date ?? "",
@@ -348,7 +347,7 @@ class TimeCardEditController extends GetxController {
   }
 
   bool isSecondMealEndValidate(String time, BuildContext context) {
-    if(historyModel?.secondMealStart!=null && historyModel?.date!=null){
+    if (historyModel?.secondMealStart != null && historyModel?.date != null) {
       var time1 = convertToMyTimeFormat(
         historyModel?.secondMealStart ?? "",
         historyModel?.date ?? "",
@@ -372,7 +371,16 @@ class TimeCardEditController extends GetxController {
     int hour = int.parse(time.split(":").first.toString());
     int minute = int.parse(time.split(":").last.substring(0, 2));
     bool isPm = time.contains("PM") ? true : false;
-    return DateTime.utc(int.parse(now[0]), int.parse(now[1]), int.parse(now[2]),
-        isPm ? hour + 12 : hour, minute, 0);
+    return DateTime.utc(
+        int.parse(now[0]),
+        int.parse(now[1]),
+        int.parse(now[2]),
+        isPm
+            ? hour != 12
+                ? hour + 12
+                : hour
+            : hour,
+        minute,
+        0);
   }
 }

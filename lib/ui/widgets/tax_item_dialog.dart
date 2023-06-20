@@ -19,8 +19,13 @@ class TaxItemDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    controller.selectedTaxedItemType = controller.typeList.firstWhereOrNull(
+            (element) => element.text == defaultSelectedItem?.type) ??
+        MenuItem(text: "Select Type");
+
     return GetBuilder<TaxedItemDialogController>(
-      initState: (initState) {
+      initState: (initState) async {
+        await controller.getAllPerTimeDropDownItems();
         if (defaultSelectedItem != null) {
           controller.selectItemForEdit(defaultSelectedItem!);
         }
@@ -78,34 +83,7 @@ class TaxItemDialog extends StatelessWidget {
                   ],
                 ),
                 fmDropDown(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.black,
-                        ),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ctrl.selectedTaxedItemType.text.text(
-                          fontColor: ctrl.selectedTaxedItemType.id != null
-                              ? Colors.black
-                              : greyTextColor,
-                          fontSize: 16,
-                        ),
-                        FmImage.assetImage(
-                          path: Assets.iconsDownIcon,
-                          fit: BoxFit.fill,
-                          size: 14,
-                        )
-                      ],
-                    ).paddingOnly(
-                      left: screenWPadding16.sw(),
-                      right: screenWPadding16.sw(),
-                      top: screenHPadding16.sw(),
-                      bottom: screenHPadding16.sw(),
-                    ),
-                  ),
+                  child: dropDownItem(ctrl),
                   onDropDownTap: (item) {
                     controller.onTypeListDropDownTap(item);
                   },
@@ -116,11 +94,24 @@ class TaxItemDialog extends StatelessWidget {
                 ),
                 ctrl.typeError != null
                     ? Row(
-                        children: [ctrl.typeError.text(fontColor: redColor)],
+                        children: [
+                          ctrl.typeError.text(fontColor: redColor),
+                        ],
                       ).paddingOnly(
                         top: 4,
                       )
                     : Container(),
+                if (ctrl.selectedTaxedItemType.text == "Other") ...[
+                  FmTextField(
+                    hint: "Type Note",
+                    hintSize: 16,
+                    inputType: TextInputType.text,
+                    controller: ctrl.typeManualController,
+                    radius: 10,
+                  ).paddingOnly(
+                    top: screenHPadding8.sh(),
+                  )
+                ]
               ],
             ).paddingOnly(
               left: screenWPadding32.sw(),
@@ -235,9 +226,18 @@ class TaxItemDialog extends StatelessWidget {
                       type: controller.selectedTaxedItemType.text,
                       per: controller.selectedPerTime.text,
                       amount: controller.amountController.text,
-                      id: defaultSelectedItem?.id
+                      id: defaultSelectedItem?.id,
+                      taxedItemId:
+                          controller.selectedTaxedItemType.text == "Other"
+                              ? 0
+                              : controller.selectedTaxedItemType.id,
+                      taxedTypeNote:
+                          controller.selectedTaxedItemType.text == "Other"
+                              ? ctrl.typeManualController.text
+                              : null,
                     ),
                   );
+                  controller.typeManualController.clear();
                   Navigator.of(context, rootNavigator: true).pop();
                 }
               },
@@ -253,10 +253,42 @@ class TaxItemDialog extends StatelessWidget {
       },
     );
   }
+
+  dropDownItem(TaxedItemDialogController ctrl) {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black,
+          ),
+          borderRadius: BorderRadius.circular(10)),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ctrl.selectedTaxedItemType.text.text(
+            fontColor: ctrl.selectedTaxedItemType.id != null
+                ? Colors.black
+                : greyTextColor,
+            fontSize: 16,
+          ),
+          FmImage.assetImage(
+            path: Assets.iconsDownIcon,
+            fit: BoxFit.fill,
+            size: 14,
+          )
+        ],
+      ).paddingOnly(
+        left: screenWPadding16.sw(),
+        right: screenWPadding16.sw(),
+        top: screenHPadding16.sw(),
+        bottom: screenHPadding16.sw(),
+      ),
+    );
+  }
 }
 
 class TaxedItemDialogController extends GetxController {
   TextEditingController amountController = TextEditingController();
+  TextEditingController typeManualController = TextEditingController();
 
   @override
   void onInit() {
@@ -272,8 +304,13 @@ class TaxedItemDialogController extends GetxController {
     if (response.status) {
       typeList.clear();
       typeList.addAll(taxedItemTypesModelFromJson(response.data)
-          .map((e) =>
-              MenuItem(text: e.taxedItem, id: e.taxedItemId, isSelected: false))
+          .map(
+            (e) => MenuItem(
+              text: e.taxedItem,
+              id: e.taxedItemId,
+              isSelected: false,
+            ),
+          )
           .toList());
       update();
     } else {}

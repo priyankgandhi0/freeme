@@ -166,6 +166,7 @@ class QuickEntryController extends GetxController {
         if (response.status) {
           await Get.find<WorkHistoryController>().getAllJob();
           stopLoading();
+          clearAllData();
           Navigator.of(context).pop();
         } else {
           response.message.errorSnack(context);
@@ -175,6 +176,35 @@ class QuickEntryController extends GetxController {
         stopLoading();
       }
     }
+  }
+
+
+  clearAllData() {
+    selectedDays.clear();
+    descriptionController.clear();
+    productionTitleController.clear();
+    producerController.clear();
+    productionCompanyController.clear();
+    addressLIne1Controller.clear();
+    addressLIne2Controller.clear();
+    cityController.clear();
+    zipController.clear();
+    rateTextController.clear();
+    recommendedByController.clear();
+    hiredByController.clear();
+    selectedDays.clear();
+    taxedItems.clear();
+    nonTaxedItems.clear();
+    selectedCountry = MenuItem(text: "United States", countryCode: "US");
+    selectedPerHour = MenuItem(text: "10 hours", isSelected: true, id: 3);
+    selectedGuaranteedHour = MenuItem(text: "Not Sure");
+    selectedW2Or1099 = MenuItem(text: "Not Sure");
+    selectedPaidBy = MenuItem(text: "Not Sure");
+    selectedTerm = MenuItem(text: "Not Sure");
+    selectedDepartment = MenuItem(text: "Select Department");
+    selectedPosition = MenuItem(text: "Select Position");
+    selectedType = MenuItem(text: "Not Sure");
+    selectedUnion = MenuItem(text: "Not Sure", isSelected: true);
   }
 
   void moveToThirdPage() {

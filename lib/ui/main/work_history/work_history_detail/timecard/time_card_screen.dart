@@ -229,6 +229,7 @@ class TimeCardTabScreen extends StatelessWidget {
                     color: Colors.black,
                     fontWeight: FontWeight.w500),
                 itemHeight: 36,
+                itemWidth: 65,
                 is24HourMode: false,
                 onTimeChange: (time) {
                   controller.clockInTime = time;

@@ -22,19 +22,23 @@ class NotesController extends GetxController {
   Future<void> getAllNotes({
     required int jobId,
   }) async {
-    // startLoading();
-    noteController.clear();
-    ResponseItem response = await JobRepo.getNotes(jobId: jobId);
-    if (response.status) {
-      noteController.text = response.data["notes"];
-      noteController.selection = TextSelection.fromPosition(
-        TextPosition(offset: noteController.text.length),
-      );
-
-      // stopLoading();
-    } else {
-      //stopLoading();
+      startLoading();
+    try{
+      noteController.clear();
+      ResponseItem response = await JobRepo.getNotes(jobId: jobId);
+      if (response.status) {
+        noteController.text = response.data["notes"];
+        noteController.selection = TextSelection.fromPosition(
+          TextPosition(offset: noteController.text.length),
+        );
+        // stopLoading();
+      } else {
+        //stopLoading();
+      }
+    } catch(e){
+       stopLoading();
     }
+
   }
 
   Future<void> editNotes({

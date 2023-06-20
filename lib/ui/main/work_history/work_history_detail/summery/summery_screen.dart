@@ -108,19 +108,8 @@ class SummeryScreen extends StatelessWidget {
 
   Widget _summeryCard() {
     return Container(
-      height: 355,
+      height: 400,
       width: Get.width,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            offset: Offset(2, 3),
-            blurRadius: 10.0,
-          ),
-        ],
-      ),
       child: PageView.builder(
         controller: controller.pageController,
         itemCount: 2,
@@ -131,11 +120,6 @@ class SummeryScreen extends StatelessWidget {
           return pages[index];
         },
       ),
-    ).paddingOnly(
-      top: screenHPadding16.sh(),
-      bottom: screenHPadding16.sh(),
-      left: screenWPadding16.sh(),
-      right: screenWPadding16.sh(),
     );
   }
 
@@ -216,11 +200,11 @@ class SummeryScreen extends StatelessWidget {
                         )
                   ],
                 ),
-                "\$2510.50".text(
-                  fontSize: 16,
-                  weight: FontWeight.w500,
-                  fontColor: Colors.white,
-                ),
+                ("\$${ctrl.summery?.grossEarningTotal ?? ""}").toString().text(
+                      fontSize: 16,
+                      weight: FontWeight.w500,
+                      fontColor: Colors.white,
+                    ),
               ],
             ).paddingAll(16),
           ),
@@ -230,19 +214,12 @@ class SummeryScreen extends StatelessWidget {
                 quantity: "${e.taxtAmount}/${e.taxtPer}",
                 price: "\$250"),
           ),
-          /*_grossEarningItem(name: "Wages", quantity: "750/10", price: "\$250"),
-          _grossEarningItem(
-              name: "Monitor", quantity: "250/Day", price: "\750"),
-          _grossEarningItem(name: "Kit Fee", quantity: "75/Day", price: "\150"),
-          _grossEarningItem(
-              name: "Cart Fee", quantity: "50/Day", price: "\$200"),
-          _grossEarningItem(name: "Mileage", quantity: " ", price: "\82.50"),*/
           Container(
             width: Get.width,
             height: 1,
             color: Colors.black,
           ),
-          _totalEarningItem()
+          _totalEarningItem(ctrl)
         ],
       ),
     ).paddingOnly(
@@ -251,7 +228,7 @@ class SummeryScreen extends StatelessWidget {
     );
   }
 
-  Widget _totalEarningItem() {
+  Widget _totalEarningItem(SummeryController ctrl) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -265,7 +242,8 @@ class SummeryScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               "Gross Earnings:".text(fontSize: 16, fontColor: darkGreenColor),
-              "\$2510.50".text(fontSize: 16, fontColor: darkGreenColor),
+              ("\$${ctrl.summery?.grossEarningTotal ?? ""}")
+                  .text(fontSize: 16, fontColor: darkGreenColor),
             ],
           )),
         ],
@@ -283,13 +261,17 @@ class SummeryScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Expanded(
-            child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            name.text(fontSize: 16),
-            quantity.text(fontSize: 16),
-          ],
-        )),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              name.text(fontSize: 16),
+              quantity.text(
+                fontSize: 16,
+                fontColor: greyTextColor,
+              ),
+            ],
+          ),
+        ),
         Expanded(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -690,157 +672,177 @@ class SummeryDataTableSecond extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DataTable(
-      columnSpacing: 10,
-      horizontalMargin: 15,
-      headingRowColor: MaterialStateProperty.all(darkGreenColor2),
-      border: TableBorder.all(
-        width: 1.0,
-        color: Colors.black,
-        style: BorderStyle.solid,
-        borderRadius: BorderRadius.circular(10),
+    return Container(
+      height: 355,
+      width: Get.width,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            offset: Offset(2, 3),
+            blurRadius: 10.0,
+          ),
+        ],
       ),
-      clipBehavior: Clip.hardEdge,
-      headingRowHeight: 45,
-      columns: [
-        DataColumn(
-          label: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              "Date"
-                  .text(weight: FontWeight.w500, fontColor: Colors.white)
-                  .paddingOnly(bottom: 5)
-            ],
+      child: DataTable(
+        columnSpacing: 10,
+        horizontalMargin: 15,
+        headingRowColor: MaterialStateProperty.all(darkGreenColor2),
+        border: TableBorder.all(
+          width: 1.0,
+          color: Colors.black,
+          style: BorderStyle.solid,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        clipBehavior: Clip.hardEdge,
+        headingRowHeight: 45,
+        columns: [
+          DataColumn(
+            label: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                "Date"
+                    .text(weight: FontWeight.w500, fontColor: Colors.white)
+                    .paddingOnly(bottom: 5)
+              ],
+            ),
           ),
-        ),
-        DataColumn(
-          label: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              "1x"
-                  .text(weight: FontWeight.w500, fontColor: Colors.white)
-                  .paddingOnly(bottom: 5)
-            ],
+          DataColumn(
+            label: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                "1x"
+                    .text(weight: FontWeight.w500, fontColor: Colors.white)
+                    .paddingOnly(bottom: 5)
+              ],
+            ),
           ),
-        ),
-        DataColumn(
-          label: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              "1.5x"
-                  .text(weight: FontWeight.w500, fontColor: Colors.white)
-                  .paddingOnly(bottom: 5)
-            ],
+          DataColumn(
+            label: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                "1.5x"
+                    .text(weight: FontWeight.w500, fontColor: Colors.white)
+                    .paddingOnly(bottom: 5)
+              ],
+            ),
           ),
-        ),
-        DataColumn(
-          label: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              "2x"
-                  .text(weight: FontWeight.w500, fontColor: Colors.white)
-                  .paddingOnly(bottom: 5)
-            ],
+          DataColumn(
+            label: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                "2x"
+                    .text(weight: FontWeight.w500, fontColor: Colors.white)
+                    .paddingOnly(bottom: 5)
+              ],
+            ),
           ),
-        ),
-        DataColumn(
-          label: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              "   "
-                  .text(weight: FontWeight.w500, fontColor: Colors.white)
-                  .paddingOnly(bottom: 5)
-            ],
+          DataColumn(
+            label: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                "   "
+                    .text(weight: FontWeight.w500, fontColor: Colors.white)
+                    .paddingOnly(bottom: 5)
+              ],
+            ),
           ),
-        ),
-        DataColumn(
-          label: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              "MP"
-                  .text(weight: FontWeight.w500, fontColor: Colors.white)
-                  .paddingOnly(bottom: 5)
-            ],
+          DataColumn(
+            label: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                "MP"
+                    .text(weight: FontWeight.w500, fontColor: Colors.white)
+                    .paddingOnly(bottom: 5)
+              ],
+            ),
           ),
-        ),
-        DataColumn(
-          label: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              "Paid \nHrs"
-                  .text(weight: FontWeight.w500, fontColor: Colors.white)
-                  .paddingOnly(bottom: 5)
-            ],
+          DataColumn(
+            label: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                "Paid \nHrs"
+                    .text(weight: FontWeight.w500, fontColor: Colors.white)
+                    .paddingOnly(bottom: 5)
+              ],
+            ),
           ),
-        ),
-        DataColumn(
-          label: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              "  Gross\n  Wages"
-                  .text(weight: FontWeight.w500, fontColor: Colors.white)
-                  .paddingOnly(bottom: 5)
-            ],
+          DataColumn(
+            label: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                "  Gross\n  Wages"
+                    .text(weight: FontWeight.w500, fontColor: Colors.white)
+                    .paddingOnly(bottom: 5)
+              ],
+            ),
           ),
-        ),
-      ],
-      dataRowHeight: 30,
-      rows: [
-        _dataRow(
-          date: "7/17",
-          color: rowCellGreyColor,
-        ),
-        _dataRow(
-          date: "7/18",
-        ),
-        _dataRow(
-          date: "7/19",
-          color: rowCellGreyColor,
-          oneX: '8',
-          oneFiveX: "4",
-          paidHours: "14",
-          grossWages: "\$770",
-        ),
-        _dataRow(
-          date: "7/19",
-          oneX: '8',
-          oneFiveX: "4",
-          mp: "1",
-          paidHours: "14",
-          grossWages: "\$770",
-        ),
-        _dataRow(
-          date: "7/20",
-          color: rowCellGreyColor,
-        ),
-        _dataRow(
-          date: "7/21",
-        ),
-        _dataRow(
-          date: "7/22",
-          color: rowCellGreyColor,
-        ),
-        _dataRow(
-          date: "7/23",
-        ),
-        _dataRow(
-            date: "Total",
-            oneX: "16",
-            oneFiveX: "8",
-            twoX: "    ",
-            empty: "    ",
+        ],
+        dataRowHeight: 30,
+        rows: [
+          _dataRow(
+            date: "7/17",
+            color: rowCellGreyColor,
+          ),
+          _dataRow(
+            date: "7/18",
+          ),
+          _dataRow(
+            date: "7/19",
+            color: rowCellGreyColor,
+            oneX: '8',
+            oneFiveX: "4",
+            paidHours: "14",
+            grossWages: "\$770",
+          ),
+          _dataRow(
+            date: "7/19",
+            oneX: '8',
+            oneFiveX: "4",
             mp: "1",
-            paidHours: "28",
-            grossWages: "\$1540",
-            color: darkGreenColor2.withOpacity(0.2),
-            textColor: darkGreenColor2,
-            weight: FontWeight.w500),
-      ],
+            paidHours: "14",
+            grossWages: "\$770",
+          ),
+          _dataRow(
+            date: "7/20",
+            color: rowCellGreyColor,
+          ),
+          _dataRow(
+            date: "7/21",
+          ),
+          _dataRow(
+            date: "7/22",
+            color: rowCellGreyColor,
+          ),
+          _dataRow(
+            date: "7/23",
+          ),
+          _dataRow(
+              date: "Total",
+              oneX: "16",
+              oneFiveX: "8",
+              twoX: "    ",
+              empty: "    ",
+              mp: "1",
+              paidHours: "28",
+              grossWages: "\$1540",
+              color: darkGreenColor2.withOpacity(0.2),
+              textColor: darkGreenColor2,
+              weight: FontWeight.w500),
+        ],
+      ).paddingOnly(
+        left: screenWPadding8.sw(),
+        right: screenWPadding8.sw(),
+        top: 14.sh(),
+        bottom: 24.sh(),
+      ),
     ).paddingOnly(
-      left: screenWPadding8.sw(),
-      right: screenWPadding8.sw(),
-      top: 14.sh(),
-      bottom: 24.sh(),
+      top: screenHPadding16.sh(),
+      bottom: screenHPadding16.sh(),
+      left: screenWPadding16.sw(),
+      right: screenWPadding16.sw(),
     );
   }
 
@@ -944,175 +946,212 @@ class SummeryDataTableSecond extends StatelessWidget {
 }
 
 class SummeryDataTableFirst extends StatelessWidget {
-  const SummeryDataTableFirst({Key? key}) : super(key: key);
+  SummeryDataTableFirst({Key? key}) : super(key: key);
+
+  final controller = Get.find<SummeryController>();
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        DataTable(
-          columnSpacing: 20,
-          horizontalMargin: 15,
-          headingRowColor: MaterialStateProperty.all(darkGreenColor2),
-          border: TableBorder.all(
-            width: 1.0,
-            color: Colors.black,
-            style: BorderStyle.solid,
-            borderRadius: BorderRadius.circular(10),
+    return GetBuilder<SummeryController>(
+      builder: (ctrl) {
+        return Container(
+          height: 355,
+          width: Get.width,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                offset: Offset(2, 3),
+                blurRadius: 10.0,
+              ),
+            ],
           ),
-          clipBehavior: Clip.hardEdge,
-          headingRowHeight: 43,
-          columns: [
-            DataColumn(
-              label: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  "Date"
-                      .text(weight: FontWeight.w500, fontColor: Colors.white)
-                      .paddingOnly(bottom: 5)
-                ],
-              ),
-            ),
-            DataColumn(
-              label: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  "Call"
-                      .text(weight: FontWeight.w500, fontColor: Colors.white)
-                      .paddingOnly(bottom: 5)
-                ],
-              ),
-            ),
-            DataColumn(
-              label: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  "Out"
-                      .text(weight: FontWeight.w500, fontColor: Colors.white)
-                      .paddingOnly(bottom: 5)
-                ],
-              ),
-            ),
-            DataColumn(
-              label: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  "In"
-                      .text(weight: FontWeight.w500, fontColor: Colors.white)
-                      .paddingOnly(bottom: 5)
-                ],
-              ),
-            ),
-            DataColumn(
-              label: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  "Out"
-                      .text(weight: FontWeight.w500, fontColor: Colors.white)
-                      .paddingOnly(bottom: 5)
-                ],
-              ),
-            ),
-            DataColumn(
-              label: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  "In"
-                      .text(weight: FontWeight.w500, fontColor: Colors.white)
-                      .paddingOnly(bottom: 5)
-                ],
-              ),
-            ),
-            DataColumn(
-              label: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  "Wrap"
-                      .text(weight: FontWeight.w500, fontColor: Colors.white)
-                      .paddingOnly(bottom: 5)
-                ],
-              ),
-            ),
-          ],
-          dataRowHeight: 32,
-          rows: [
-            _dataRow(
-              date: "7/17",
-              color: rowCellGreyColor,
-            ),
-            _dataRow(
-              date: "7/18",
-            ),
-            _dataRow(
-              date: "7/19",
-              color: rowCellGreyColor,
-              call: "9.0",
-              outOne: '15.0',
-              inOne: '15.5',
-              outTwo: '',
-              inTwo: '',
-              wrap: '21.5',
-            ),
-            _dataRow(
-              date: "7/20",
-              call: "9.0",
-              outOne: '15.5',
-              inOne: '16',
-              outTwo: '',
-              inTwo: '',
-              wrap: '22',
-            ),
-            _dataRow(
-              date: "7/21",
-              color: rowCellGreyColor,
-            ),
-            _dataRow(
-              date: "7/22",
-            ),
-            _dataRow(
-              date: "7/23",
-              color: rowCellGreyColor,
-            ),
-          ],
-        ).paddingOnly(
-          left: screenWPadding8.sw(),
-          right: screenWPadding8.sw(),
-          top: 14.sh(),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            "View:".text(fontSize: 20, weight: FontWeight.w500),
-            SizedBox(
-              width: 12,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(
+          child: Column(
+            children: [
+              DataTable(
+                columnSpacing: 20,
+                horizontalMargin: 15,
+                headingRowColor: MaterialStateProperty.all(darkGreenColor2),
+                border: TableBorder.all(
+                  width: 1.0,
                   color: Colors.black,
+                  style: BorderStyle.solid,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-              ),
-              child: Row(
-                children: [
-                  "Tenths".text(fontSize: 16),
-                  SizedBox(
-                    width: 38,
+                clipBehavior: Clip.hardEdge,
+                headingRowHeight: 43,
+                columns: [
+                  DataColumn(
+                    label: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        "Date"
+                            .text(
+                                weight: FontWeight.w500,
+                                fontColor: Colors.white)
+                            .paddingOnly(bottom: 5)
+                      ],
+                    ),
                   ),
-                  FmImage.assetImage(
-                    path: Assets.iconsDownIcon,
-                    height: 15.sh(),
-                    width: 15.sw(),
+                  DataColumn(
+                    label: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        "Call"
+                            .text(
+                                weight: FontWeight.w500,
+                                fontColor: Colors.white)
+                            .paddingOnly(bottom: 5)
+                      ],
+                    ),
+                  ),
+                  DataColumn(
+                    label: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        "Out"
+                            .text(
+                                weight: FontWeight.w500,
+                                fontColor: Colors.white)
+                            .paddingOnly(bottom: 5)
+                      ],
+                    ),
+                  ),
+                  DataColumn(
+                    label: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        "In"
+                            .text(
+                                weight: FontWeight.w500,
+                                fontColor: Colors.white)
+                            .paddingOnly(bottom: 5)
+                      ],
+                    ),
+                  ),
+                  DataColumn(
+                    label: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        "Out"
+                            .text(
+                                weight: FontWeight.w500,
+                                fontColor: Colors.white)
+                            .paddingOnly(bottom: 5)
+                      ],
+                    ),
+                  ),
+                  DataColumn(
+                    label: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        "In"
+                            .text(
+                                weight: FontWeight.w500,
+                                fontColor: Colors.white)
+                            .paddingOnly(bottom: 5)
+                      ],
+                    ),
+                  ),
+                  DataColumn(
+                    label: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        "Wrap"
+                            .text(
+                                weight: FontWeight.w500,
+                                fontColor: Colors.white)
+                            .paddingOnly(bottom: 5)
+                      ],
+                    ),
+                  ),
+                ],
+                dataRowHeight: 32,
+                rows: [
+                  _dataRow(
+                    date: "7/17",
+                    color: rowCellGreyColor,
+                  ),
+                  _dataRow(
+                    date: "7/18",
+                  ),
+                  _dataRow(
+                    date: "7/19",
+                    color: rowCellGreyColor,
+                    call: "9.0",
+                    outOne: '15.0',
+                    inOne: '15.5',
+                    outTwo: '',
+                    inTwo: '',
+                    wrap: '21.5',
+                  ),
+                  _dataRow(
+                    date: "7/20",
+                    call: "9.0",
+                    outOne: '15.5',
+                    inOne: '16',
+                    outTwo: '',
+                    inTwo: '',
+                    wrap: '22',
+                  ),
+                  _dataRow(
+                    date: "7/21",
+                    color: rowCellGreyColor,
+                  ),
+                  _dataRow(
+                    date: "7/22",
+                  ),
+                  _dataRow(
+                    date: "7/23",
+                    color: rowCellGreyColor,
+                  ),
+                ],
+              ).paddingOnly(
+                top: 14.sh(),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  "View:".text(fontSize: 20, weight: FontWeight.w500),
+                  SizedBox(
+                    width: 12,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: Colors.black,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        "Tenths".text(fontSize: 16),
+                        SizedBox(
+                          width: 38,
+                        ),
+                        FmImage.assetImage(
+                          path: Assets.iconsDownIcon,
+                          height: 15.sh(),
+                          width: 15.sw(),
+                        )
+                      ],
+                    ).paddingOnly(left: 10, top: 5, bottom: 5, right: 10),
                   )
                 ],
-              ).paddingOnly(left: 10, top: 5, bottom: 5, right: 10),
-            )
-          ],
+              ).paddingOnly(
+                top: screenHPadding16.sh(),
+                right: screenWPadding8.sw(),
+              )
+            ],
+          ),
         ).paddingOnly(
-          top: screenHPadding16.sh(),
-          right: screenWPadding8.sw(),
-        )
-      ],
+            top: screenHPadding16.sh(),
+            bottom: screenHPadding16.sh(),
+            left: screenWPadding16.sw(),
+            right: screenWPadding16.sw());
+      },
     );
   }
 

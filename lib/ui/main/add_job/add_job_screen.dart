@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../globle.dart';
 import '../../../models/taxed_nontaxed_item.dart';
+import '../../../utils/app_utils.dart';
 import '../../widgets/app_calender.dart';
 import '../../widgets/dropdown.dart';
 import '../../widgets/fm_appbar.dart';
@@ -255,22 +256,23 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
-  getDaysMonthWise(Set<DateTime> selectedDays){
-
+  String getDaysMonthWise(Set<DateTime> selectedDays) {
+    String generatedDate = "";
     var coreMonths = selectedDays.toList().map((e) => e.month);
     List<int> months = coreMonths.toSet().toList();
-    String strMonth = "";
-   /* months.forEach((element) {
-      List<DateTime> ss = selectedDays.map((e) => e.month==element).toList();
-      ss.map((e) => e)
-      strMonth = strMonth +
+    months.toList().forEach((e1) {
+      generatedDate = "$generatedDate${monthList[e1]} " ;
+      generatedDate = generatedDate +
+          selectedDays
+              .toList()
+              .where((element) => element.month == e1)
+              .toList().map((e) => e.day)
+              .join(",");
     });
-   return selectedDays
-        .map((e) => "${e.day}")
-        .toList()
-        .join(",");*/
-
+    return generatedDate;
   }
+
+
 
   Widget _discriptionCard(BuildContext context) {
     return Column(
@@ -398,8 +400,8 @@ class AddJobScreen extends StatelessWidget {
           ),
           if (controller.selectedPaidBy.text == "Other") ...[
             _detailItem(
-              "Paid By(Manually)",
-              hint: "Enter Paid By",
+              "",
+              hint: "Paid By Notes",
               controller: controller.paidByManualController,
             ),
           ],
@@ -417,8 +419,8 @@ class AddJobScreen extends StatelessWidget {
           ),
           if (controller.selectedTerm.text == "Other") ...[
             _detailItem(
-              "Terms(Manually)",
-              hint: "Enter Terms",
+              "",
+              hint: "Term Notes",
               controller: controller.termsManualController,
             ),
           ],
@@ -462,8 +464,8 @@ class AddJobScreen extends StatelessWidget {
           ),
           if (controller.selectedType.text == "Other") ...[
             _detailItem(
-              "Type(Manually)",
-              hint: "Enter Type",
+              "",
+              hint: "Type Notes",
               controller: controller.typeManualController,
             ),
           ],
@@ -1093,8 +1095,7 @@ class AddJobScreen extends StatelessWidget {
         defaultSelectedItem: defaultItem,
         onAddClick: (TaxedNonTaxedModel model) {
           if (model.id != null) {
-            var index = controller.taxedItems
-                .indexWhere((element) => element.id == model.id);
+            var index = controller.taxedItems.indexWhere((element) => element.id == model.id);
             controller.taxedItems.removeAt(index);
             controller.taxedItems.insert(index, model);
             controller.update();
@@ -1107,6 +1108,7 @@ class AddJobScreen extends StatelessWidget {
     ).whenComplete(
       () {
         Get.find<TaxedItemDialogController>().whenDialogClose();
+        Get.find<TaxedItemDialogController>().typeManualController.clear();
       },
     );
   }

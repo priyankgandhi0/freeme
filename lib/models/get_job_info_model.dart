@@ -165,12 +165,14 @@ class Taxes {
     _taxtType = json['taxt_type'];
     _taxtAmount = json['taxt_amount'];
     _taxtPer = json['taxt_per'];
+    _taxtTypeId = json['taxt_type_id'];
   }
 
   num? _taxesId;
   String? _taxtType;
   num? _taxtAmount;
   String? _taxtPer;
+  num? _taxtTypeId;
 
   num? get taxId => _taxesId;
   String? get taxType => _taxtType;
@@ -178,6 +180,7 @@ class Taxes {
   num? get taxAmount => _taxtAmount;
 
   String? get taxPer => _taxtPer;
+  num? get  taxtTypeId => _taxtTypeId;
 }
 
 class NonTaxes {
@@ -186,12 +189,14 @@ class NonTaxes {
     _nonTaxtType = json['non_taxt_type'];
     _nonTaxtAmount = json['non_taxt_amount'];
     _nonTaxtPer = json['non_taxt_per'];
+    _taxtTypeId = json['taxt_type_id'];
   }
 
   num? _nonTaxId;
   String? _nonTaxtType;
   num? _nonTaxtAmount;
   String? _nonTaxtPer;
+  num? _taxtTypeId;
 
   num? get nonTaxId => _nonTaxId;
 
@@ -200,4 +205,6 @@ class NonTaxes {
   num? get nonTaxtAmount => _nonTaxtAmount;
 
   String? get nonTaxtPer => _nonTaxtPer;
+
+  num? get  taxtTypeId => _taxtTypeId;
 }

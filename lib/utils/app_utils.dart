@@ -6,19 +6,24 @@ import 'package:package_info/package_info.dart';
 
 import 'app_constant.dart';
 
-class AppUtils{
+class AppUtils {
   static Map<String, String> requestHeader(bool passAuthToken) {
     return {
       RequestHeaderKey.contentType: 'application/json',
       RequestHeaderKey.appSecret: 'freeme123',
       RequestHeaderKey.appTrackVersion: 'v1',
       RequestHeaderKey.appDeviceType: Platform.isIOS ? 'iOS' : 'android',
-      RequestHeaderKey.appStoreVersion: box.read(AppConstant.appStoreVersion) ?? '',
-      RequestHeaderKey.appDeviceModel: box.read(AppConstant.appDeviceModel) ?? '',
+      RequestHeaderKey.appStoreVersion:
+          box.read(AppConstant.appStoreVersion) ?? '',
+      RequestHeaderKey.appDeviceModel:
+          box.read(AppConstant.appDeviceModel) ?? '',
       RequestHeaderKey.appOsVersion: box.read(AppConstant.appOsVersion) ?? '',
-      RequestHeaderKey.appStoreBuildNumber: box.read(AppConstant.appStoreBuildNumber) ?? '',
-      if (passAuthToken)RequestHeaderKey.authToken: box.read(AppConstant.authToken) ?? '',
-      if (passAuthToken)RequestHeaderKey.accessToken: box.read(AppConstant.accessToken) ?? '',
+      RequestHeaderKey.appStoreBuildNumber:
+          box.read(AppConstant.appStoreBuildNumber) ?? '',
+      if (passAuthToken)
+        RequestHeaderKey.authToken: box.read(AppConstant.authToken) ?? '',
+      if (passAuthToken)
+        RequestHeaderKey.accessToken: box.read(AppConstant.accessToken) ?? '',
     };
   }
 
@@ -41,9 +46,26 @@ class AppUtils{
     await box.write(AppConstant.appStoreVersion, packageInfo.version);
     await box.write(AppConstant.appStoreBuildNumber, packageInfo.buildNumber);
   }
+
   static Future<dynamic> appDeviceInfo() async {
     return Platform.isIOS
         ? await DeviceInfoPlugin().iosInfo
         : await DeviceInfoPlugin().androidInfo;
   }
 }
+
+List<String> monthList = [
+  "",
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];

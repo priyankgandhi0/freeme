@@ -248,8 +248,17 @@ class TimeCardController extends GetxController {
     int hour = int.parse(time.split(":").first.toString());
     int minute = int.parse(time.split(":").last.substring(0, 2));
     bool isPm = time.contains("PM") ? true : false;
-    return DateTime.utc(int.parse(now[0]), int.parse(now[1]), int.parse(now[2]),
-        isPm ? hour + 12 : hour, minute, 0);
+    return DateTime.utc(
+        int.parse(now[0]),
+        int.parse(now[1]),
+        int.parse(now[2]),
+        isPm
+            ? hour != 12
+                ? hour + 12
+                : hour
+            : hour,
+        minute,
+        0);
   }
 }
 

@@ -11,11 +11,9 @@ import 'dropdown.dart';
 class NonTaxItemDialog extends StatelessWidget {
   Function(TaxedNonTaxedModel model) onAddClick;
 
-  NonTaxItemDialog({
-    Key? key,
-    required this.onAddClick,
-    this.defaultSelectedItem
-  }) : super(key: key);
+  NonTaxItemDialog(
+      {Key? key, required this.onAddClick, this.defaultSelectedItem})
+      : super(key: key);
 
   TaxedNonTaxedModel? defaultSelectedItem;
 
@@ -24,7 +22,8 @@ class NonTaxItemDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<NonTaxItemDialogController>(
-      initState: (initState){
+      initState: (initState) async {
+        await controller.getAllTexedItemType();
         if (defaultSelectedItem != null) {
           controller.selectItemForEdit(defaultSelectedItem!);
         }
@@ -125,6 +124,17 @@ class NonTaxItemDialog extends StatelessWidget {
                         top: 4,
                       )
                     : Container(),
+                if (ctrl.selectedTaxedItemType.text == "Other") ...[
+                  FmTextField(
+                    hint: "Type Note",
+                    hintSize: 16,
+                    inputType: TextInputType.text,
+                    controller: ctrl.typeManualController,
+                    radius: 10,
+                  ).paddingOnly(
+                    top: screenHPadding8.sh(),
+                  )
+                ]
               ],
             ).paddingOnly(
               left: screenWPadding32.sw(),
@@ -236,10 +246,21 @@ class NonTaxItemDialog extends StatelessWidget {
                 if (controller.isValidate()) {
                   onAddClick(
                     TaxedNonTaxedModel(
-                        type: controller.selectedTaxedItemType.text,
-                        per: controller.selectedPerTime.text,
-                        amount: controller.amountController.text, id: defaultSelectedItem?.id),
+                      type: controller.selectedTaxedItemType.text,
+                      per: controller.selectedPerTime.text,
+                      amount: controller.amountController.text,
+                      id: defaultSelectedItem?.id,
+                      taxedItemId:
+                      controller.selectedTaxedItemType.text == "Other"
+                          ? 0
+                          : controller.selectedTaxedItemType.id,
+                      taxedTypeNote:
+                      controller.selectedTaxedItemType.text == "Other"
+                          ? ctrl.typeManualController.text
+                          : null,
+                    ),
                   );
+                  controller.typeManualController.clear();
                   Navigator.of(context, rootNavigator: true).pop();
                 }
               },
@@ -259,6 +280,7 @@ class NonTaxItemDialog extends StatelessWidget {
 
 class NonTaxItemDialogController extends GetxController {
   TextEditingController amountController = TextEditingController();
+  TextEditingController typeManualController = TextEditingController();
 
   @override
   void onInit() {

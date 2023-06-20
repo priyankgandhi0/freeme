@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:freeme/api/api_helpers.dart';
 
 import '../../models/taxed_nontaxed_item.dart';
@@ -168,7 +170,6 @@ class QuickEntryRepo {
 
       reqData["remove_non_taxed_items"] = removeNonTaxedItems?.join(",");
     }
-
 
     result = await BaseApiHelper.postRequest(
       requestUrl: AppUrls.baseUrl,

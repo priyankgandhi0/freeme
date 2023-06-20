@@ -176,9 +176,9 @@ class _TimePickerSpinnerState extends State<TimePickerSpinner> {
     int second = (currentSelectedSecondIndex -
             (isLoop(_getSecondCount()) ? _getSecondCount() : 1)) *
         widget.secondsInterval;
-    int finalMinute = (minute+1==60)?00:(minute+1);
+    int finalMinute = (minute + 1 == 60) ? 00 : (minute + 1);
     return DateTime(currentTime!.year, currentTime!.month, currentTime!.day,
-        hour+1, finalMinute, second);
+        hour + 1, finalMinute, second);
   }
 
   @override
@@ -239,7 +239,7 @@ class _TimePickerSpinnerState extends State<TimePickerSpinner> {
           () => isHourScrolling = false,
         ),
       ),
-      spacer(),
+      //  spacer(),
       SizedBox(
         width: _getItemWidth(),
         height: _getItemHeight()! * 5,
@@ -259,9 +259,9 @@ class _TimePickerSpinnerState extends State<TimePickerSpinner> {
     ];
 
     if (!widget.is24HourMode) {
-      contents.add(spacer());
+      // contents.add(spacer());
       contents.add(SizedBox(
-        width: _getItemWidth()! * 1.2,
+        width: _getItemWidth()! * 1,
         height: _getItemHeight()! * 3,
         child: apSpinner(),
       ));
