@@ -80,8 +80,8 @@ class JobInfoScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               var data = (ctrl.jobInfo?.nonTaxes ?? [])[index];
               return detailItem(
-                title: data.nonTaxtType,
-                desc: "\$${data.nonTaxtAmount}/${data.nonTaxtPer}",
+                title: data.taxedItem,
+                desc: "\$${data.nonTaxtAmount}/${data.taxPerTimeCategory}",
               ).paddingOnly(
                 right: screenWPadding16.sw(),
                 top: screenHPadding16.sw(),
@@ -131,8 +131,8 @@ class JobInfoScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               var data = (ctrl.jobInfo?.taxes ?? [])[index];
               return detailItem(
-                title: data.taxType,
-                desc: "\$${data.taxAmount}/${data.taxPer}",
+                title: data.taxedItem,
+                desc: "\$${data.taxtAmount}/${data.taxPerTimeCategory}",
               ).paddingOnly(
                 right: screenWPadding16.sw(),
                 top: screenHPadding16.sw(),
@@ -161,7 +161,8 @@ class JobInfoScreen extends StatelessWidget {
         children: [
           detailItem(
             title: jobClassification,
-            desc: "${ctrl.jobInfo?.department}/${ctrl.jobInfo?.position}",
+            desc:
+                "${ctrl.jobInfo?.jobClassificationCategory}/${ctrl.jobInfo?.subJobClassificationsCategory}",
             titleColor: redTextColor,
           ).paddingOnly(
             top: screenHPadding16.sh(),
@@ -214,7 +215,7 @@ class JobInfoScreen extends StatelessWidget {
         children: [
           detailItem(
               title: rateStar,
-              desc: "\$${ctrl.jobInfo?.rate}/${ctrl.jobInfo?.perHowManyHours}",
+              desc: "\$${ctrl.jobInfo?.rate}/${ctrl.jobInfo?.hours}",
               titleColor: redTextColor,
               onIbuttonClick: () {
                 if (ctrl.jobInfo != null) {
@@ -226,7 +227,7 @@ class JobInfoScreen extends StatelessWidget {
           ),
           detailItem(
             title: guarHours,
-            desc: ctrl.jobInfo?.guaranteedHours.toString(),
+            desc: ctrl.jobInfo?.guaranteedHour.toString(),
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
@@ -240,14 +241,14 @@ class JobInfoScreen extends StatelessWidget {
           ),
           detailItem(
             title: paidBy,
-            desc: ctrl.jobInfo?.paidBy.toString(),
+            desc: ctrl.jobInfo?.paidByName.toString(),
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: terms,
-            desc: ctrl.jobInfo?.terms.toString(),
+            desc: ctrl.jobInfo?.term.toString(),
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding16.sh(),
@@ -280,7 +281,7 @@ class JobInfoScreen extends StatelessWidget {
           ),
           detailItem(
             title: title,
-            desc: ctrl.jobInfo?.productionTital,
+            desc: ctrl.jobInfo?.productionTitle,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
@@ -359,13 +360,15 @@ class JobInfoScreen extends StatelessWidget {
     BuildContext context,
     GetJobInfoModel jobInfo,
   ) {
-    num hour = (jobInfo.perHowManyHours.toString().toLowerCase() == "10 hours"
+    num hour = (jobInfo.hours.toString().toLowerCase() ==
+            "10 hours".toLowerCase()
         ? 10
-        : jobInfo.perHowManyHours.toString().toLowerCase() == "Hourly"
+        : jobInfo.hours.toString().toLowerCase() == "Hourly".toLowerCase()
             ? 1
-            : jobInfo.perHowManyHours.toString().toLowerCase() == "8 hours"
+            : jobInfo.hours.toString().toLowerCase() == "8 hours".toLowerCase()
                 ? 8
-                : jobInfo.perHowManyHours.toString().toLowerCase() == "12 hours"
+                : jobInfo.hours.toString().toLowerCase() ==
+                        "12 hours".toLowerCase()
                     ? 12
                     : 0);
     num perHourRate = int.parse(jobInfo.rate.toString()) / hour;
@@ -394,21 +397,24 @@ class JobInfoScreen extends StatelessWidget {
           ),
           detailItem(
             title: hourly,
-            desc: perHourRate.toStringAsFixed(2),
+            desc: perHourRate.isNaN ? "-" : perHourRate.toStringAsFixed(2),
           ).paddingOnly(
             top: screenHPadding16.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: hourlyX15,
-            desc: (perHourRate * 1.5).toStringAsFixed(2),
+            desc: perHourRate.isNaN
+                ? "-"
+                : (perHourRate * 1.5).toStringAsFixed(2),
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: Hourly20,
-            desc: (perHourRate * 2).toStringAsFixed(2),
+            desc:
+                perHourRate.isNaN ? "-" : (perHourRate * 2).toStringAsFixed(2),
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
@@ -427,5 +433,3 @@ class JobInfoScreen extends StatelessWidget {
         "${ctrl.jobInfo?.zip == 0 ? "" : ctrl.jobInfo?.zip}\n${ctrl.jobInfo?.country ?? ""}";
   }
 }
-
-

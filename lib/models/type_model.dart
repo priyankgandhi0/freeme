@@ -11,10 +11,10 @@ class TypeModel {
     _type = json['type'];
   }
 
-  num? _typeId;
+  int? _typeId;
   String? _type;
 
-  num? get typeId => _typeId;
+  int? get typeId => _typeId;
   String? get type => _type;
 
   Map<String, dynamic> toJson() {

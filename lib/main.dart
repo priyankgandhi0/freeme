@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       ),
       debugShowCheckedModeBanner: false,
       getPages: Routes.pages,
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }

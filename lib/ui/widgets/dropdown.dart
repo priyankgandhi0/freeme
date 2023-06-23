@@ -121,10 +121,11 @@ Widget buildItem(
 class MenuItem {
   String? text;
   String? subText;
-  num? id;
-
+  int? id;
   bool isSelected;
   String? countryCode;
+
+  int? get idForAPI => text == "Other" ? 0 : id;
 
   MenuItem({
     this.text,

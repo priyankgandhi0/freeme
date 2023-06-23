@@ -1,23 +1,15 @@
 
-=> Is there a way to have DONE listed on the top right of the keyboard so a user can click it to go away when they want the keyboard to go away? [Not Done]
 
- 	=>Is there a way to have DONE listed on the top right of the keyboard so a user can click it to go away when they want the keyboard to go away?
-=>	Dropdown menu does not match design (All dropdowns throughout app) [Done]
- =>	Gray lines are not expanded from left to right. There is a gap on both sides [Done]
-=>	Dropdown menu - is there a way to make it like a “smart” drop down menu? Depending on when the user clicks, dropdown menu will pop below or above? See example here. [Working]
-=>	Dropdown menu for Industry [Done]
+    =>	Dropdown menu does not match design (All dropdowns throughout app) [Done]
+    =>	Gray lines are not expanded from left to right. There is a gap on both sides [Done]
+    =>	Dropdown menu - is there a way to make it like a “smart” drop down menu? Depending on when the user clicks, dropdown menu will pop below or above? See example here. [Working]
+    =>	Dropdown menu for Industry [Done]
 	•	Should not PUSH everything down. Please make it overlay
 	•	If a user selects “Other” is there a way for them to input information?
-=>Example job  (See Figma file) [Working]
-	•	Can we add an example job here? So that if a user downloads this, they can actually click into this example job and understand that they need to add a new job to get inside the timecard?
-
+    =>Example job  (See Figma file) [Done]
+	•	Can we add an example job here? So that if a user downloads this, they can actually click into this example job and understand that they need to add a new job to get inside the timecard? [Done]
 	=>	Validation is not correct [Done]
 	=>	Validation SHOULD NOT be for every single entry point [Done]
-
-    => Is there a way to have DONE listed on the top right of the keyboard so a user can click it to go away when they want the keyboard to go away? [Not Done]
-
-
-
  	=>Is there a way to have DONE listed on the top right of the keyboard so a user can click it to go away when they want the keyboard to go away?
     =>	Dropdown menu does not match design (All dropdowns throughout app) [Done]
     =>	Gray lines are not expanded from left to right. There is a gap on both sides [Done]
@@ -25,11 +17,8 @@
     =>	Dropdown menu for Industry [Done]
 	    •	Should not PUSH everything down. Please make it overlay
 	    •	If a user selects “Other” is there a way for them to input information?
-    =>Example job  (See Figma file) [Working]
-	    •	Can we add an example job here? So that if a user downloads this, they can actually click into this example job and understand that they need to add a new job to get inside the timecard?
 	=>	Validation is not correct [Done]
 	=>	Validation SHOULD NOT be for every single entry point [Done]
-
 	=>	Data validation format is too crowded [Done]
 	    •	Please highlight required answer box in red. See figma file for example
 	    •	For “Add Job - Manual Entry” please use warning icon. See figma file for example
@@ -43,13 +32,12 @@
 	    •	8 Hours
 	    •	10 Hours (this is default checked)
 	    •	12 hours
-	=>	Paid By [Done]
-    	•	Can you please add “TakeOne Network Corp” to this dropdown menu list?
-    	•	Job Classification - can we have this to be ALREADY expanded?
-    	•	Job Classification - Position should have pre-determined list dependent on what they select for DEPARTMENT (currently only shows limited list)
-    	•	Job Classification - Department  (See Figma file)
-    	•	Dropdown menu items get truncated
-    	•	“Production Design - Construction” gets chopped off at the end. The N is barely at the end. If we have to, we can put “Construction” underneath Production Design like so:
+    	•	Can you please add “TakeOne Network Corp” to this dropdown menu list? [Done]
+    	•	Job Classification - can we have this to be ALREADY expanded? [Done]
+    	•	Job Classification - Position should have pre-determined list dependent on what they select for DEPARTMENT (currently only shows limited list) [Done]
+    	•	Job Classification - Department  (See Figma file) [Done]
+    	•	Dropdown menu items get truncated  [Done]
+    	•	“Production Design - Construction” gets chopped off at the end. The N is barely at the end. If we have to, we can put “Construction” underneath Production Design like so: [Done]
             This is true for other items in dropdown menu as well[Done]
     	•	Add Tax Item & Add Non-tax item[Done]
     	•	This is not functional. I cannot select type or per drop down.[Done]
@@ -62,14 +50,16 @@
                  8 Hours
                  10 Hours (Default)
                  12 Hours
-    	•	Job Classification
-    	•	It will not allow me to select position so I cannot go past this section[You Have to Select Department First]
-    	•	Too many folders per job[Working[
-    	•	Once I select June 14, 15, 16 there are three new folders under that job. The only time it ever splits should when the job is past a work week (Work week is defined by Sunday through Saturday).[Working[
-    	•	To reiterate, unless a job does not happen within a Sunday-Saturday week, it does not need an extra folder.[Working[
-    	•	If a job is on Saturday, Sunday Monday – there is a crossover. So Saturday should have a folder, and Sunday/Monday should have a different folder.[Working]
-    	•	All folders are based on the week ending on a SATURDAY. Please see wireframe and cross reference a real calendar [Working[
+    => Job Classification
+    	•	It will not allow me to select position so I cannot go past this section [You Have to Select Department First]
+    	•	Too many folders per job[Done]
+    	•	Once I select June 14, 15, 16 there are three new folders under that job. The only time it ever splits should when the job is past a work week (Work week is defined by Sunday through Saturday).[Done]
+    	•	To reiterate, unless a job does not happen within a Sunday-Saturday week, it does not need an extra folder.[Done]
+    	•	If a job is on Saturday, Sunday Monday – there is a crossover. So Saturday should have a folder, and Sunday/Monday should have a different folder.[Done]
+    	•	All folders are based on the week ending on a SATURDAY. Please see wireframe and cross reference a real calendar [Done]
     	•	This should be TWO WHITE RECTANGLES that get swiped. Maybe that is unclear in the design. Two white rectangles with charts inside that are side by side. There should be a GAP between the two charts. [Done]
     	•	The AM and PM get swiped WAY TOO far when I swipe up and down [Done]
     	•	Sensitivity of scroll on the clock for the hour and minutes is short [Done]
     	•	When I click the NEXT DAY on the top, there is a FLASH of black. Why? [This is Loading Screen]
+
+    => Is there a way to have DONE listed on the top right of the keyboard so a user can click it to go away when they want the keyboard to go away? [Not Done]

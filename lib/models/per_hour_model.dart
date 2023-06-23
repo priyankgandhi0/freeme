@@ -9,9 +9,9 @@ class PerHourModel {
     _hoursId = json['hours_id'];
     _hours = json['hours'];
   }
-  num? _hoursId;
+  int? _hoursId;
   String? _hours;
 
-  num? get hoursId => _hoursId;
+  int? get hoursId => _hoursId;
   String? get hours => _hours;
 }

@@ -110,7 +110,7 @@ class TaxedItemPage extends StatelessWidget {
                   return _childItem(
                     item.type,
                     item.amount,
-                    item.per,
+                    item.timeId.toString(),
                   );
                 },
               ),
@@ -186,7 +186,7 @@ class TaxedItemPage extends StatelessWidget {
                   return _childItem(
                     item.type,
                     item.amount,
-                    item.per,
+                    item.timeId.toString(),
                   );
                 },
               ),

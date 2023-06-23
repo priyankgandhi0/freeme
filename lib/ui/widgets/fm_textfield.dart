@@ -186,7 +186,7 @@ class FmEmptyTextField extends StatelessWidget {
       this.maxLines,
       this.textInputType,
       this.controller,
-      this.onchange})
+      this.onchange,this.enable = true})
       : super(key: key);
 
   TextInputType? textInputType;
@@ -195,10 +195,12 @@ class FmEmptyTextField extends StatelessWidget {
   int? maxLines;
   TextEditingController? controller;
   ValueChanged<String>? onchange;
+  bool enable;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      enabled: enable,
       textInputAction: TextInputAction.done,
       inputFormatters: <TextInputFormatter>[
         if (textInputType != null &&

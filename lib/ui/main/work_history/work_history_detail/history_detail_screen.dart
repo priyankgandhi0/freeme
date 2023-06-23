@@ -20,6 +20,9 @@ class WorkHistoryDetailScreen extends StatelessWidget {
   num? dayId;
   String? date;
   String? title;
+  String? startDate;
+  String? endDate;
+  bool? isExample;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +32,9 @@ class WorkHistoryDetailScreen extends StatelessWidget {
     dayId = arguments["day_id"] ?? -1;
     date = arguments["date"] ?? "";
     title = arguments["title"] ?? "";
+    startDate = arguments["start_date"] ?? "";
+    endDate = arguments["end_date"] ?? "";
+    isExample = arguments["isExample"] ?? false;
 
     return WillPopScope(
       child: Scaffold(
@@ -40,37 +46,43 @@ class WorkHistoryDetailScreen extends StatelessWidget {
               children: [
                 fMAppBar2(
                   title: title,
-                  description: "Week Ending 7/23/2022",
+                  description: endDate.isNullOrEmpty
+                      ? ""
+                      : "Week Ending ${changeToUIFormat(endDate!)}",
                   context: context,
                   onBackClick: () {
                     FocusScope.of(context).unfocus();
                     Navigator.of(context).pop();
                   },
                   onTrailingClick: () {
-                    if (controller.tabIndex == 1) {
-                      try {
+                    if (isExample ?? false) {
+                    } else {
+                      if (controller.tabIndex == 1) {
+                        try {
+                          Navigator.pushNamed(
+                            context,
+                            Routes.timeCardEditHistoryScreen,
+                            arguments: {
+                              "date":
+                                  Get.find<TimeCardController>().selectedDate,
+                              "job_id": jobId,
+                              "day_id": dayId,
+                              "title": title,
+                            },
+                          );
+                        } catch (e) {
+                          e.debugPrint;
+                        }
+                      } else if (controller.tabIndex == 2) {
                         Navigator.pushNamed(
                           context,
-                          Routes.timeCardEditHistoryScreen,
+                          Routes.addJobScreen,
                           arguments: {
-                            "date": Get.find<TimeCardController>().selectedDate,
-                            "job_id": jobId,
-                            "day_id": dayId,
-                            "title": title,
+                            "ForEdit": true,
+                            "job_id": jobId?.toInt() ?? -1,
                           },
                         );
-                      } catch (e) {
-                        e.debugPrint;
                       }
-                    } else if (controller.tabIndex == 2) {
-                      Navigator.pushNamed(
-                        context,
-                        Routes.addJobScreen,
-                        arguments: {
-                          "ForEdit": true,
-                          "job_id": jobId?.toInt() ?? -1,
-                        },
-                      );
                     }
                   },
                 ),
@@ -119,17 +131,21 @@ class WorkHistoryDetailScreen extends StatelessWidget {
                     children: [
                       SummeryScreen(
                         jobId: jobId ?? -1,
+                        startDate: startDate ?? "",
+                        endDate: endDate ?? "",
                       ),
                       TimeCardTabScreen(
                         jobId: jobId ?? -1,
                         dayId: dayId ?? -1,
                         date: date ?? "",
+                        endDate: endDate ?? "",
                       ),
                       JobInfoScreen(
                         jobId: jobId?.toInt() ?? -1,
                       ),
                       NotesScreen(
-                        jobId: jobId?.toInt() ?? -1,
+                        jobId: jobId?.toInt() ?? -1,isExample:isExample ?? false,
+
                       ),
                     ],
                   ),
@@ -143,5 +159,10 @@ class WorkHistoryDetailScreen extends StatelessWidget {
         return false;
       },
     );
+  }
+
+  String changeToUIFormat(String date) {
+    DateTime tempDate = DateFormat("yyyy-MM-dd").parse(date);
+    return DateFormat('MM/dd/yy').format(tempDate);
   }
 }

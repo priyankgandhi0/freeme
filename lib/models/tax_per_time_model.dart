@@ -15,10 +15,10 @@ class TaxPerTimeModel {
     _taxPerTimeId = json['tax_per_time_id'];
     _taxPerTimeCategory = json['tax_per_time_category'];
   }
-  num? _taxPerTimeId;
+  int? _taxPerTimeId;
   String? _taxPerTimeCategory;
 
-  num? get taxPerTimeId => _taxPerTimeId;
+  int? get taxPerTimeId => _taxPerTimeId;
   String? get taxPerTimeCategory => _taxPerTimeCategory;
 
   Map<String, dynamic> toJson() {

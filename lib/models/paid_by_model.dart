@@ -11,10 +11,10 @@ class PaidByModel {
     _paidById = json['paid_by_id'];
     _paidByName = json['paid_by_name'];
   }
-  num? _paidById;
+  int? _paidById;
   String? _paidByName;
 
-  num? get paidById => _paidById;
+  int? get paidById => _paidById;
   String? get paidByName => _paidByName;
 
 

@@ -10,10 +10,10 @@ class JobClassificationModel {
     _jobClassificationCategory = json['job_classification_category'];
   }
 
-  num? _jobClassificationId;
+  int? _jobClassificationId;
   String? _jobClassificationCategory;
 
-  num? get jobClassificationId => _jobClassificationId;
+  int? get jobClassificationId => _jobClassificationId;
 
   String? get jobClassificationCategory => _jobClassificationCategory;
 }

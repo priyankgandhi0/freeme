@@ -10,10 +10,10 @@ class TaxedItemTypesModel {
     _taxedItem = json['taxed_item'];
   }
 
-  num? _taxedItemId;
+  int? _taxedItemId;
   String? _taxedItem;
 
-  num? get taxedItemId => _taxedItemId;
+  int? get taxedItemId => _taxedItemId;
 
   String? get taxedItem => _taxedItem;
 }

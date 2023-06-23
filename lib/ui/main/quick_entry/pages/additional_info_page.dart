@@ -215,15 +215,6 @@ class AdditionalInfoPage extends StatelessWidget {
             items: ctrl.allTypes,
             context: context,
             width: 210),
-        if(ctrl.selectedType.text=="Other")...[
-          FmTextField(
-            hint: cardBrandJob,
-            header: "Type (Add Manually)",
-            inputType: TextInputType.text,
-            radius: 10,
-            controller: ctrl.typeManualController,
-          ).paddingOnly(top: screenHPadding8.sw(),),
-        ]
       ],
     ).paddingOnly(
       left: screenWPadding16.sw(),
@@ -241,24 +232,45 @@ class AdditionalInfoPage extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          selected.text(
-            fontSize: 16,
-            fontColor: Colors.black,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              selected.text(
+                fontSize: 16,
+                fontColor: Colors.black,
+              ),
+              FmImage.assetImage(
+                path: Assets.iconsDownIcon,
+                height: 15.sh(),
+                width: 15.sw(),
+              )
+            ],
+          ).paddingOnly(
+            top: 13.sh(),
+            bottom: 13.sh(),
+            left: screenWPadding16.sw(),
+            right: screenWPadding16.sw(),
           ),
-          FmImage.assetImage(
-            path: Assets.iconsDownIcon,
-            height: 15.sh(),
-            width: 15.sw(),
-          )
+          if (controller.selectedType.text == "Other") ...[
+            Container(
+              color: greyTextColor,
+              width: Get.width,
+              height: 1,
+            ),
+            FmEmptyTextField(
+              hintText: cardBrandJob,
+              textInputType: TextInputType.text,
+              controller: controller.typeManualController,
+            ).paddingOnly(
+              top: 13.sh(),
+              bottom: 13.sh(),
+              left: screenWPadding16.sw(),
+              right: screenWPadding16.sw(),
+            ),
+          ]
         ],
-      ).paddingOnly(
-        top: 13.sh(),
-        bottom: 13.sh(),
-        left: screenWPadding16.sw(),
-        right: screenWPadding16.sw(),
       ),
     ).paddingOnly(
       top: screenHPadding8.sh(),

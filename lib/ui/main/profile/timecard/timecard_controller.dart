@@ -126,38 +126,59 @@ class TimeCardController extends GetxController {
 
   GetJobInfoModel? jobInfo;
 
+  List<String> weekDays = [];
   Future<void> getJobInfo({
     required int jobId,
+    required String endDate,
   }) async {
     startLoading();
     ResponseItem response = await JobRepo.getJobInfo(jobId);
     if (response.status) {
       jobInfo = GetJobInfoModel.fromJson(response.data);
+      weekDays.clear();
+      jobInfo?.days?.forEach((e) {
+        if(changeToApiFormat(expandingChildItem(e))==endDate){
+          weekDays.add(e.date.toString());
+        }
+      });
       stopLoading();
     } else {
       stopLoading();
     }
   }
 
+  String changeToApiFormat(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
+
+  DateTime expandingChildItem(Days e) {
+    DateTime tempDate = DateFormat("yyyy-MM-dd").parse(e.date.toString());
+    return findSaturdayDateOfTheWeek(tempDate);
+  }
+
+  DateTime findSaturdayDateOfTheWeek(DateTime dateTime) {
+    return dateTime
+        .add(Duration(days: DateTime.daysPerWeek - (dateTime.weekday + 1)));
+  }
+
   void changeDateToLeft(String date) {
-    if (jobInfo?.days != null) {
-      var index =
-          jobInfo?.days?.indexWhere((element) => element.date == date) ?? 0;
+    if(weekDays.isNotEmpty){
+      var index = weekDays.indexWhere((element) => element == date) ?? 0;
       if ((index - 1) >= 0) {
-        getWorkHistory(jobInfo?.jobId, jobInfo?.days![index - 1].date ?? "");
-        selectedDate = jobInfo?.days![index - 1].date ?? "";
+        getWorkHistory(jobInfo?.jobId, weekDays[index-1]);
+        selectedDate = weekDays[index-1];
         update();
       }
     }
   }
 
+
   void changeDateToRight(String date) {
-    if (jobInfo?.days != null) {
-      var index =
-          jobInfo?.days?.indexWhere((element) => element.date == date) ?? 0;
-      if ((index + 1) < jobInfo!.days!.length) {
-        getWorkHistory(jobInfo?.jobId, jobInfo?.days![index + 1].date ?? "");
-        selectedDate = jobInfo?.days![index + 1].date ?? "";
+    if(weekDays.isNotEmpty){
+      var index = weekDays.indexWhere((element) => element == date) ?? 0;
+      if ((index + 1) < weekDays.length){
+        getWorkHistory(jobInfo?.jobId, weekDays[index+1]);
+        selectedDate = weekDays[index+1];
         update();
       }
     }

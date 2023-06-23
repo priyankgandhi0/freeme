@@ -35,6 +35,10 @@ class WorkHistoryScreen extends StatelessWidget {
                   itemCount: ctrl.allJobList.length,
                   itemBuilder: (context, index) {
                     var job = ctrl.allJobList[index];
+                    var lastDateList = (job.days ?? [])
+                        .map((e) => expandingChildItem(e))
+                        .toSet()
+                        .toList();
                     return fMExpandedView(
                       title: job.description,
                       description: createDescription(job.days),
@@ -42,7 +46,8 @@ class WorkHistoryScreen extends StatelessWidget {
                               job.days!.isNotEmpty &&
                               job.days!.length == 1
                           ? () {
-                              Navigator.pushNamed(
+                              lastDateList[0].debugPrint;
+                              /*Navigator.pushNamed(
                                 context,
                                 Routes.workHistoryDetailScreen,
                                 arguments: {
@@ -51,7 +56,7 @@ class WorkHistoryScreen extends StatelessWidget {
                                   "date": job.days![0].date,
                                   "title": job.description,
                                 },
-                              );
+                              );*/
                             }
                           : null,
                       onChildTap: (index) {
@@ -63,16 +68,20 @@ class WorkHistoryScreen extends StatelessWidget {
                             "day_id": job.days![index].dayId,
                             "date": job.days![index].date,
                             "title": job.description,
+                            "start_date":changeToApiFormat(findSundayDateOfTheWeek(lastDateList[index])),
+                            "end_date":changeToApiFormat(lastDateList[index]),
+                            "isExample":job.jobIsExample
                           },
                         );
+                        changeToApiFormat(findSundayDateOfTheWeek(lastDateList[index])).debugPrint;
+                        changeToApiFormat(lastDateList[index]).debugPrint;
                       },
                       childList: [
                         if (job.days != null &&
                             job.days!.isNotEmpty &&
                             job.days!.length != 1)
-                          ...(job.days ?? [])
-                              .map((e) =>
-                                  "${chageFormat(e.date.toString())} - ${job.description}")
+                          ...lastDateList
+                              .map((e) => "${changeToUIFormat(e)} - ${job.description}")
                               .toList()
                       ],
                     ).paddingOnly(
@@ -80,7 +89,6 @@ class WorkHistoryScreen extends StatelessWidget {
                     );
                   },
                 ),
-
               ],
             ).safeArea;
           }),
@@ -91,6 +99,30 @@ class WorkHistoryScreen extends StatelessWidget {
       },
     );
   }
+
+  DateTime expandingChildItem(Days e) {
+    DateTime tempDate = DateFormat("yyyy-MM-dd").parse(e.date.toString());
+    return findSaturdayDateOfTheWeek(tempDate);
+  }
+
+  String changeToUIFormat(DateTime date) {
+    return DateFormat('MM/dd/yy').format(date);
+  }
+
+  String changeToApiFormat(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
+
+   DateTime findSundayDateOfTheWeek(DateTime dateTime) {
+    return dateTime.subtract(Duration(days: dateTime.weekday));
+  }
+
+  DateTime findSaturdayDateOfTheWeek(DateTime dateTime) {
+    return dateTime
+        .add(Duration(days: DateTime.daysPerWeek - (dateTime.weekday + 1)));
+  }
+
+  DateTime getDate(DateTime d) => DateTime(d.year, d.month, d.day);
 
   Widget addNewJob(BuildContext context) {
     return Container(

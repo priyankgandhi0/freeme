@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:freeme/globle.dart';
+import 'package:freeme/models/summery_model.dart';
 import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_controller.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../constant/space_constant.dart';
 import '../../../../widgets/fm_dialog.dart';
@@ -12,16 +14,20 @@ class SummeryScreen extends StatelessWidget {
   SummeryScreen({
     Key? key,
     required this.jobId,
+    required this.startDate,
+    required this.endDate,
   }) : super(key: key);
 
   final controller = Get.put(SummeryController());
   num jobId;
+  String startDate;
+  String endDate;
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SummeryController>(
       initState: (initState) {
-        controller.getSummery(jobId);
+        controller.getSummery(jobId, startDate, endDate);
       },
       builder: (ctrl) {
         return SingleChildScrollView(
@@ -107,7 +113,7 @@ class SummeryScreen extends StatelessWidget {
   ];
 
   Widget _summeryCard() {
-    return Container(
+    return SizedBox(
       height: 400,
       width: Get.width,
       child: PageView.builder(
@@ -210,8 +216,8 @@ class SummeryScreen extends StatelessWidget {
           ),
           ...(ctrl.summery?.grossEarnings ?? []).map(
             (e) => _grossEarningItem(
-                name: e.taxtType,
-                quantity: "${e.taxtAmount}/${e.taxtPer}",
+                name: e.taxedItem,
+                quantity: "${e.taxtAmount}/${e.taxPerTimeCategory}",
                 price: "\$250"),
           ),
           Container(
@@ -670,180 +676,273 @@ class SummeryScreen extends StatelessWidget {
 class SummeryDataTableSecond extends StatelessWidget {
   SummeryDataTableSecond({Key? key}) : super(key: key);
 
+  final controller = Get.find<SummeryController>();
+
+  DateTime findSundayDateOfTheWeek(DateTime dateTime) {
+    return dateTime.subtract(Duration(days: dateTime.weekday));
+  }
+
+  DateTime findSaturdayDateOfTheWeek(DateTime dateTime) {
+    return dateTime
+        .add(Duration(days: DateTime.daysPerWeek - (dateTime.weekday + 1)));
+  }
+
+  DateTime expandingChildItem(String e) {
+    DateTime tempDate = DateFormat("yyyy-MM-dd").parse(e.toString());
+    return findSaturdayDateOfTheWeek(tempDate);
+  }
+
+  String changeToApiFormat(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 355,
-      width: Get.width,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            offset: Offset(2, 3),
-            blurRadius: 10.0,
-          ),
-        ],
-      ),
-      child: DataTable(
-        columnSpacing: 10,
-        horizontalMargin: 15,
-        headingRowColor: MaterialStateProperty.all(darkGreenColor2),
-        border: TableBorder.all(
-          width: 1.0,
-          color: Colors.black,
-          style: BorderStyle.solid,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        clipBehavior: Clip.hardEdge,
-        headingRowHeight: 45,
-        columns: [
-          DataColumn(
-            label: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                "Date"
-                    .text(weight: FontWeight.w500, fontColor: Colors.white)
-                    .paddingOnly(bottom: 5)
-              ],
+    return GetBuilder<SummeryController>(
+      builder: (ctrl) {
+        var firstDayOfWeek = findSundayDateOfTheWeek(
+          expandingChildItem(ctrl.summery?.hourlySummary?[0].date ?? ""),
+        );
+
+        List<HourlySummary> myDayListList = [];
+        for (int i = 0; i < 7; i++) {
+          myDayListList.insert(
+            i,
+            HourlySummary(
+              changeToApiFormat(
+                firstDayOfWeek.add(
+                  Duration(days: i),
+                ),
+              ),
             ),
+          );
+          (ctrl.summery?.hourlySummary ?? []).forEach(
+            (element) {
+              if (element.date == changeToApiFormat(firstDayOfWeek.add(Duration(days: i)))) {
+                myDayListList.removeAt(i);
+                myDayListList.insert(i, element);
+              }
+            },
+          );
+        }
+
+        /*var list = List.generate(7, (index) => index).map((value) {
+          (ctrl.summery?.hourlySummary ?? []).forEach((element) {
+            if(element.date==changeToApiFormat(firstDayOfWeek.add(Duration(days: value)))){
+              myList.add(element);
+            }
+          });
+          return changeToApiFormat(firstDayOfWeek.add(Duration(days: value)));
+        }).toList();*/
+
+        return Container(
+          height: 355,
+          width: Get.width,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                offset: Offset(2, 3),
+                blurRadius: 10.0,
+              ),
+            ],
           ),
-          DataColumn(
-            label: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                "1x"
-                    .text(weight: FontWeight.w500, fontColor: Colors.white)
-                    .paddingOnly(bottom: 5)
-              ],
+          child: DataTable(
+            columnSpacing: 10,
+            horizontalMargin: 15,
+            headingRowColor: MaterialStateProperty.all(darkGreenColor2),
+            border: TableBorder.all(
+              width: 1.0,
+              color: Colors.black,
+              style: BorderStyle.solid,
+              borderRadius: BorderRadius.circular(10),
             ),
+            clipBehavior: Clip.hardEdge,
+            headingRowHeight: 45,
+            columns: [
+              DataColumn(
+                label: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    "Date"
+                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .paddingOnly(bottom: 5)
+                  ],
+                ),
+              ),
+              DataColumn(
+                label: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    "1x"
+                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .paddingOnly(bottom: 5)
+                  ],
+                ),
+              ),
+              DataColumn(
+                label: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    "1.5x"
+                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .paddingOnly(bottom: 5)
+                  ],
+                ),
+              ),
+              DataColumn(
+                label: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    "2x"
+                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .paddingOnly(bottom: 5)
+                  ],
+                ),
+              ),
+              DataColumn(
+                label: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    "   "
+                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .paddingOnly(bottom: 5)
+                  ],
+                ),
+              ),
+              DataColumn(
+                label: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    "MP"
+                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .paddingOnly(bottom: 5)
+                  ],
+                ),
+              ),
+              DataColumn(
+                label: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    "Paid \nHrs"
+                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .paddingOnly(bottom: 5)
+                  ],
+                ),
+              ),
+              DataColumn(
+                label: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    "  Gross\n  Wages"
+                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .paddingOnly(bottom: 5)
+                  ],
+                ),
+              ),
+            ],
+            dataRowHeight: 30,
+            rows: [
+              ...myDayListList.map(
+                (e) {
+                  var perHourRate = (e.paymentDetails?.rate ?? 0).toInt() /
+                      (e.paymentDetails?.totalHours ?? 0).toInt();
+                  calaculateTime(e);
+                  return _dataRow(
+                    date: changeToMyFormat(e),
+                    color: rowCellGreyColor,
+                    oneX:
+                        perHourRate.isNaN ? "" : perHourRate.toStringAsFixed(1),
+                    oneFiveX: perHourRate.isNaN
+                        ? ""
+                        : (perHourRate * 1.5).toStringAsFixed(1),
+                    twoX: perHourRate.isNaN
+                        ? ""
+                        : (perHourRate * 2).toStringAsFixed(1),
+                  );
+                },
+              ),
+              /*            _dataRow(
+                date: "7/17",
+                color: rowCellGreyColor,
+              ),
+              _dataRow(
+                date: "7/18",
+              ),
+              _dataRow(
+                date: "7/19",
+                color: rowCellGreyColor,
+                oneX: '8',
+                oneFiveX: "4",
+                paidHours: "14",
+                grossWages: "\$770",
+              ),
+              _dataRow(
+                date: "7/19",
+                oneX: '8',
+                oneFiveX: "4",
+                mp: "1",
+                paidHours: "14",
+                grossWages: "\$770",
+              ),
+              _dataRow(
+                date: "7/20",
+                color: rowCellGreyColor,
+              ),
+              _dataRow(
+                date: "7/21",
+              ),
+              _dataRow(
+                date: "7/22",
+                color: rowCellGreyColor,
+              ),
+              _dataRow(
+                date: "7/23",
+              ),
+              _dataRow(
+                  date: "Total",
+                  oneX: "16",
+                  oneFiveX: "8",
+                  twoX: "    ",
+                  empty: "    ",
+                  mp: "1",
+                  paidHours: "28",
+                  grossWages: "\$1540",
+                  color: darkGreenColor2.withOpacity(0.2),
+                  textColor: darkGreenColor2,
+                  weight: FontWeight.w500),*/
+            ],
+          ).paddingOnly(
+            left: screenWPadding8.sw(),
+            right: screenWPadding8.sw(),
+            top: 14.sh(),
+            bottom: 24.sh(),
           ),
-          DataColumn(
-            label: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                "1.5x"
-                    .text(weight: FontWeight.w500, fontColor: Colors.white)
-                    .paddingOnly(bottom: 5)
-              ],
-            ),
-          ),
-          DataColumn(
-            label: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                "2x"
-                    .text(weight: FontWeight.w500, fontColor: Colors.white)
-                    .paddingOnly(bottom: 5)
-              ],
-            ),
-          ),
-          DataColumn(
-            label: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                "   "
-                    .text(weight: FontWeight.w500, fontColor: Colors.white)
-                    .paddingOnly(bottom: 5)
-              ],
-            ),
-          ),
-          DataColumn(
-            label: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                "MP"
-                    .text(weight: FontWeight.w500, fontColor: Colors.white)
-                    .paddingOnly(bottom: 5)
-              ],
-            ),
-          ),
-          DataColumn(
-            label: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                "Paid \nHrs"
-                    .text(weight: FontWeight.w500, fontColor: Colors.white)
-                    .paddingOnly(bottom: 5)
-              ],
-            ),
-          ),
-          DataColumn(
-            label: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                "  Gross\n  Wages"
-                    .text(weight: FontWeight.w500, fontColor: Colors.white)
-                    .paddingOnly(bottom: 5)
-              ],
-            ),
-          ),
-        ],
-        dataRowHeight: 30,
-        rows: [
-          _dataRow(
-            date: "7/17",
-            color: rowCellGreyColor,
-          ),
-          _dataRow(
-            date: "7/18",
-          ),
-          _dataRow(
-            date: "7/19",
-            color: rowCellGreyColor,
-            oneX: '8',
-            oneFiveX: "4",
-            paidHours: "14",
-            grossWages: "\$770",
-          ),
-          _dataRow(
-            date: "7/19",
-            oneX: '8',
-            oneFiveX: "4",
-            mp: "1",
-            paidHours: "14",
-            grossWages: "\$770",
-          ),
-          _dataRow(
-            date: "7/20",
-            color: rowCellGreyColor,
-          ),
-          _dataRow(
-            date: "7/21",
-          ),
-          _dataRow(
-            date: "7/22",
-            color: rowCellGreyColor,
-          ),
-          _dataRow(
-            date: "7/23",
-          ),
-          _dataRow(
-              date: "Total",
-              oneX: "16",
-              oneFiveX: "8",
-              twoX: "    ",
-              empty: "    ",
-              mp: "1",
-              paidHours: "28",
-              grossWages: "\$1540",
-              color: darkGreenColor2.withOpacity(0.2),
-              textColor: darkGreenColor2,
-              weight: FontWeight.w500),
-        ],
-      ).paddingOnly(
-        left: screenWPadding8.sw(),
-        right: screenWPadding8.sw(),
-        top: 14.sh(),
-        bottom: 24.sh(),
-      ),
-    ).paddingOnly(
-      top: screenHPadding16.sh(),
-      bottom: screenHPadding16.sh(),
-      left: screenWPadding16.sw(),
-      right: screenWPadding16.sw(),
+        ).paddingOnly(
+          top: screenHPadding16.sh(),
+          bottom: screenHPadding16.sh(),
+          left: screenWPadding16.sw(),
+          right: screenWPadding16.sw(),
+        );
+      },
     );
+  }
+
+  TimeOfDay fromString(String time) {
+    int hh = 0;
+    if (time.endsWith('PM')) hh = 12;
+    time = time.split(' ')[0];
+    return TimeOfDay(
+      hour: hh + int.parse(time.split(":")[0]) % 24,
+      // in case of a bad time format entered manually by the user
+      minute: int.parse(time.split(":")[1]) % 60,
+    );
+  }
+
+  String changeToMyFormat(HourlySummary e) {
+    return "${e.date?.split("-")[1]}/${e.date?.split("-").last}";
   }
 
   DataRow _dataRow(
@@ -942,6 +1041,34 @@ class SummeryDataTableSecond extends StatelessWidget {
         )),
       ],
     );
+  }
+
+  void calaculateTime(HourlySummary e) {
+    if ((!e.callTime.isNullOrEmpty) && (!e.wrap.isNullOrEmpty)) {
+      DateTime callTime = convertToMyTimeFormat(e.callTime ?? "", e.date ?? "");
+      DateTime wrap = convertToMyTimeFormat(e.wrap ?? "", e.date ?? "");
+      Duration duration = wrap.difference(callTime);
+
+      duration.debugPrint;
+    }
+  }
+
+  DateTime convertToMyTimeFormat(String time, String date) {
+    var now = date.split("-");
+    int hour = int.parse(time.split(":").first.toString());
+    int minute = int.parse(time.split(":").last.substring(0, 2));
+    bool isPm = time.contains("PM") ? true : false;
+    return DateTime.utc(
+        int.parse(now[0]),
+        int.parse(now[1]),
+        int.parse(now[2]),
+        isPm
+            ? hour != 12
+                ? hour + 12
+                : hour
+            : hour,
+        minute,
+        0);
   }
 }
 
@@ -1070,6 +1197,12 @@ class SummeryDataTableFirst extends StatelessWidget {
                 ],
                 dataRowHeight: 32,
                 rows: [
+                  /* ...(ctrl.summery?.hourlySummary ?? []).map(
+                    (e) => _dataRow(
+                      date: changeToMyFormat(e),
+                      color: rowCellGreyColor,
+                    ),
+                  ),*/
                   _dataRow(
                     date: "7/17",
                     color: rowCellGreyColor,
@@ -1153,6 +1286,10 @@ class SummeryDataTableFirst extends StatelessWidget {
             right: screenWPadding16.sw());
       },
     );
+  }
+
+  String changeToMyFormat(HourlySummary e) {
+    return "${e.date?.split("-")[1]}/${e.date?.split("-").last}";
   }
 
   DataRow _dataRow(

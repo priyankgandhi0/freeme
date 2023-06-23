@@ -10,10 +10,10 @@ class TermModel {
     _term = json['term'];
   }
 
-  num? _termsId;
+  int? _termsId;
   String? _term;
 
-  num? get termsId => _termsId;
+  int? get termsId => _termsId;
 
   String? get term => _term;
 }

@@ -31,12 +31,18 @@ class SummeryController extends GetxController {
 
   SummeryModel? summery;
 
-  Future<void> getSummery(num jobId) async {
+  Future<void> getSummery(num jobId, String startDate, String endDate) async {
     startLoading();
-    ResponseItem response = await JobRepo.getSummary(jobId);
+    ResponseItem response = await JobRepo.getSummary(
+      jobId,
+      startDate,
+      endDate,
+    );
     if (response.status) {
       if (response.data != null) {
-        summery = SummeryModel.fromJson(response.data);
+        summery = SummeryModel.fromJson(
+          response.data,
+        );
       }
       stopLoading();
     } else {

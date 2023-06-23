@@ -187,7 +187,8 @@ class JobRepo {
     return ResponseItem(data: data, message: message, status: status);
   }
 
-  static Future<ResponseItem> getSummary(num jobId) async {
+  static Future<ResponseItem> getSummary(
+      num jobId, String startDate, String endDate) async {
     ResponseItem result;
     bool status = true;
     dynamic data;
@@ -199,7 +200,11 @@ class JobRepo {
     result = await BaseApiHelper.postRequest(
       requestUrl: AppUrls.baseUrl,
       queryParam: queryParameters,
-      requestData: {"job_id": jobId},
+      requestData: {
+        "job_id": jobId,
+        "start_date": startDate,
+        "end_date": endDate
+      },
       passAuthToken: true,
       isMultipart: false,
     );

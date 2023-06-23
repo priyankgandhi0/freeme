@@ -84,15 +84,6 @@ class PaymentDetailPage extends StatelessWidget {
           items: ctrl.allTerms,
           context: context,
         ),
-        if(ctrl.selectedTerm.text=="Other")...[
-          FmTextField(
-            hint: cardBrandJob,
-            header: "Terms (Add Manually)",
-            inputType: TextInputType.text,
-            radius: 10,
-            controller: ctrl.termsManualController,
-          ).paddingOnly(top: screenHPadding8.sw(),),
-        ]
       ],
     ).paddingOnly(
       left: screenWPadding16.sw(),
@@ -109,24 +100,45 @@ class PaymentDetailPage extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(10),
           color: Colors.white),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          selected.text(
-            fontSize: 16,
-            fontColor: Colors.black,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              selected.text(
+                fontSize: 16,
+                fontColor: Colors.black,
+              ),
+              FmImage.assetImage(
+                path: Assets.iconsDownIcon,
+                height: 15.sh(),
+                width: 15.sw(),
+              )
+            ],
+          ).paddingOnly(
+            top: 13.sh(),
+            bottom: 13.sh(),
+            left: screenWPadding16.sw(),
+            right: screenWPadding16.sw(),
           ),
-          FmImage.assetImage(
-            path: Assets.iconsDownIcon,
-            height: 15.sh(),
-            width: 15.sw(),
-          )
+          if (controller.selectedTerm.text == "Other") ...[
+            Container(
+              width: Get.width,
+              height: 1,
+              color: greyTextColor,
+            ),
+            FmEmptyTextField(
+              hintText: cardBrandJob,
+              textInputType: TextInputType.text,
+              controller: controller.termsManualController,
+            ).paddingOnly(
+              top: 13.sh(),
+              bottom: 13.sh(),
+              left: screenWPadding16.sw(),
+              right: screenWPadding16.sw(),
+            ),
+          ]
         ],
-      ).paddingOnly(
-        top: 13.sh(),
-        bottom: 13.sh(),
-        left: screenWPadding16.sw(),
-        right: screenWPadding16.sw(),
       ),
     ).paddingOnly(
       top: screenHPadding8.sh(),
@@ -148,17 +160,6 @@ class PaymentDetailPage extends StatelessWidget {
             items: ctrl.allPaidBy,
             context: context,
             width: 245),
-        if(ctrl.selectedPaidBy.text=="Other")...[
-          FmTextField(
-            hint: cardBrandJob,
-            header: "Paid By (Add Manually)",
-            inputType: TextInputType.text,
-            radius: 10,
-            controller: ctrl.paidByManualController,
-          ).paddingOnly(   top: screenHPadding8.sw(),),
-        ]
-
-
       ],
     ).paddingOnly(
       left: screenWPadding16.sw(),
@@ -175,24 +176,45 @@ class PaymentDetailPage extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(10),
           color: Colors.white),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          selected.text(
-            fontSize: 16,
-            fontColor: Colors.black,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              selected.text(
+                fontSize: 16,
+                fontColor: Colors.black,
+              ),
+              FmImage.assetImage(
+                path: Assets.iconsDownIcon,
+                height: 15.sh(),
+                width: 15.sw(),
+              )
+            ],
+          ).paddingOnly(
+            top: 13.sh(),
+            bottom: 13.sh(),
+            left: screenWPadding16.sw(),
+            right: screenWPadding16.sw(),
           ),
-          FmImage.assetImage(
-            path: Assets.iconsDownIcon,
-            height: 15.sh(),
-            width: 15.sw(),
-          )
+          if (controller.selectedPaidBy.text == "Other") ...[
+            Container(
+              width: Get.width,
+              color: greyTextColor,
+              height: 1,
+            ),
+            FmEmptyTextField(
+              hintText: "PaidBy Note",
+              textInputType: TextInputType.text,
+              controller: controller.paidByManualController,
+            ).paddingOnly(
+              top: 13.sh(),
+              bottom: 13.sh(),
+              left: screenWPadding16.sw(),
+              right: screenWPadding16.sw(),
+            ),
+          ]
         ],
-      ).paddingOnly(
-        top: 13.sh(),
-        bottom: 13.sh(),
-        left: screenWPadding16.sw(),
-        right: screenWPadding16.sw(),
       ),
     ).paddingOnly(
       top: screenHPadding8.sh(),

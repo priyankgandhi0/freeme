@@ -16,14 +16,13 @@ const String dontHaveAccount = 'Don’t have an account?';
 const String haveAnAccount = 'Have an account? ';
 const String signUp = ' Sign Up';
 const String selectCountry = ' Select Country';
-
 const String request = ' Request';
 const String helloThere = ' Hello There!';
 const String toAccessAllFeatures = ' To access all features, create an account';
 const String firstName = 'First Name';
 const String lastName = 'Last Name';
 const String confirmPassword = 'Confirm Password';
-const String enterConfirmPassword = ' Re-enter Password';
+const String enterConfirmPassword = 'Re-enter Password';
 const String provideYourEmail = 'Provide your email to reset password';
 const String addNewPasswordAndVerifyCode = 'Enter New Password and Verify code Recieved in Mail';
 const String rememberPassword = 'Remember Password? ';

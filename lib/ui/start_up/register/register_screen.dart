@@ -84,7 +84,7 @@ class RegisterScreen extends StatelessWidget {
           context: context,
           width: 200
         ),
-        if (controller.selectedIndustry.text == "other industry") ...[
+       /* if (controller.selectedIndustry.text == "other industry") ...[
           FmTextField(
             hint: "Please Enter Industry",
             header: "Industry (Add Manually)",
@@ -96,7 +96,7 @@ class RegisterScreen extends StatelessWidget {
             right: screenHPadding16.sw(),
             top: 8.sh(),
           )
-        ]
+        ]*/
       ],
     );
   }
@@ -116,31 +116,52 @@ class RegisterScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(5),
         color: Colors.white,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
         children: [
-          hint
-              .text(
-                fontColor: Colors.black,
-                fontSize: 16,
-                overFlow: TextOverflow.ellipsis,
-              )
-              .paddingOnly(left: 16),
-          showDownIcon
-              ? customSuffix ??
-                  FmImage.assetImage(
-                    path: Assets.iconsDownIcon,
-                    height: 15.sh(),
-                    width: 15.sw(),
-                    color: Colors.black,
-                  ).paddingOnly(
-                    right: screenWPadding16.sw(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              hint
+                  .text(
+                    fontColor: Colors.black,
+                    fontSize: 16,
+                    overFlow: TextOverflow.ellipsis,
                   )
-              : Container()
+                  .paddingOnly(left: 16),
+              showDownIcon
+                  ? customSuffix ??
+                      FmImage.assetImage(
+                        path: Assets.iconsDownIcon,
+                        height: 15.sh(),
+                        width: 15.sw(),
+                        color: Colors.black,
+                      ).paddingOnly(
+                        right: screenWPadding16.sw(),
+                      )
+                  : Container()
+            ],
+          ).paddingOnly(
+            top: screenHPadding16.sh(),
+            bottom: 16.sh(),
+          ),
+          if (controller.selectedIndustry.text == "other industry") ...[
+            Container(
+              width: Get.width,
+              color: greyTextColor,
+              height: 1,
+            ),
+            FmEmptyTextField(
+              hintText: "Industry Note",
+              controller: controller.industryController,
+              textInputType: TextInputType.text,
+            ).paddingOnly(
+              left: screenWPadding16.sw(),
+              right: screenWPadding16.sw(),
+              top: screenHPadding16.sh(),
+              bottom: screenHPadding16.sh(),
+            )
+          ]
         ],
-      ).paddingOnly(
-        top: screenHPadding16.sh(),
-        bottom: 16.sh(),
       ),
     ).paddingOnly(
         left: screenHPadding16.sw(),

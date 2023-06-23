@@ -9,9 +9,14 @@ import '../../../../widgets/fm_textfield.dart';
 import 'notes_controller.dart';
 
 class NotesScreen extends StatelessWidget {
-  NotesScreen({Key? key, required this.jobId}) : super(key: key);
+  NotesScreen({
+    Key? key,
+    required this.jobId,
+    required this.isExample,
+  }) : super(key: key);
 
   int jobId;
+  bool isExample;
 
   final controller = Get.put(NotesController());
   Timer? _debounce;
@@ -59,10 +64,15 @@ class NotesScreen extends StatelessWidget {
                             onchange: (value) {
                               if (_debounce?.isActive ?? false)
                                 _debounce!.cancel();
-                              _debounce = Timer(const Duration(seconds: 2), () {
-                                controller.editNotes(jobId: jobId, note: value);
-                              },);
+                              _debounce = Timer(
+                                const Duration(seconds: 2),
+                                () {
+                                  controller.editNotes(
+                                      jobId: jobId, note: value);
+                                },
+                              );
                             },
+                            enable: !isExample,
                           ).paddingOnly(
                             left: screenWPadding16.sw(),
                           ),

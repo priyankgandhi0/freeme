@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 
 class AppUrls {
-  static const String _devBaseURL = "http://codonnier.tech/naitik/free_me_app/dev";
-  static const String _liveBaseURL = "http://codonnier.tech/naitik/free_me_app/dev";
+  static const String _devBaseURL = "http://codonnier.tech/naitik/free_me_app/staging";
+  static const String _liveBaseURL = "http://codonnier.tech/naitik/free_me_app/staging";
 
   static const String baseUrl =
       '${kDebugMode ? _devBaseURL : _liveBaseURL}/Service.php?';
@@ -34,6 +34,7 @@ class MethodNames {
   static const getAllTaxedItemType = 'getAllTaxedItemType';
   static const getAllTaxPerTime = 'getAllTaxPerTime';
   static const addJob = 'addJob';
+  static const addNewJob = 'addNewJob';
   static const editJob = 'editJob';
   static const getJobInfo = 'getJobInfo';
   static const getAllJobs = 'getAllJobs';

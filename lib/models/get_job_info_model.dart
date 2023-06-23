@@ -1,16 +1,18 @@
 import 'dart:convert';
 
 
+
 List<GetJobInfoModel> getAllJobFromJson(dynamic json){
   return (json as List).map((e) => GetJobInfoModel.fromJson(e)).toList();
 }
 
 class GetJobInfoModel {
+
   GetJobInfoModel.fromJson(dynamic json) {
     _jobId = json['job_id'];
     _userToken = json['user_token'];
     _description = json['description'];
-    _productionTital = json['production_title'];
+    _productionTitle = json['production_title'];
     _producer = json['producer'];
     _productionCompany = json['production_company'];
     _companyAddressLine1 = json['company_address_line1'];
@@ -19,19 +21,29 @@ class GetJobInfoModel {
     _state = json['state'];
     _zip = json['zip'];
     _country = json['country'];
-    _department = json['department'];
-    _position = json['position'];
-    _type = json['type'];
+    _jobClassificationId = json['job_classification_id'];
+    _subJobClassificationsId = json['sub_job_classifications_id'];
+    _typeId = json['type_id'];
     _unionNonunion = json['union_nonunion'];
     _recommendedBy = json['recommended_by'];
     _hiredBy = json['hired_by'];
+    _notes = json['notes'];
+    _isExample = json['is_example'];
+    _jobIsExample = json['job_is_example']==1;
     _paymentId = json['payment_id'];
     _rate = json['rate'];
-    _perHowManyHours = json['per_how_many_hours'];
-    _guaranteedHours = json['guaranteed_hours'];
+    _hoursId = json['hours_id'];
+    _guaranteedHourId = json['guaranteed_hour_id'];
     _w21099 = json['w2_1099'];
-    _paidBy = json['paid_by'];
-    _terms = json['terms'];
+    _paidById = json['paid_by_id'];
+    _termsId = json['terms_id'];
+    _jobClassificationCategory = json['job_classification_category'];
+    _subJobClassificationsCategory = json['sub_job_classifications_category'];
+    _type = json['type'];
+    _hours = json['hours'];
+    _guaranteedHour = json['guaranteed_hour'];
+    _paidByName = json['paid_by_name'];
+    _term = json['term'];
     if (json['taxes'] != null) {
       _taxes = [];
       json['taxes'].forEach((v) {
@@ -51,11 +63,10 @@ class GetJobInfoModel {
       });
     }
   }
-
   num? _jobId;
   String? _userToken;
   String? _description;
-  String? _productionTital;
+  String? _productionTitle;
   String? _producer;
   String? _productionCompany;
   String? _companyAddressLine1;
@@ -64,147 +75,171 @@ class GetJobInfoModel {
   String? _state;
   num? _zip;
   String? _country;
-  String? _department;
-  String? _position;
-  String? _type;
+  num? _jobClassificationId;
+  num? _subJobClassificationsId;
+  num? _typeId;
   String? _unionNonunion;
   String? _recommendedBy;
   String? _hiredBy;
+  String? _notes;
+  num? _isExample;
+  bool? _jobIsExample;
   num? _paymentId;
   num? _rate;
-  String? _perHowManyHours;
-  String? _guaranteedHours;
+  num? _hoursId;
+  num? _guaranteedHourId;
   String? _w21099;
-  String? _paidBy;
-  String? _terms;
+  num? _paidById;
+  num? _termsId;
+  String? _jobClassificationCategory;
+  String? _subJobClassificationsCategory;
+  String? _type;
+  String? _hours;
+  String? _guaranteedHour;
+  String? _paidByName;
+  String? _term;
   List<Taxes>? _taxes;
   List<NonTaxes>? _nonTaxes;
   List<Days>? _days;
 
   num? get jobId => _jobId;
-
   String? get userToken => _userToken;
-
   String? get description => _description;
-
-  String? get productionTital => _productionTital;
-
+  String? get productionTitle => _productionTitle;
   String? get producer => _producer;
-
   String? get productionCompany => _productionCompany;
-
   String? get companyAddressLine1 => _companyAddressLine1;
-
   String? get companyAddressLine2 => _companyAddressLine2;
-
   String? get city => _city;
-
   String? get state => _state;
-
   num? get zip => _zip;
-
   String? get country => _country;
-
-  String? get department => _department;
-
-  String? get position => _position;
-
-  String? get type => _type;
-
+  num? get jobClassificationId => _jobClassificationId;
+  num? get subJobClassificationsId => _subJobClassificationsId;
+  num? get typeId => _typeId;
   String? get unionNonunion => _unionNonunion;
-
   String? get recommendedBy => _recommendedBy;
-
   String? get hiredBy => _hiredBy;
-
+  String? get notes => _notes;
+  num? get isExample => _isExample;
+  bool? get jobIsExample => _jobIsExample;
   num? get paymentId => _paymentId;
-
   num? get rate => _rate;
-
-  String? get perHowManyHours => _perHowManyHours;
-
-  String? get guaranteedHours => _guaranteedHours;
-
+  num? get hoursId => _hoursId;
+  num? get guaranteedHourId => _guaranteedHourId;
   String? get w21099 => _w21099;
-
-  String? get paidBy => _paidBy;
-
-  String? get terms => _terms;
-
+  num? get paidById => _paidById;
+  num? get termsId => _termsId;
+  String? get jobClassificationCategory => _jobClassificationCategory;
+  String? get subJobClassificationsCategory => _subJobClassificationsCategory;
+  String? get type => _type;
+  String? get hours => _hours;
+  String? get guaranteedHour => _guaranteedHour;
+  String? get paidByName => _paidByName;
+  String? get term => _term;
   List<Taxes>? get taxes => _taxes;
-
   List<NonTaxes>? get nonTaxes => _nonTaxes;
-
   List<Days>? get days => _days;
+
+
 }
 
-Days daysFromJson(String str) => Days.fromJson(json.decode(str));
-
 class Days {
+
+
   Days.fromJson(dynamic json) {
     _dayId = json['day_id'];
     _jobId = json['job_id'];
     _userToken = json['user_token'];
     _date = json['date'];
+    _isExample = json['is_example'];
   }
-
   num? _dayId;
   num? _jobId;
   String? _userToken;
   String? _date;
+  num? _isExample;
 
   num? get dayId => _dayId;
   num? get jobId => _jobId;
   String? get userToken => _userToken;
   String? get date => _date;
+  num? get isExample => _isExample;
+
+
 }
 
-class Taxes {
-  Taxes.fromJson(dynamic json) {
-    _taxesId = json['taxes_id'];
-    _taxtType = json['taxt_type'];
-    _taxtAmount = json['taxt_amount'];
-    _taxtPer = json['taxt_per'];
-    _taxtTypeId = json['taxt_type_id'];
-  }
-
-  num? _taxesId;
-  String? _taxtType;
-  num? _taxtAmount;
-  String? _taxtPer;
-  num? _taxtTypeId;
-
-  num? get taxId => _taxesId;
-  String? get taxType => _taxtType;
-
-  num? get taxAmount => _taxtAmount;
-
-  String? get taxPer => _taxtPer;
-  num? get  taxtTypeId => _taxtTypeId;
-}
 
 class NonTaxes {
+
   NonTaxes.fromJson(dynamic json) {
-    _nonTaxId = json['non_taxes_id'];
-    _nonTaxtType = json['non_taxt_type'];
-    _nonTaxtAmount = json['non_taxt_amount'];
-    _nonTaxtPer = json['non_taxt_per'];
+    _nonTaxesId = json['non_taxes_id'];
+    _jobId = json['job_id'];
+    _userToken = json['user_token'];
     _taxtTypeId = json['taxt_type_id'];
+    _nonTaxtAmount = json['non_taxt_amount'];
+    _taxPerTimeId = json['tax_per_time_id'];
+    _isExample = json['is_example'];
+    _taxedItem = json['taxed_item'];
+    _taxPerTimeCategory = json['tax_per_time_category'];
   }
-
-  num? _nonTaxId;
-  String? _nonTaxtType;
-  num? _nonTaxtAmount;
-  String? _nonTaxtPer;
+  num? _nonTaxesId;
+  num? _jobId;
+  String? _userToken;
   num? _taxtTypeId;
+  num? _nonTaxtAmount;
+  num? _taxPerTimeId;
+  num? _isExample;
+  String? _taxedItem;
+  String? _taxPerTimeCategory;
 
-  num? get nonTaxId => _nonTaxId;
-
-  String? get nonTaxtType => _nonTaxtType;
-
+  num? get nonTaxesId => _nonTaxesId;
+  num? get jobId => _jobId;
+  String? get userToken => _userToken;
+  num? get taxtTypeId => _taxtTypeId;
   num? get nonTaxtAmount => _nonTaxtAmount;
+  num? get taxPerTimeId => _taxPerTimeId;
+  num? get isExample => _isExample;
+  String? get taxedItem => _taxedItem;
+  String? get taxPerTimeCategory => _taxPerTimeCategory;
 
-  String? get nonTaxtPer => _nonTaxtPer;
 
-  num? get  taxtTypeId => _taxtTypeId;
+
+}
+
+
+class Taxes {
+
+  Taxes.fromJson(dynamic json) {
+    _taxesId = json['taxes_id'];
+    _jobId = json['job_id'];
+    _userToken = json['user_token'];
+    _taxtTypeId = json['taxt_type_id'];
+    _taxtAmount = json['taxt_amount'];
+    _taxPerTimeId = json['tax_per_time_id'];
+    _isExample = json['is_example'];
+    _taxedItem = json['taxed_item'];
+    _taxPerTimeCategory = json['tax_per_time_category'];
+  }
+  num? _taxesId;
+  num? _jobId;
+  String? _userToken;
+  num? _taxtTypeId;
+  num? _taxtAmount;
+  num? _taxPerTimeId;
+  num? _isExample;
+  String? _taxedItem;
+  String? _taxPerTimeCategory;
+
+  num? get taxesId => _taxesId;
+  num? get jobId => _jobId;
+  String? get userToken => _userToken;
+  num? get taxtTypeId => _taxtTypeId;
+  num? get taxtAmount => _taxtAmount;
+  num? get taxPerTimeId => _taxPerTimeId;
+  num? get isExample => _isExample;
+  String? get taxedItem => _taxedItem;
+  String? get taxPerTimeCategory => _taxPerTimeCategory;
+
+
 }

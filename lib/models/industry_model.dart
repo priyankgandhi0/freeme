@@ -6,7 +6,7 @@ List<IndustryModel> allIndustryList(dynamic json){
 
 class IndustryModel {
   IndustryModel({
-    num? industryId,
+    int? industryId,
     String? industryName,
   }) {
     _industryId = industryId;
@@ -18,10 +18,10 @@ class IndustryModel {
     _industryName = json['industry_name'];
   }
 
-  num? _industryId;
+  int? _industryId;
   String? _industryName;
 
-  num? get industryId => _industryId;
+  int? get industryId => _industryId;
 
   String? get industryName => _industryName;
 }

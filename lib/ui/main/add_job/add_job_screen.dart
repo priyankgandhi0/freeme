@@ -589,7 +589,7 @@ class AddJobScreen extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  "\$${item.amount} / ${item.per}".text(fontSize: 16),
+                  "\$${item.amount} / ${item.timeDesc}".text(fontSize: 16),
                 ],
               ),
             )

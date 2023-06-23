@@ -24,11 +24,13 @@ class TimeCardTabScreen extends StatelessWidget {
     required this.jobId,
     required this.dayId,
     required this.date,
+    required this.endDate,
   }) : super(key: key);
 
   num jobId;
   num dayId;
   String date;
+  String endDate;
 
   final controller = Get.put(TimeCardController());
 
@@ -42,6 +44,7 @@ class TimeCardTabScreen extends StatelessWidget {
             controller.getWorkHistory(jobId, controller.selectedDate);
             controller.getJobInfo(
               jobId: jobId.toInt(),
+                endDate:endDate
             );
           });
         },
@@ -594,7 +597,6 @@ class TimeCardTabScreen extends StatelessWidget {
             bottom: screenHPadding16.sw(),
           )
               .onTap(() {
-            "left icon click".debugPrint;
             controller.changeDateToLeft(date);
           }),
           Expanded(

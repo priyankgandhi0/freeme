@@ -7,7 +7,7 @@ List<SubJobClassificationModel> subJobClassificationModelFromJson(dynamic str){
 
 class SubJobClassificationModel {
   SubJobClassificationModel({
-      num? subJobClassificationsId, 
+      int? subJobClassificationsId,
       num? jobClassificationId, 
       String? subJobClassificationsCategory,}){
     _subJobClassificationsId = subJobClassificationsId;
@@ -20,11 +20,11 @@ class SubJobClassificationModel {
     _jobClassificationId = json['job_classification_id'];
     _subJobClassificationsCategory = json['sub_job_classifications_category'];
   }
-  num? _subJobClassificationsId;
+  int? _subJobClassificationsId;
   num? _jobClassificationId;
   String? _subJobClassificationsCategory;
 
-  num? get subJobClassificationsId => _subJobClassificationsId;
+  int? get subJobClassificationsId => _subJobClassificationsId;
   num? get jobClassificationId => _jobClassificationId;
   String? get subJobClassificationsCategory => _subJobClassificationsCategory;
 

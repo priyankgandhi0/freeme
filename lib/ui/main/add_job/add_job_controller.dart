@@ -466,57 +466,57 @@ class AddJobController extends GetxController {
   Future<void> addJobButtonClick(BuildContext context, {int? jobId}) async {
     if (_isValidate(context)) {
       startLoading();
-     /* try {*/
-        ResponseItem response = await QuickEntryRepo.addJobSubmit(
-          jobId: jobId,
-          selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
-          description: descriptionController.text.trim(),
-          productionTitle: productionTitleController.text.trim(),
-          producer: producerController.text.trim(),
-          productionCompany: productionCompanyController.text.trim(),
-          companyAddressLine1: addressLIne1Controller.text.trim(),
-          companyAddressLine2: addressLIne2Controller.text.trim(),
-          city: cityController.text.trim(),
-          state: stateController.text.trim(),
-          zip: zipController.text.trim(),
-          rate: rateTextController.text.isNotEmpty
-              ? int.parse(rateTextController.text.trim().toString())
-              : null,
-          recommendedBy: recommendedByController.text.trim(),
-          hiredBy: hiredByController.text.trim(),
-          unionNonunion: selectedUnion.text,
-          department: selectedDepartment.text,
-          w2_1099: selectedW2Or1099.text,
-          guaranteedHours: selectedGuaranteedHour.text,
-          paidBy: selectedPaidBy.text,
-          terms: selectedTerm.text,
-          perHowManyHours: selectedPerHour.text,
-          countryCode: selectedCountry.text,
-          type: selectedType.text,
-          position: selectedPosition.text,
-          nonTaxedItems: nonTaxedItems,
-          taxedItems: taxedItems,
-          removeNonTaxedItems: nonTaxedItemRemoveList,
-          removeTaxedItems: taxedItemRemoveList,
-          paidByManual: paidByManualController.text.trim(),
-          termsManual: termsManualController.text.trim(),
-          typeManual: typeManualController.text.trim(),
-        );
-        if (response.status) {
-          if (jobId != null) {
-            await Get.find<JobInfoController>().getJobInfo(jobId: jobId);
-            Get.find<JobInfoController>().update();
-          }
-          stopLoading();
-          await Get.find<WorkHistoryController>().getAllJob();
-
-          clearAllData();
-          Navigator.of(context).pop();
-        } else {
-          stopLoading();
-          response.message.errorSnack(context);
+      /* try {*/
+      ResponseItem response = await QuickEntryRepo.addJobSubmit(
+        jobId: jobId,
+        selectedDays: selectedDays.map((e) => convertToMyFormat(e)).toList(),
+        description: descriptionController.text.trim(),
+        productionTitle: productionTitleController.text.trim(),
+        producer: producerController.text.trim(),
+        productionCompany: productionCompanyController.text.trim(),
+        companyAddressLine1: addressLIne1Controller.text.trim(),
+        companyAddressLine2: addressLIne2Controller.text.trim(),
+        city: cityController.text.trim(),
+        state: stateController.text.trim(),
+        zip: zipController.text.trim(),
+        rate: rateTextController.text.isNotEmpty
+            ? int.parse(rateTextController.text.trim().toString())
+            : null,
+        recommendedBy: recommendedByController.text.trim(),
+        hiredBy: hiredByController.text.trim(),
+        unionNonunion: selectedUnion.text,
+        department: selectedDepartment.id,
+        w2_1099: selectedW2Or1099.text,
+        guaranteedHours: selectedGuaranteedHour.id,
+        paidBy: selectedPaidBy.idForAPI,
+        terms: selectedTerm.idForAPI,
+        perHowManyHours: selectedPerHour.id,
+        countryCode: selectedCountry.text,
+        type: selectedType.idForAPI,
+        position: selectedPosition.id,
+        nonTaxedItems: nonTaxedItems,
+        taxedItems: taxedItems,
+        removeNonTaxedItems: nonTaxedItemRemoveList,
+        removeTaxedItems: taxedItemRemoveList,
+        paidByManual: paidByManualController.text.trim(),
+        termsManual: termsManualController.text.trim(),
+        typeManual: typeManualController.text.trim(),
+      );
+      if (response.status) {
+        if (jobId != null) {
+          await Get.find<JobInfoController>().getJobInfo(jobId: jobId);
+          Get.find<JobInfoController>().update();
         }
-     /* } catch (e) {
+        stopLoading();
+        await Get.find<WorkHistoryController>().getAllJob();
+
+        clearAllData();
+        Navigator.of(context).pop();
+      } else {
+        stopLoading();
+        response.message.errorSnack(context);
+      }
+      /* } catch (e) {
         stopLoading();
       }*/
     }
@@ -596,7 +596,7 @@ class AddJobController extends GetxController {
 
   void setJobData(GetJobInfoModel jobInfo) {
     descriptionController.text = jobInfo.description ?? "";
-    productionTitleController.text = jobInfo.productionTital ?? "";
+    productionTitleController.text = jobInfo.productionTitle ?? "";
     producerController.text = jobInfo.producer ?? "";
     productionCompanyController.text = jobInfo.productionCompany ?? "";
     addressLIne1Controller.text = jobInfo.companyAddressLine1 ?? "";
@@ -610,30 +610,32 @@ class AddJobController extends GetxController {
 
     selectedPerHour = allPerHour.firstWhereOrNull((element) =>
             element.text?.toLowerCase() ==
-            jobInfo.perHowManyHours?.toLowerCase()) ??
+            jobInfo.hours?.toLowerCase()) ??
         MenuItem(text: "10 hours", isSelected: true, id: 3);
     onPerHourDropDownTap(selectedPerHour);
 
     selectedGuaranteedHour = allGuaranteedHour.firstWhereOrNull((element) =>
             element.text?.toLowerCase() ==
-            jobInfo.guaranteedHours?.toLowerCase()) ??
+            jobInfo.guaranteedHour?.toLowerCase()) ??
         MenuItem(text: "Not Sure");
     selectedW2Or1099 = w21099List.firstWhere((element) =>
         element.text?.toLowerCase() == jobInfo.w21099?.toLowerCase());
     selectedPaidBy = allPaidBy.firstWhereOrNull((element) =>
-            element.text?.toLowerCase() == jobInfo.paidBy?.toLowerCase()) ??
+            element.text?.toLowerCase() == jobInfo.paidByName?.toLowerCase()) ??
         MenuItem(text: "Not Sure");
     selectedTerm = allTerms.firstWhereOrNull((element) =>
-            element.text?.toLowerCase() == jobInfo.terms?.toLowerCase()) ??
+            element.text?.toLowerCase() == jobInfo.term?.toLowerCase()) ??
         MenuItem(text: "Not Sure");
     selectedDepartment = allJobClassificationList.firstWhere((element) =>
-        element.text?.toLowerCase() == jobInfo.department?.toLowerCase());
+        element.text?.toLowerCase() == jobInfo.jobClassificationCategory?.toLowerCase());
     selectedType = allTypes.firstWhereOrNull((element) =>
             element.text?.toLowerCase() == jobInfo.type?.toLowerCase()) ??
         MenuItem(text: "Not Sure");
 
-    selectedUnion = unionNonUnionList.firstWhere((element) =>
-        element.text?.toLowerCase() == jobInfo.unionNonunion?.toLowerCase());
+    selectedUnion = unionNonUnionList.firstWhereOrNull((element) =>
+            element.text?.toLowerCase() ==
+            jobInfo.unionNonunion?.toLowerCase()) ??
+        MenuItem(text: "Not Sure", isSelected: true);
 
     selectedDays.clear();
     jobInfo.days?.forEach((element) {
@@ -650,11 +652,12 @@ class AddJobController extends GetxController {
     taxedItems.addAll(
       jobInfo.taxes?.map(
             (e) => TaxedNonTaxedModel(
-                type: e.taxType,
-                amount: e.taxAmount.toString(),
-                per: e.taxPer,
-                id: e.taxId,
-                taxedItemId: e.taxtTypeId),
+                type: e.taxedItem,
+                amount: e.taxtAmount.toString(),
+                timeId: e.taxPerTimeId?.toInt(),
+                id: e.taxesId,
+                taxedItemId: e.taxtTypeId,
+                timeDesc: e.taxPerTimeCategory),
           ) ??
           [],
     );
@@ -663,11 +666,12 @@ class AddJobController extends GetxController {
     nonTaxedItems.addAll(
       jobInfo.nonTaxes?.map(
             (e) => TaxedNonTaxedModel(
-              type: e.nonTaxtType,
+              type: e.taxedItem,
               amount: e.nonTaxtAmount.toString(),
-              per: e.nonTaxtPer,
-              id: e.nonTaxId,
+              timeId: e.taxPerTimeId?.toInt(),
+              id: e.nonTaxesId,
               taxedItemId: e.taxtTypeId,
+              timeDesc: e.taxPerTimeCategory,
             ),
           ) ??
           [],
@@ -676,7 +680,7 @@ class AddJobController extends GetxController {
     getAllSubJobList(selectedDepartment.id ?? -1).then(
       (value) {
         selectedPosition = allSubJobList
-            .firstWhere((element) => element.text == jobInfo.position);
+            .firstWhere((element) => element.text == makeStringDoubleLine(jobInfo.subJobClassificationsCategory ?? ""));
         update();
       },
     );

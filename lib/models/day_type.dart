@@ -6,25 +6,16 @@ List<DayType> dayTypeListFromJson(dynamic str){
 }
 
 class DayType {
-  DayType({
-      num? dayTypeId, 
-      String? dayType,}){
-    _dayTypeId = dayTypeId;
-    _dayType = dayType;
-}
+
 
   DayType.fromJson(dynamic json) {
     _dayTypeId = json['day_type_id'];
     _dayType = json['day_type'];
   }
-  num? _dayTypeId;
+  int? _dayTypeId;
   String? _dayType;
-DayType copyWith({  num? dayTypeId,
-  String? dayType,
-}) => DayType(  dayTypeId: dayTypeId ?? _dayTypeId,
-  dayType: dayType ?? _dayType,
-);
-  num? get dayTypeId => _dayTypeId;
+
+  int? get dayTypeId => _dayTypeId;
   String? get dayType => _dayType;
 
   Map<String, dynamic> toJson() {

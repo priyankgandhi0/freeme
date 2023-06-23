@@ -32,40 +32,7 @@ class NonTaxItemDialog extends StatelessWidget {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Stack(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    addNonTaxItem
-                        .text(
-                          fontSize: 18,
-                          weight: FontWeight.w500,
-                        )
-                        .paddingOnly(
-                          top: screenHPadding16.sh(),
-                          bottom: screenHPadding16.sh(),
-                        ),
-                  ],
-                ),
-                FmImage.assetImage(
-                  path: Assets.iconsCloseIcon,
-                  fit: BoxFit.fill,
-                  size: 12,
-                )
-                    .paddingOnly(
-                  top: 22.sh(),
-                  right: 22.sw(),
-                  left: 22.sw(),
-                  bottom: 22.sw(),
-                )
-                    .onTap(
-                  () {
-                    Navigator.of(context, rootNavigator: true).pop();
-                  },
-                ).positioned(right: 0)
-              ],
-            ),
+            topBar(context),
             Container(
               color: bottomLineGreyColor,
               width: Get.width,
@@ -81,34 +48,7 @@ class NonTaxItemDialog extends StatelessWidget {
                   ],
                 ),
                 fmDropDown(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.black,
-                        ),
-                        borderRadius: BorderRadius.circular(10)),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ctrl.selectedTaxedItemType.text.text(
-                          fontColor: ctrl.selectedTaxedItemType.id != null
-                              ? Colors.black
-                              : greyTextColor,
-                          fontSize: 16,
-                        ),
-                        FmImage.assetImage(
-                          path: Assets.iconsDownIcon,
-                          fit: BoxFit.fill,
-                          size: 14,
-                        )
-                      ],
-                    ).paddingOnly(
-                      left: screenWPadding16.sw(),
-                      right: screenWPadding16.sw(),
-                      top: screenHPadding16.sw(),
-                      bottom: screenHPadding16.sw(),
-                    ),
-                  ),
+                  child: nonTaxDropDownItem(ctrl),
                   onDropDownTap: (item) {
                     controller.onTypeListDropDownTap(item);
                   },
@@ -124,17 +64,6 @@ class NonTaxItemDialog extends StatelessWidget {
                         top: 4,
                       )
                     : Container(),
-                if (ctrl.selectedTaxedItemType.text == "Other") ...[
-                  FmTextField(
-                    hint: "Type Note",
-                    hintSize: 16,
-                    inputType: TextInputType.text,
-                    controller: ctrl.typeManualController,
-                    radius: 10,
-                  ).paddingOnly(
-                    top: screenHPadding8.sh(),
-                  )
-                ]
               ],
             ).paddingOnly(
               left: screenWPadding32.sw(),
@@ -247,17 +176,18 @@ class NonTaxItemDialog extends StatelessWidget {
                   onAddClick(
                     TaxedNonTaxedModel(
                       type: controller.selectedTaxedItemType.text,
-                      per: controller.selectedPerTime.text,
+                      timeDesc: controller.selectedPerTime.text,
+                      timeId: controller.selectedPerTime.id,
                       amount: controller.amountController.text,
                       id: defaultSelectedItem?.id,
                       taxedItemId:
-                      controller.selectedTaxedItemType.text == "Other"
-                          ? 0
-                          : controller.selectedTaxedItemType.id,
+                          controller.selectedTaxedItemType.text == "Other"
+                              ? 0
+                              : controller.selectedTaxedItemType.id,
                       taxedTypeNote:
-                      controller.selectedTaxedItemType.text == "Other"
-                          ? ctrl.typeManualController.text
-                          : null,
+                          controller.selectedTaxedItemType.text == "Other"
+                              ? ctrl.typeManualController.text
+                              : null,
                     ),
                   );
                   controller.typeManualController.clear();
@@ -274,6 +204,96 @@ class NonTaxItemDialog extends StatelessWidget {
           ],
         );
       },
+    );
+  }
+
+  topBar(BuildContext context) {
+    return Stack(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            addNonTaxItem
+                .text(
+                  fontSize: 18,
+                  weight: FontWeight.w500,
+                )
+                .paddingOnly(
+                  top: screenHPadding16.sh(),
+                  bottom: screenHPadding16.sh(),
+                ),
+          ],
+        ),
+        FmImage.assetImage(
+          path: Assets.iconsCloseIcon,
+          fit: BoxFit.fill,
+          size: 12,
+        )
+            .paddingOnly(
+          top: 22.sh(),
+          right: 22.sw(),
+          left: 22.sw(),
+          bottom: 22.sw(),
+        )
+            .onTap(
+          () {
+            Navigator.of(context, rootNavigator: true).pop();
+          },
+        ).positioned(right: 0)
+      ],
+    );
+  }
+
+  nonTaxDropDownItem(NonTaxItemDialogController ctrl) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.black,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ctrl.selectedTaxedItemType.text.text(
+                fontColor: ctrl.selectedTaxedItemType.id != null
+                    ? Colors.black
+                    : greyTextColor,
+                fontSize: 16,
+              ),
+              FmImage.assetImage(
+                path: Assets.iconsDownIcon,
+                fit: BoxFit.fill,
+                size: 14,
+              )
+            ],
+          ).paddingOnly(
+            left: screenWPadding16.sw(),
+            right: screenWPadding16.sw(),
+            top: screenHPadding16.sw(),
+            bottom: screenHPadding16.sw(),
+          ),
+          if (ctrl.selectedTaxedItemType.text == "Other") ...[
+            Container(
+              color: greyTextColor,
+              height: 1,
+              width: Get.width,
+            ),
+            FmEmptyTextField(
+              textInputType: TextInputType.text,
+              controller: ctrl.typeManualController,
+              hintText: "Non-Taxed Item Note",
+            ).paddingOnly(
+              left: screenWPadding16.sw(),
+              right: screenWPadding16.sw(),
+              top: screenHPadding16.sw(),
+              bottom: screenHPadding16.sw(),
+            )
+          ]
+        ],
+      ),
     );
   }
 }
@@ -396,7 +416,7 @@ class NonTaxItemDialogController extends GetxController {
         typeList.firstWhereOrNull((element) => element.text == item.type) ??
             MenuItem(text: "Select Type");
     selectedPerTime =
-        perHourList.firstWhereOrNull((element) => element.text == item.per) ??
+        perHourList.firstWhereOrNull((element) => element.text == item.timeId) ??
             MenuItem(text: "Day", id: 1);
     amountController.text = item.amount.toString();
     update();

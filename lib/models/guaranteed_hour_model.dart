@@ -12,10 +12,10 @@ class GuaranteedHourModel {
     _guaranteedHour = json['guaranteed_hour'];
   }
 
-  num? _guaranteedHourId;
+  int? _guaranteedHourId;
   String? _guaranteedHour;
 
-  num? get guaranteedHourId => _guaranteedHourId;
+  int? get guaranteedHourId => _guaranteedHourId;
 
   String? get guaranteedHour => _guaranteedHour;
 

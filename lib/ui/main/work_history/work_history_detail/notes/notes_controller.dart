@@ -22,7 +22,7 @@ class NotesController extends GetxController {
   Future<void> getAllNotes({
     required int jobId,
   }) async {
-      startLoading();
+     // startLoading();
     try{
       noteController.clear();
       ResponseItem response = await JobRepo.getNotes(jobId: jobId);
@@ -36,9 +36,8 @@ class NotesController extends GetxController {
         //stopLoading();
       }
     } catch(e){
-       stopLoading();
+       //stopLoading();
     }
-
   }
 
   Future<void> editNotes({
