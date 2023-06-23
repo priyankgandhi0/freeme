@@ -73,8 +73,6 @@ class WorkHistoryScreen extends StatelessWidget {
                             "isExample":job.jobIsExample
                           },
                         );
-                        changeToApiFormat(findSundayDateOfTheWeek(lastDateList[index])).debugPrint;
-                        changeToApiFormat(lastDateList[index]).debugPrint;
                       },
                       childList: [
                         if (job.days != null &&

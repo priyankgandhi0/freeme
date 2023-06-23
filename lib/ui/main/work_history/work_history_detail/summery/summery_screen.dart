@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:freeme/globle.dart';
 import 'package:freeme/models/summery_model.dart';
+import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_calculation.dart';
 import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -718,22 +719,14 @@ class SummeryDataTableSecond extends StatelessWidget {
           );
           (ctrl.summery?.hourlySummary ?? []).forEach(
             (element) {
-              if (element.date == changeToApiFormat(firstDayOfWeek.add(Duration(days: i)))) {
+              if (element.date ==
+                  changeToApiFormat(firstDayOfWeek.add(Duration(days: i)))) {
                 myDayListList.removeAt(i);
                 myDayListList.insert(i, element);
               }
             },
           );
         }
-
-        /*var list = List.generate(7, (index) => index).map((value) {
-          (ctrl.summery?.hourlySummary ?? []).forEach((element) {
-            if(element.date==changeToApiFormat(firstDayOfWeek.add(Duration(days: value)))){
-              myList.add(element);
-            }
-          });
-          return changeToApiFormat(firstDayOfWeek.add(Duration(days: value)));
-        }).toList();*/
 
         return Container(
           height: 355,
@@ -802,7 +795,7 @@ class SummeryDataTableSecond extends StatelessWidget {
                   ],
                 ),
               ),
-              DataColumn(
+             /* DataColumn(
                 label: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -811,7 +804,7 @@ class SummeryDataTableSecond extends StatelessWidget {
                         .paddingOnly(bottom: 5)
                   ],
                 ),
-              ),
+              ),*/
               DataColumn(
                 label: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -822,7 +815,7 @@ class SummeryDataTableSecond extends StatelessWidget {
                   ],
                 ),
               ),
-              DataColumn(
+              /*DataColumn(
                 label: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -831,7 +824,7 @@ class SummeryDataTableSecond extends StatelessWidget {
                         .paddingOnly(bottom: 5)
                   ],
                 ),
-              ),
+              ),*/
               DataColumn(
                 label: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -847,72 +840,21 @@ class SummeryDataTableSecond extends StatelessWidget {
             rows: [
               ...myDayListList.map(
                 (e) {
-                  var perHourRate = (e.paymentDetails?.rate ?? 0).toInt() /
-                      (e.paymentDetails?.totalHours ?? 0).toInt();
-                  calaculateTime(e);
+                  var data = TableTowCalculation.calculate(e);
+
                   return _dataRow(
-                    date: changeToMyFormat(e),
+                    date: data.date,
                     color: rowCellGreyColor,
-                    oneX:
-                        perHourRate.isNaN ? "" : perHourRate.toStringAsFixed(1),
-                    oneFiveX: perHourRate.isNaN
-                        ? ""
-                        : (perHourRate * 1.5).toStringAsFixed(1),
-                    twoX: perHourRate.isNaN
-                        ? ""
-                        : (perHourRate * 2).toStringAsFixed(1),
+                    oneX: data.oneX?.toString(),
+                    oneFiveX: data.oneFiveX?.toString(),
+                    twoX: data.twoX?.toString(),
+                    mp: data.mp!=0?data.mp.toString():null,
+                    paidHours:
+                        data.paidHours != 0 ? data.paidHours?.toString() : "",
+                    grossWages: data.grossWages
                   );
                 },
               ),
-              /*            _dataRow(
-                date: "7/17",
-                color: rowCellGreyColor,
-              ),
-              _dataRow(
-                date: "7/18",
-              ),
-              _dataRow(
-                date: "7/19",
-                color: rowCellGreyColor,
-                oneX: '8',
-                oneFiveX: "4",
-                paidHours: "14",
-                grossWages: "\$770",
-              ),
-              _dataRow(
-                date: "7/19",
-                oneX: '8',
-                oneFiveX: "4",
-                mp: "1",
-                paidHours: "14",
-                grossWages: "\$770",
-              ),
-              _dataRow(
-                date: "7/20",
-                color: rowCellGreyColor,
-              ),
-              _dataRow(
-                date: "7/21",
-              ),
-              _dataRow(
-                date: "7/22",
-                color: rowCellGreyColor,
-              ),
-              _dataRow(
-                date: "7/23",
-              ),
-              _dataRow(
-                  date: "Total",
-                  oneX: "16",
-                  oneFiveX: "8",
-                  twoX: "    ",
-                  empty: "    ",
-                  mp: "1",
-                  paidHours: "28",
-                  grossWages: "\$1540",
-                  color: darkGreenColor2.withOpacity(0.2),
-                  textColor: darkGreenColor2,
-                  weight: FontWeight.w500),*/
             ],
           ).paddingOnly(
             left: screenWPadding8.sw(),
@@ -930,21 +872,6 @@ class SummeryDataTableSecond extends StatelessWidget {
     );
   }
 
-  TimeOfDay fromString(String time) {
-    int hh = 0;
-    if (time.endsWith('PM')) hh = 12;
-    time = time.split(' ')[0];
-    return TimeOfDay(
-      hour: hh + int.parse(time.split(":")[0]) % 24,
-      // in case of a bad time format entered manually by the user
-      minute: int.parse(time.split(":")[1]) % 60,
-    );
-  }
-
-  String changeToMyFormat(HourlySummary e) {
-    return "${e.date?.split("-")[1]}/${e.date?.split("-").last}";
-  }
-
   DataRow _dataRow(
       {String? date,
       String? oneX,
@@ -960,18 +887,20 @@ class SummeryDataTableSecond extends StatelessWidget {
     return DataRow(
       color: MaterialStateProperty.all(color),
       cells: [
-        DataCell(Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            date
-                .text(
-                  fontSize: 16,
-                  fontColor: textColor,
-                  weight: weight,
-                )
-                .center,
-          ],
-        )),
+        DataCell(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              date
+                  .text(
+                    fontSize: 16,
+                    fontColor: textColor,
+                    weight: weight,
+                  )
+                  .center,
+            ],
+          ),
+        ),
         DataCell(
           oneX
               .text(
@@ -999,7 +928,7 @@ class SummeryDataTableSecond extends StatelessWidget {
               )
               .center,
         ),
-        DataCell(
+        /*DataCell(
           empty
               .text(
                 fontSize: 16,
@@ -1007,7 +936,7 @@ class SummeryDataTableSecond extends StatelessWidget {
                 weight: weight,
               )
               .center,
-        ),
+        ),*/
         DataCell(
           mp
               .text(
@@ -1017,7 +946,7 @@ class SummeryDataTableSecond extends StatelessWidget {
               )
               .center,
         ),
-        DataCell(
+       /* DataCell(
           paidHours
               .text(
                 fontSize: 16,
@@ -1025,7 +954,7 @@ class SummeryDataTableSecond extends StatelessWidget {
                 weight: weight,
               )
               .center,
-        ),
+        ),*/
         DataCell(Row(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.end,
@@ -1041,34 +970,6 @@ class SummeryDataTableSecond extends StatelessWidget {
         )),
       ],
     );
-  }
-
-  void calaculateTime(HourlySummary e) {
-    if ((!e.callTime.isNullOrEmpty) && (!e.wrap.isNullOrEmpty)) {
-      DateTime callTime = convertToMyTimeFormat(e.callTime ?? "", e.date ?? "");
-      DateTime wrap = convertToMyTimeFormat(e.wrap ?? "", e.date ?? "");
-      Duration duration = wrap.difference(callTime);
-
-      duration.debugPrint;
-    }
-  }
-
-  DateTime convertToMyTimeFormat(String time, String date) {
-    var now = date.split("-");
-    int hour = int.parse(time.split(":").first.toString());
-    int minute = int.parse(time.split(":").last.substring(0, 2));
-    bool isPm = time.contains("PM") ? true : false;
-    return DateTime.utc(
-        int.parse(now[0]),
-        int.parse(now[1]),
-        int.parse(now[2]),
-        isPm
-            ? hour != 12
-                ? hour + 12
-                : hour
-            : hour,
-        minute,
-        0);
   }
 }
 

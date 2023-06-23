@@ -17,7 +17,7 @@ import '../../navigator/main_controller.dart';
 
 class TimeCardController extends GetxController {
   var focusedDay = DateTime.now();
-  late String selectedDate;
+  String selectedDate ="";
   DateTime currentDay = DateTime.now();
 
   DateTime clockInTime = DateTime.now();
@@ -280,6 +280,15 @@ class TimeCardController extends GetxController {
             : hour,
         minute,
         0);
+  }
+
+
+  clearController(){
+    selectedDate = "";
+   historyModel = null;
+   clockTimeList.clear();
+    weekDays.clear();
+   selectedDays.clear();
   }
 }
 

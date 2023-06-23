@@ -144,14 +144,14 @@ class RegisterScreen extends StatelessWidget {
             top: screenHPadding16.sh(),
             bottom: 16.sh(),
           ),
-          if (controller.selectedIndustry.text == "other industry") ...[
+          if (controller.selectedIndustry.text == "Other") ...[
             Container(
               width: Get.width,
               color: greyTextColor,
               height: 1,
             ),
             FmEmptyTextField(
-              hintText: "Industry Note",
+              hintText: "Enter Your Industry",
               controller: controller.industryController,
               textInputType: TextInputType.text,
             ).paddingOnly(

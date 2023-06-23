@@ -49,4 +49,8 @@ class SummeryController extends GetxController {
       stopLoading();
     }
   }
+
+  void clearController() {
+    summery = null;
+  }
 }

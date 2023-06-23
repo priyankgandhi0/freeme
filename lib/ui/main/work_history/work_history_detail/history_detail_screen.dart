@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_controller.dart';
 import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_screen.dart';
 import 'package:freeme/ui/main/work_history/work_history_detail/timecard/time_card_screen.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +9,9 @@ import '../../../widgets/fm_appbar.dart';
 import '../../profile/timecard/timecard_controller.dart';
 import '../../profile/timecard/timecard_screen.dart';
 import 'history_detail_controller.dart';
+import 'job_info/job_info_controller.dart';
 import 'job_info/job_info_screen.dart';
+import 'notes/notes_controller.dart';
 import 'notes/notes_screen.dart';
 
 class WorkHistoryDetailScreen extends StatelessWidget {
@@ -127,6 +130,7 @@ class WorkHistoryDetailScreen extends StatelessWidget {
                 ),
                 Expanded(
                   child: TabBarView(
+                    physics: const NeverScrollableScrollPhysics(),
                     controller: controller.tabController,
                     children: [
                       SummeryScreen(
@@ -156,6 +160,14 @@ class WorkHistoryDetailScreen extends StatelessWidget {
         ),
       ),
       onWillPop: () async {
+        try{
+          Get.find<TimeCardController>().clearController();
+          Get.find<SummeryController>().clearController();
+          Get.find<JobInfoController>().clearController();
+          Get.find<NotesController>().clearController();
+        }catch(e){
+          e.debugPrint;
+        }
         return false;
       },
     );

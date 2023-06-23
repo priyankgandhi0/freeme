@@ -40,6 +40,7 @@ class TimeCardTabScreen extends StatelessWidget {
     return SingleChildScrollView(
       child: GetBuilder<TimeCardController>(
         initState: (initState) {
+          controller.selectedDate = date;
           Future.delayed(Duration.zero, () {
             controller.getWorkHistory(jobId, controller.selectedDate);
             controller.getJobInfo(
@@ -748,6 +749,6 @@ class TimeCardTabScreen extends StatelessWidget {
 
   String changeToTimeCardDateFormat(String date) {
     DateTime tempDate = DateFormat("yyyy-MM-dd").parse(date);
-    return DateFormat('EEEE, MMM dd, yyyy').format(tempDate);
+    return DateFormat('EEEE, MMM d, yyyy').format(tempDate);
   }
 }

@@ -63,7 +63,7 @@ class AddJobController extends GetxController {
     update(["CompanyAdddressExpanded"]);
   }
 
-  bool isJobClassificationExpanded = false;
+  bool isJobClassificationExpanded = true;
 
   onJobClassificationExpansionChange(bool value) {
     isJobClassificationExpanded = value;

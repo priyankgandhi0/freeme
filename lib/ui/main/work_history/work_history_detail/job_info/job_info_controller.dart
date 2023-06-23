@@ -51,7 +51,6 @@ class JobInfoController extends GetxController {
   }
 
   GetJobInfoModel? jobInfo;
-
   Future<void> getJobInfo({
     required int jobId,
   }) async {
@@ -73,5 +72,10 @@ class JobInfoController extends GetxController {
       onDaySelect(tempDate, tempDate);
     });
 
+  }
+
+  void clearController() {
+    selectedDays.clear();
+    jobInfo = null;
   }
 }

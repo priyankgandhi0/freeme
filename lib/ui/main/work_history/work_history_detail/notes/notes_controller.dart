@@ -56,4 +56,8 @@ class NotesController extends GetxController {
       // stopLoading();
     }
   }
+
+  void clearController() {
+    noteController.clear();
+  }
 }
