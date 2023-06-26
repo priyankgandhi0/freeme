@@ -223,7 +223,7 @@ class AddJobController extends GetxController {
 
   List<MenuItem> unionNonUnionList = [
     MenuItem(text: "Not Sure", isSelected: true),
-    MenuItem(text: "Non Union", isSelected: false),
+    MenuItem(text: "Non-Union", isSelected: false),
     MenuItem(text: "Union", isSelected: false),
   ];
 

@@ -69,7 +69,7 @@ class QuickEntryRepo {
       "terms_id": terms,
       "terms_manual": termsManual,
       "type_id": type,
-      "type_manual":typeManual,
+      "type_manual": typeManual,
       "job_classification_id": department,
       "sub_job_classifications_id": position,
       "union_nonunion": unionNonunion,
@@ -130,7 +130,8 @@ class QuickEntryRepo {
     dynamic data;
     String message = '';
     var queryParameters = {
-      RequestParam.service: jobId!=null?MethodNames.editJob:MethodNames.addJob,
+      RequestParam.service:
+          jobId != null ? MethodNames.editJob : MethodNames.addJob,
       RequestParam.showError: false,
     };
 
@@ -155,7 +156,7 @@ class QuickEntryRepo {
       "terms_id": terms,
       "terms_manual": termsManual,
       "type_id": type,
-      "type_manual":typeManual,
+      "type_manual": typeManual,
       "job_classification_id": department,
       "sub_job_classifications_id": position,
       "union_nonunion": unionNonunion,
@@ -182,7 +183,7 @@ class QuickEntryRepo {
     message = result.message;
     return ResponseItem(data: data, message: message, status: status);
   }
-  
+
   static Future<ResponseItem> getAllTypesList() async {
     ResponseItem result;
     bool status = true;
@@ -313,6 +314,32 @@ class QuickEntryRepo {
     data = result.data;
     message = result.message;
     return ResponseItem(data: data, message: message, status: status);
+  }
+
+  static Future<ResponseItem> myProfile() async {
+    ResponseItem result;
+    bool status = true;
+    dynamic data;
+    String message = '';
+    var queryParameters = {
+      RequestParam.service: MethodNames.myProfile,
+      RequestParam.showError: false,
+    };
+    result = await BaseApiHelper.postRequest(
+      requestUrl: AppUrls.baseUrl,
+      queryParam: queryParameters,
+      requestData: {},
+      passAuthToken: true,
+      isMultipart: false,
+    );
+    status = result.status;
+    data = result.data;
+    message = result.message;
+    return ResponseItem(
+      data: data,
+      message: message,
+      status: status,
+    );
   }
 
   static Future<ResponseItem> allSubJobClassificationList(num id) async {

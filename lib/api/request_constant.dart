@@ -46,6 +46,7 @@ class MethodNames {
   static const editNotes = 'editNotes';
   static const getSummary = 'getSummary';
 
+
 }
 
 class RequestParam {

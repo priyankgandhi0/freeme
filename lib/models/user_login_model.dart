@@ -1,43 +1,39 @@
 import 'dart:convert';
 
-
 UserModel userLoginModelFromJson(String str) => UserModel.fromJson(json.decode(str));
 String userLoginModelToJson(UserModel data) => json.encode(data.toJson());
 class UserModel {
   UserModel({
-      int? userId, 
-      String? userToken, 
-      String? firstName, 
-      String? middle, 
-      String? lastName, 
-      String? union, 
-      String? primaryPosition, 
-      String? address, 
-      String? website, 
-      String? socialMedia, 
-      String? userProfilePhoto, 
-      int? industryId, 
-      String? loginType, 
-      String? birthDate, 
-      String? about, 
-      String? authToken, 
-      String? devicePushToken, 
-      String? deviceType, 
-      String? verifyEmail, 
-      String? verifyPhone, 
-      String? verifyEmailCode, 
-      String? verifyForgotCode, 
-      int? isLoggedOut, 
+      num? userId,
+      String? userToken,
+      String? firstName,
+      String? middle,
+      String? lastName,
+      String? union,
+      String? userEmail,
+      num? jobClassificationId,
+      num? subJobClassificationsId,
+      List<Address>? address,
+      List<Website>? website,
+      List<SocialMedia>? socialMedia,
+      String? userProfilePhoto,
+      num? industryId,
+      String? loginType,
+      String? birthDate,
+      String? about,
+      String? authToken,
+      String? devicePushToken,
+      String? deviceType,
+      String? verifyEmail,
+      String? verifyPhone,
+      String? verifyEmailCode,
+      String? verifyForgotCode,
+      num? isLoggedOut,
       String? industryName,
-    String? timecardInfoId,
-    String? socialSecurity,
-    String? city,
-    String? state,
-    String? zip,
-    String? country,
-    String? gender,
-    String? loanOut,
-      List<Email>? email, 
+      num? isAddedByUser,
+      String? jobClassificationCategory,
+      String? subJobClassificationsCategory,
+      List<Email>? email,
       List<Mobile>? mobile,}){
     _userId = userId;
     _userToken = userToken;
@@ -45,7 +41,9 @@ class UserModel {
     _middle = middle;
     _lastName = lastName;
     _union = union;
-    _primaryPosition = primaryPosition;
+    _userEmail = userEmail;
+    _jobClassificationId = jobClassificationId;
+    _subJobClassificationsId = subJobClassificationsId;
     _address = address;
     _website = website;
     _socialMedia = socialMedia;
@@ -63,14 +61,9 @@ class UserModel {
     _verifyForgotCode = verifyForgotCode;
     _isLoggedOut = isLoggedOut;
     _industryName = industryName;
-    _timecardInfoId = timecardInfoId;
-    _socialSecurity = socialSecurity;
-    _city = city;
-    _state = state;
-    _zip = zip;
-    _country = country;
-    _gender = gender;
-    _loanOut = loanOut;
+    _isAddedByUser = isAddedByUser;
+    _jobClassificationCategory = jobClassificationCategory;
+    _subJobClassificationsCategory = subJobClassificationsCategory;
     _email = email;
     _mobile = mobile;
 }
@@ -82,10 +75,27 @@ class UserModel {
     _middle = json['middle'];
     _lastName = json['last_name'];
     _union = json['union'];
-    _primaryPosition = json['primary_position'];
-    _address = json['address'];
-    _website = json['website'];
-    _socialMedia = json['social_media'];
+    _userEmail = json['user_email'];
+    _jobClassificationId = json['job_classification_id'];
+    _subJobClassificationsId = json['sub_job_classifications_id'];
+    if (json['address'] != null) {
+      _address = [];
+      json['address'].forEach((v) {
+        _address?.add(Address.fromJson(v));
+      });
+    }
+    if (json['website'] != null) {
+      _website = [];
+      json['website'].forEach((v) {
+        _website?.add(Website.fromJson(v));
+      });
+    }
+    if (json['social_media'] != null) {
+      _socialMedia = [];
+      json['social_media'].forEach((v) {
+        _socialMedia?.add(SocialMedia.fromJson(v));
+      });
+    }
     _userProfilePhoto = json['user_profile_photo'];
     _industryId = json['industry_id'];
     _loginType = json['login_type'];
@@ -100,14 +110,9 @@ class UserModel {
     _verifyForgotCode = json['verify_forgot_code'];
     _isLoggedOut = json['is_logged_out'];
     _industryName = json['industry_name'];
-    _timecardInfoId = json['timecard_info_id'];
-    _socialSecurity = json['social_security'];
-    _city = json['city'];
-    _state = json['state'];
-    _zip = json['zip'];
-    _country = json['country'];
-    _gender = json['gender'];
-    _loanOut = json['loan_out'];
+    _isAddedByUser = json['is_added_by_user'];
+    _jobClassificationCategory = json['job_classification_category'];
+    _subJobClassificationsCategory = json['sub_job_classifications_category'];
     if (json['email'] != null) {
       _email = [];
       json['email'].forEach((v) {
@@ -121,18 +126,20 @@ class UserModel {
       });
     }
   }
-  int? _userId;
+  num? _userId;
   String? _userToken;
   String? _firstName;
   String? _middle;
   String? _lastName;
   String? _union;
-  String? _primaryPosition;
-  String? _address;
-  String? _website;
-  String? _socialMedia;
+  String? _userEmail;
+  num? _jobClassificationId;
+  num? _subJobClassificationsId;
+  List<Address>? _address;
+  List<Website>? _website;
+  List<SocialMedia>? _socialMedia;
   String? _userProfilePhoto;
-  int? _industryId;
+  num? _industryId;
   String? _loginType;
   String? _birthDate;
   String? _about;
@@ -143,31 +150,28 @@ class UserModel {
   String? _verifyPhone;
   String? _verifyEmailCode;
   String? _verifyForgotCode;
-  int? _isLoggedOut;
+  num? _isLoggedOut;
   String? _industryName;
-  String? _timecardInfoId;
-  String? _socialSecurity;
-  String? _city;
-  String? _state;
-  String? _zip;
-  String? _country;
-  String? _gender;
-  String? _loanOut;
+  num? _isAddedByUser;
+  String? _jobClassificationCategory;
+  String? _subJobClassificationsCategory;
   List<Email>? _email;
   List<Mobile>? _mobile;
 
-  int? get userId => _userId;
+  num? get userId => _userId;
   String? get userToken => _userToken;
   String? get firstName => _firstName;
   String? get middle => _middle;
   String? get lastName => _lastName;
   String? get union => _union;
-  String? get primaryPosition => _primaryPosition;
-  String? get address => _address;
-  String? get website => _website;
-  String? get socialMedia => _socialMedia;
+  String? get userEmail => _userEmail;
+  num? get jobClassificationId => _jobClassificationId;
+  num? get subJobClassificationsId => _subJobClassificationsId;
+  List<Address>? get address => _address;
+  List<Website>? get website => _website;
+  List<SocialMedia>? get socialMedia => _socialMedia;
   String? get userProfilePhoto => _userProfilePhoto;
-  int? get industryId => _industryId;
+  num? get industryId => _industryId;
   String? get loginType => _loginType;
   String? get birthDate => _birthDate;
   String? get about => _about;
@@ -178,16 +182,11 @@ class UserModel {
   String? get verifyPhone => _verifyPhone;
   String? get verifyEmailCode => _verifyEmailCode;
   String? get verifyForgotCode => _verifyForgotCode;
-  int? get isLoggedOut => _isLoggedOut;
+  num? get isLoggedOut => _isLoggedOut;
   String? get industryName => _industryName;
-  dynamic get timecardInfoId => _timecardInfoId;
-  dynamic get socialSecurity => _socialSecurity;
-  dynamic get city => _city;
-  dynamic get state => _state;
-  dynamic get zip => _zip;
-  dynamic get country => _country;
-  dynamic get gender => _gender;
-  dynamic get loanOut => _loanOut;
+  num? get isAddedByUser => _isAddedByUser;
+  String? get jobClassificationCategory => _jobClassificationCategory;
+  String? get subJobClassificationsCategory => _subJobClassificationsCategory;
   List<Email>? get email => _email;
   List<Mobile>? get mobile => _mobile;
 
@@ -199,10 +198,18 @@ class UserModel {
     map['middle'] = _middle;
     map['last_name'] = _lastName;
     map['union'] = _union;
-    map['primary_position'] = _primaryPosition;
-    map['address'] = _address;
-    map['website'] = _website;
-    map['social_media'] = _socialMedia;
+    map['user_email'] = _userEmail;
+    map['job_classification_id'] = _jobClassificationId;
+    map['sub_job_classifications_id'] = _subJobClassificationsId;
+    if (_address != null) {
+      map['address'] = _address?.map((v) => v.toJson()).toList();
+    }
+    if (_website != null) {
+      map['website'] = _website?.map((v) => v.toJson()).toList();
+    }
+    if (_socialMedia != null) {
+      map['social_media'] = _socialMedia?.map((v) => v.toJson()).toList();
+    }
     map['user_profile_photo'] = _userProfilePhoto;
     map['industry_id'] = _industryId;
     map['login_type'] = _loginType;
@@ -217,14 +224,9 @@ class UserModel {
     map['verify_forgot_code'] = _verifyForgotCode;
     map['is_logged_out'] = _isLoggedOut;
     map['industry_name'] = _industryName;
-    map['timecard_info_id'] = _timecardInfoId;
-    map['social_security'] = _socialSecurity;
-    map['city'] = _city;
-    map['state'] = _state;
-    map['zip'] = _zip;
-    map['country'] = _country;
-    map['gender'] = _gender;
-    map['loan_out'] = _loanOut;
+    map['is_added_by_user'] = _isAddedByUser;
+    map['job_classification_category'] = _jobClassificationCategory;
+    map['sub_job_classifications_category'] = _subJobClassificationsCategory;
     if (_email != null) {
       map['email'] = _email?.map((v) => v.toJson()).toList();
     }
@@ -236,9 +238,60 @@ class UserModel {
 
 }
 
+/// number_id : 23
+/// user_token : "164941404e223664c5a124e681"
+/// mobile_no : 9978848357
+
+Mobile mobileFromJson(String str) => Mobile.fromJson(json.decode(str));
+String mobileToJson(Mobile data) => json.encode(data.toJson());
+class Mobile {
+  Mobile({
+      num? numberId, 
+      String? userToken, 
+      num? mobileNo,}){
+    _numberId = numberId;
+    _userToken = userToken;
+    _mobileNo = mobileNo;
+}
+
+  Mobile.fromJson(dynamic json) {
+    _numberId = json['number_id'];
+    _userToken = json['user_token'];
+    _mobileNo = json['mobile_no'];
+  }
+  num? _numberId;
+  String? _userToken;
+  num? _mobileNo;
+Mobile copyWith({  num? numberId,
+  String? userToken,
+  num? mobileNo,
+}) => Mobile(  numberId: numberId ?? _numberId,
+  userToken: userToken ?? _userToken,
+  mobileNo: mobileNo ?? _mobileNo,
+);
+  num? get numberId => _numberId;
+  String? get userToken => _userToken;
+  num? get mobileNo => _mobileNo;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['number_id'] = _numberId;
+    map['user_token'] = _userToken;
+    map['mobile_no'] = _mobileNo;
+    return map;
+  }
+
+}
+
+/// email_id : 46
+/// user_token : "164941404e223664c5a124e681"
+/// email : "hardik@yopmail.com"
+
+Email emailFromJson(String str) => Email.fromJson(json.decode(str));
+String emailToJson(Email data) => json.encode(data.toJson());
 class Email {
   Email({
-      int? emailId, 
+      num? emailId, 
       String? userToken, 
       String? email,}){
     _emailId = emailId;
@@ -251,17 +304,17 @@ class Email {
     _userToken = json['user_token'];
     _email = json['email'];
   }
-  int? _emailId;
+  num? _emailId;
   String? _userToken;
   String? _email;
-Email copyWith({  int? emailId,
+Email copyWith({  num? emailId,
   String? userToken,
   String? email,
 }) => Email(  emailId: emailId ?? _emailId,
   userToken: userToken ?? _userToken,
   email: email ?? _email,
 );
-  int? get emailId => _emailId;
+  num? get emailId => _emailId;
   String? get userToken => _userToken;
   String? get email => _email;
 
@@ -272,39 +325,104 @@ Email copyWith({  int? emailId,
     map['email'] = _email;
     return map;
   }
+
 }
 
+/// website_id : 9
+/// user_token : "164941404e223664c5a124e681"
+/// website : "www.lll.com"
 
-
-class Mobile {
-  Mobile({
-    int? emailId,
-    String? userToken,
-    String? email,}){
-    _mobileId = emailId;
+Website websiteFromJson(String str) => Website.fromJson(json.decode(str));
+String websiteToJson(Website data) => json.encode(data.toJson());
+class Website {
+  Website({
+      num? websiteId, 
+      String? userToken, 
+      String? website,}){
+    _websiteId = websiteId;
     _userToken = userToken;
-    _mobile = email;
-  }
+    _website = website;
+}
 
-  Mobile.fromJson(dynamic json) {
-    _mobileId = json['mobile_id'];
+  Website.fromJson(dynamic json) {
+    _websiteId = json['website_id'];
     _userToken = json['user_token'];
-    _mobile = json['mobile'];
+    _website = json['website'];
   }
-
-  int? _mobileId;
+  num? _websiteId;
   String? _userToken;
-  String? _mobile;
-
-  int? get mobileId => _mobileId;
+  String? _website;
+Website copyWith({  num? websiteId,
+  String? userToken,
+  String? website,
+}) => Website(  websiteId: websiteId ?? _websiteId,
+  userToken: userToken ?? _userToken,
+  website: website ?? _website,
+);
+  num? get websiteId => _websiteId;
   String? get userToken => _userToken;
-  String? get mobile => _mobile;
+  String? get website => _website;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
-    map['mobile_id'] = _mobileId;
+    map['website_id'] = _websiteId;
     map['user_token'] = _userToken;
-    map['mobile'] = _mobile;
+    map['website'] = _website;
     return map;
   }
+
+}
+
+/// address_id : 9
+/// user_token : "164941404e223664c5a124e681"
+/// address : "vadodara"
+
+Address addressFromJson(String str) => Address.fromJson(json.decode(str));
+String addressToJson(Address data) => json.encode(data.toJson());
+class Address {
+  Address({
+      num? addressId, 
+      String? userToken, 
+      String? address,}){
+    _addressId = addressId;
+    _userToken = userToken;
+    _address = address;
+}
+
+  Address.fromJson(dynamic json) {
+    _addressId = json['address_id'];
+    _userToken = json['user_token'];
+    _address = json['address'];
+  }
+  num? _addressId;
+  String? _userToken;
+  String? _address;
+Address copyWith({  num? addressId,
+  String? userToken,
+  String? address,
+}) => Address(  addressId: addressId ?? _addressId,
+  userToken: userToken ?? _userToken,
+  address: address ?? _address,
+);
+  num? get addressId => _addressId;
+  String? get userToken => _userToken;
+  String? get address => _address;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['address_id'] = _addressId;
+    map['user_token'] = _userToken;
+    map['address'] = _address;
+    return map;
+  }
+
+}
+
+class SocialMedia{
+   SocialMedia.fromJson(v) {}
+
+   Map<String, dynamic> toJson() {
+     return {};
+   }
+
 }

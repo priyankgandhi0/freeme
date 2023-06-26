@@ -1175,8 +1175,8 @@ class SummeryDataTableFirst extends StatelessWidget {
                   )
                 ],
               ).paddingOnly(
-                top: screenHPadding16.sh(),
-                right: screenWPadding8.sw(),
+                top: 24.sh(),
+                right: 10.sw(),
               )
             ],
           ),

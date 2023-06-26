@@ -205,7 +205,6 @@ class FmEmptyTextField extends StatelessWidget {
       inputFormatters: <TextInputFormatter>[
         if (textInputType != null &&
             (textInputType == TextInputType.number ||
-                textInputType == TextInputType.emailAddress ||
                 textInputType == TextInputType.phone)) ...[
           FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
         ]

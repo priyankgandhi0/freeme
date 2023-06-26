@@ -39,7 +39,7 @@ class AccountScreen extends StatelessWidget {
                 "IATSE Local 600".text(fontSize: 16).paddingOnly(
                       top: screenHPadding8.sh(),
                     ),
-                "${ctrl.userModel?.primaryPosition ?? ""}"
+                "Primary Position"
                     .text(fontColor: greyTextColor, fontSize: 16)
                     .paddingOnly(
                       top: screenHPadding8.sh(),

@@ -51,13 +51,15 @@ Widget fmDropDown<T>(
       );
     }
   }
+
   return DropdownButtonHideUnderline(
     child: DropdownButton2(
       customButton: child,
       items: [...children],
       onChanged: (value) {},
+
       dropdownStyleData: DropdownStyleData(
-        width: width ?? Get.width / 2,
+        width: width ?? Get.width / 2,openInterval: const Interval(0.0, 0.8),
         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),

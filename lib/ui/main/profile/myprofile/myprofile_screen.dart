@@ -52,7 +52,7 @@ class MyProfileScreen extends StatelessWidget {
                               fontSize: 16,
                             )
                             .paddingOnly(top: 8),
-                        (ctrl.userModel?.primaryPosition ?? "")
+                        "primary Position"
                             .text(
                               fontSize: 16,
                               fontColor: greyTextColor,
@@ -67,14 +67,14 @@ class MyProfileScreen extends StatelessWidget {
                 ctrl.userModel?.mobile != null &&
                         ctrl.userModel!.mobile!.isNotEmpty
                     ? contentCard("Mobile",
-                            (ctrl.userModel?.mobile?[0].mobile ?? "-"),
+                            "Mobile",
                             textColor: blueTextColor)
                         .paddingOnly(top: 32)
                     : Container(),
                 contentCard("E-mail", (ctrl.userModel?.email?[0].email ?? "-"),
                         textColor: blueTextColor)
                     .paddingOnly(top: 16),
-                contentCard("Website", (ctrl.userModel?.website ?? "-"),
+                contentCard("Website", "Website",
                         textColor: blueTextColor)
                     .paddingOnly(top: 16),
                 contentCard(

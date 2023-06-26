@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../globle.dart';
+import '../../../widgets/dropdown.dart';
 import '../../../widgets/fm_appbar.dart';
 import '../../../widgets/profile_image.dart';
 import 'editprofile_controller.dart';
@@ -20,7 +21,10 @@ class EditProfileScreen extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        body: GetBuilder<EditProfileController>(builder: (ctrl) {
+        body: GetBuilder<EditProfileController>(initState: (initState) async {
+          await controller.getAllJobClassifications();
+          await controller.getMyProfile();
+        }, builder: (ctrl) {
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -45,22 +49,8 @@ class EditProfileScreen extends StatelessWidget {
                 ),
                 _addPhone(),
                 _email(),
-                contentCard(
-                  textController: ctrl.addUnionController,
-                  union,
-                  ["lATSE Local 600"],
-                  onAddClick: () {},
-                ).paddingOnly(
-                  top: screenHPadding16.sh(),
-                ),
-                contentCard(
-                  primaryPosition,
-                  ["Camera / 1st Assist..."],
-                  onAddClick: () {},
-                  textController: ctrl.addPrimaryPositionController,
-                ).paddingOnly(
-                  top: screenHPadding16.sh(),
-                ),
+                _union(context, ctrl),
+                _primaryPosition(ctrl, context),
                 _addAddress(),
                 _addWebsite(),
                 _socialMedia(),
@@ -85,6 +75,224 @@ class EditProfileScreen extends StatelessWidget {
       onWillPop: () async {
         return false;
       },
+    );
+  }
+
+  Widget _primaryPosition(EditProfileController ctrl, BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            offset: Offset(2, 3),
+            blurRadius: 10.0,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          ctrl.showPrimaryPositionSelected
+              ? Row(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          FmImage.assetImage(
+                            path: Assets.iconsMinusIcon,
+                            height: 20.sh(),
+                            width: 20.sw(),
+                          ).onClick(() {
+                            controller.removePrimaryPosition();
+                          }),
+                          "Department"
+                              .text(
+                                fontColor: greyTextColor,
+                                fontSize: 16,
+                              )
+                              .paddingOnly(
+                                left: 10.sw(),
+                              )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: fmDropDown(
+                        child: _departmentDropDownItem(ctrl),
+                        onDropDownTap: (item) {
+                          controller.onDepartmentTap(item);
+                        },
+                        items: controller.allJobClassificationList,
+                        context: context,
+                        width: 215,
+                      ).paddingOnly(
+                        left: screenWPadding8.sw(),
+                      ),
+                    )
+                  ],
+                ).paddingOnly(
+                  left: screenWPadding16.sw(),
+                  top: screenHPadding16,
+                  bottom: screenHPadding16,
+                )
+              : Container(),
+          ctrl.showPrimaryPositionSelected
+              ? Row(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 20.sw(),
+                          ),
+                          "Position"
+                              .text(
+                                fontColor: greyTextColor,
+                                fontSize: 16,
+                              )
+                              .paddingOnly(
+                                left: 10.sw(),
+                              )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: fmDropDown(
+                        child: _positionDropDownItem(ctrl),
+                        onDropDownTap: (item) {
+                          controller.onPositionTap(item);
+                        },
+                        items: controller.allSubJobList,
+                        context: context,
+                        width: 215,
+                      ).paddingOnly(
+                        left: screenWPadding8.sw(),
+                      ),
+                    )
+                  ],
+                ).paddingOnly(
+                  left: screenWPadding16.sw(),
+                  /*  top: screenHPadding16,*/
+                  /*  bottom: screenHPadding16,*/
+                )
+              : Container(),
+          Row(
+            children: [
+              FmImage.assetImage(
+                path: Assets.iconsPlusicon,
+                height: 20.sh(),
+                width: 20.sw(),
+              ),
+              "Add Primary Position"
+                  .text(
+                    fontColor: greyTextColor,
+                    fontSize: 16,
+                  )
+                  .paddingOnly(left: 10.sw())
+            ],
+          )
+              .paddingOnly(
+            left: screenWPadding16.sw(),
+            top: screenHPadding16,
+            bottom: screenHPadding16,
+          )
+              .onTap(() {
+            controller.addPrimaryPosition();
+          })
+        ],
+      ),
+    ).paddingOnly(
+      left: 16.sw(),
+      right: 16.sw(),
+      top: 16.sw(),
+    );
+  }
+
+  Widget _union(BuildContext context, EditProfileController ctrl) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            offset: Offset(2, 3),
+            blurRadius: 10.0,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          ctrl.showUnionSelected
+              ? Row(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          FmImage.assetImage(
+                            path: Assets.iconsMinusIcon,
+                            height: 20.sh(),
+                            width: 20.sw(),
+                          ).onClick(() {
+                            controller.removeUnionSelection();
+                          }),
+                          "Union"
+                              .text(
+                                fontColor: greyTextColor,
+                                fontSize: 16,
+                              )
+                              .paddingOnly(left: 10.sw())
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: fmDropDown(
+                        child: _unionDropDownItem(ctrl),
+                        onDropDownTap: (item) {
+                          ctrl.onUnionNonUnionDropDownTap(item);
+                        },
+                        items: ctrl.unionNonUnionList,
+                        width: 150,
+                        context: context,
+                      ),
+                    )
+                  ],
+                ).paddingOnly(
+                  left: screenWPadding16.sw(),
+                  top: screenHPadding16,
+                  bottom: screenHPadding16,
+                )
+              : Container(),
+          Row(
+            children: [
+              FmImage.assetImage(
+                path: Assets.iconsPlusicon,
+                height: 20.sh(),
+                width: 20.sw(),
+              ),
+              "Add Union"
+                  .text(
+                    fontColor: greyTextColor,
+                    fontSize: 16,
+                  )
+                  .paddingOnly(left: 10.sw())
+            ],
+          )
+              .paddingOnly(
+            left: screenWPadding16.sw(),
+            top: screenHPadding16,
+            bottom: screenHPadding16,
+          )
+              .onTap(() {
+            controller.addUnionSelection();
+          })
+        ],
+      ),
+    ).paddingOnly(
+      left: 16.sw(),
+      right: 16.sw(),
+      top: 16.sw(),
     );
   }
 
@@ -165,12 +373,13 @@ class EditProfileScreen extends StatelessWidget {
       },
       itemList: controller.birthDayList,
       onAddItemTap: () {
-        if (controller.birthDayList.isEmpty) {
+        if (controller.birthDayList.isEmpty &&
+            controller.birthDayList.length <= 1) {
           controller.birthDayList.add(TextEditingController());
         }
-        if (controller.birthDayList.last.text.isNotEmpty) {
+        /*if (controller.birthDayList.last.text.isNotEmpty) {
           controller.birthDayList.add(TextEditingController());
-        }
+        }*/
         controller.update();
       },
       hint: "Add BirthDay",
@@ -221,7 +430,7 @@ class EditProfileScreen extends StatelessWidget {
             },
             hint: addEmail,
             buttonName: addEmail,
-            inputType: TextInputType.number)
+            inputType: TextInputType.emailAddress)
         .paddingOnly(
       top: screenHPadding16.sh(),
     );
@@ -522,6 +731,62 @@ class EditProfileScreen extends StatelessWidget {
       left: screenWPadding16.sw(),
       top: screenHPadding16,
       bottom: screenHPadding16,
+    );
+  }
+
+  _unionDropDownItem(EditProfileController ctrl) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        ctrl.selectedUnion.text.text(
+          fontColor: Colors.black,
+          fontSize: 16,
+        ),
+        FmImage.assetImage(
+          path: Assets.iconsDownIcon,
+          height: 20.sh(),
+          width: 15.sw(),
+        )
+      ],
+    ).paddingOnly(right: screenWPadding16.sw());
+  }
+
+  _departmentDropDownItem(EditProfileController ctrl) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+            child: ctrl.selectedDepartment.text.text(
+                fontColor: Colors.black,
+                fontSize: 16,
+                overFlow: TextOverflow.ellipsis)),
+        FmImage.assetImage(
+          path: Assets.iconsDownIcon,
+          height: 20.sh(),
+          width: 15.sw(),
+        )
+      ],
+    ).paddingOnly(right: screenWPadding16.sw());
+  }
+
+  _positionDropDownItem(EditProfileController ctrl) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: ctrl.selectedPosition.text.text(
+              fontColor: Colors.black,
+              fontSize: 16,
+              overFlow: TextOverflow.ellipsis),
+        ),
+        FmImage.assetImage(
+          path: Assets.iconsDownIcon,
+          height: 20.sh(),
+          width: 15.sw(),
+        )
+      ],
+    ).paddingOnly(
+      right: screenWPadding16.sw(),
     );
   }
 }
