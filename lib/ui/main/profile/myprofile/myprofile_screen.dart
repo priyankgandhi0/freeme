@@ -29,11 +29,11 @@ class MyProfileScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    profileImage(
+                    ProfileImageWidget(
                       103,
                       103,
                       horizontalPadding: 36,
-                      verticlePadding: 34,
+                      verticlePadding: 34,imageUrl: ctrl.userModel?.userProfilePhoto,
                     ).paddingOnly(
                       top: 24.sh(),
                       left: screenWPadding16.sw(),
@@ -64,19 +64,25 @@ class MyProfileScreen extends StatelessWidget {
                     )
                   ],
                 ),
-                ctrl.userModel?.mobile != null &&
-                        ctrl.userModel!.mobile!.isNotEmpty
+                (ctrl.userModel?.mobile ?? []).isNotEmpty
                     ? contentCard("Mobile",
-                            "Mobile",
+                            (ctrl.userModel?.mobile?[0].mobileNo).toString(),
                             textColor: blueTextColor)
                         .paddingOnly(top: 32)
                     : Container(),
-                contentCard("E-mail", (ctrl.userModel?.email?[0].email ?? "-"),
-                        textColor: blueTextColor)
-                    .paddingOnly(top: 16),
-                contentCard("Website", "Website",
-                        textColor: blueTextColor)
-                    .paddingOnly(top: 16),
+                (ctrl.userModel?.email ?? []).isNotEmpty
+                    ? contentCard(
+                            "E-mail",
+                            (ctrl.userModel?.email ?? []).isNotEmpty
+                                ? (ctrl.userModel?.email?[0].email ?? "-")
+                                : "",
+                            textColor: blueTextColor)
+                        .paddingOnly(top: 16)
+                    : Container(),
+                (ctrl.userModel?.email ?? []).isNotEmpty
+                    ? contentCard("Website", ctrl.userModel?.email?[0].email ?? "",
+                        textColor: blueTextColor).paddingOnly(top: 16)
+                    : Container(),
                 contentCard(
                   "About Me",
                   (ctrl.userModel?.about ?? "-"),

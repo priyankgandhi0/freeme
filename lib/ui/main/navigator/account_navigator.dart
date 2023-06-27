@@ -7,7 +7,8 @@ import '../profile/change_password_screen/change_password_screen.dart';
 import '../profile/edit_timecard/edit_timecard_screen.dart';
 import '../profile/editprofile/editprofile_screen.dart';
 import '../profile/myprofile/myprofile_screen.dart';
-import '../profile/timecard/timecard_screen.dart';
+import '../profile/timecardinfo/timecard_info_screen.dart';
+
 
 class AccountNavigator extends StatefulWidget {
   const AccountNavigator({Key? key}) : super(key: key);
@@ -35,7 +36,7 @@ class _AccountNavigatorState extends State<AccountNavigator> {
               case Routes.editProfileScreen:
                 return EditProfileScreen();
               case Routes.timeCardInfoScreen:
-                return const TimeCardInfoScreen();
+                return  TimeCardInfoScreen();
               case Routes.editTimeCardScreen:
                 return EditTimeCardScreen();
               case Routes.accountSettingScreen:

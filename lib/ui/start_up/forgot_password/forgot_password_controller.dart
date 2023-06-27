@@ -45,10 +45,10 @@ class ForgotPasswordController extends GetxController {
     if (emailController.text.trim().isEmpty ||
         (!emailController.text.trim().isEmail)) {
       if (emailController.text.trim().isEmpty) {
-        emailError = "Please Enter Email";
+        emailError = "Enter e-mail";
       } else {
         if (!emailController.text.trim().isEmail) {
-          emailError = "Please Enter Valid Email";
+          emailError = "Enter Valid e-mail";
         } else {
           emailError = null;
         }

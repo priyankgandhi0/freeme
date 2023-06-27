@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 
 class FmImage extends StatelessWidget {
   double? height;
@@ -100,7 +100,51 @@ class FmImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (type == ImageType.Netwrok) {
-      return Container();
+      return CachedNetworkImage(
+        imageUrl: path,
+        fit: fit,
+        color: Colors.white,
+        imageBuilder: (context, imageprovider) {
+          return Container(
+            height: height ?? size,
+            width: width ?? size,
+            decoration: shape == BoxShape.circle
+                ? BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: imageprovider,
+                      fit: fit,
+                    ),
+                  )
+                : BoxDecoration(
+                    borderRadius: radius,
+                    image: DecorationImage(
+                      image: imageprovider,
+                      fit: fit,
+                    ),
+                  ),
+          );
+        },
+        placeholder: (context, url) => const CupertinoActivityIndicator(
+          radius: 20,
+          color: Colors.black,
+        ),
+        errorWidget: (context, url, error) {
+          return Container(
+            height: height ?? size,
+            width: width ?? size,
+            decoration: shape == BoxShape.circle
+                ? const BoxDecoration(
+                    shape: BoxShape.circle, color: Colors.black)
+                : BoxDecoration(borderRadius: radius, color: Colors.black),
+            child: const Icon(
+              Icons.error,
+              color: Colors.grey,
+              size: 30,
+            ),
+          );
+        },
+      );
     }
 
     if (type == ImageType.Asset) {

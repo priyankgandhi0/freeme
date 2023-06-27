@@ -7,13 +7,13 @@ import 'package:freeme/api/repositories/job_repo.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../../api/response_item.dart';
-import '../../../../calender_demo/utils.dart';
-import '../../../../globle.dart';
-import '../../../../models/edit_timecard_request.dart';
-import '../../../../models/get_job_info_model.dart';
-import '../../../../models/work_history_model.dart';
-import '../../navigator/main_controller.dart';
+import '../../../../../api/response_item.dart';
+import '../../../../../calender_demo/utils.dart';
+import '../../../../../globle.dart';
+import '../../../../../models/edit_timecard_request.dart';
+import '../../../../../models/get_job_info_model.dart';
+import '../../../../../models/work_history_model.dart';
+import '../../../navigator/main_controller.dart';
 
 class TimeCardController extends GetxController {
   var focusedDay = DateTime.now();

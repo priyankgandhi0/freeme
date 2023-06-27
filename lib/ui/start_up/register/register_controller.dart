@@ -135,33 +135,33 @@ class RegisterController extends GetxController {
             passwordController.text.trim()) ||
         (!emailController.text.trim().isEmail)) {
       if (emailController.text.trim().isEmpty) {
-        emailError = "Please Enter Email";
+        emailError = "Please e-mail";
       } else {
         if (!emailController.text.trim().isEmail) {
-          emailError = "Please Enter Valid Email";
+          emailError = "Enter Valid e-mail";
         } else {
           emailError = null;
         }
       }
       if (passwordController.text.trim().isEmpty) {
-        passwordError = "Please Enter Password";
+        passwordError = "Enter password";
       } else {
         passwordError = null;
       }
 
       if (confirmPasswordController.text.trim().isEmpty) {
-        confirmPasswordError = "Please Enter Confirm Password";
+        confirmPasswordError = "Re-Enter password";
       } else {
         if (confirmPasswordController.text.trim() !=
             passwordController.text.trim()) {
-          confirmPasswordError = "Enter confirm password same as password";
+          confirmPasswordError = "Passwords do not match";
         } else {
           confirmPasswordError = null;
         }
       }
 
       if (selectedIndustry == null) {
-        industryError = "Please Select Industry";
+        industryError = "Select industry";
       } else {
         industryError = null;
       }
@@ -172,12 +172,12 @@ class RegisterController extends GetxController {
         industryTextFieldError = null;
       }
       if (firstNameController.text.trim().isEmpty) {
-        firstNameError = "Please Enter Firstname";
+        firstNameError = "Enter first name";
       } else {
         firstNameError = null;
       }
       if (lastNameController.text.trim().isEmpty) {
-        lastNameError = "Please Enter Lastname";
+        lastNameError = "Enter last name";
       } else {
         lastNameError = null;
       }

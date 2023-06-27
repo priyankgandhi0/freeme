@@ -4,6 +4,7 @@ class AppUrls {
   static const String _devBaseURL = "http://codonnier.tech/naitik/free_me_app/staging";
   static const String _liveBaseURL = "http://codonnier.tech/naitik/free_me_app/staging";
 
+
   static const String baseUrl =
       '${kDebugMode ? _devBaseURL : _liveBaseURL}/Service.php?';
 
@@ -11,6 +12,8 @@ class AppUrls {
       'http://146.190.158.193/YurInvtd/app_images/profile_images/';
   static const String imageBaseUrl =
       'https://app.yurinvtd.com/YurInvtd/app_images/profile_images/';
+
+  static const String baseImageUrl = "https://codonnier.tech/naitik/free_me_app/app_images/profile_images/";
 }
 
 class MethodNames {
@@ -45,6 +48,7 @@ class MethodNames {
   static const getNotes = 'getNotes';
   static const editNotes = 'editNotes';
   static const getSummary = 'getSummary';
+  static const timecardInfo = 'timecardInfo';
 
 
 }

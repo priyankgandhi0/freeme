@@ -760,7 +760,10 @@ class SummeryDataTableSecond extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     "Date"
-                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .text(
+                            weight: FontWeight.w500,
+                            fontColor: Colors.white,
+                            fontSize: 14)
                         .paddingOnly(bottom: 5)
                   ],
                 ),
@@ -770,7 +773,10 @@ class SummeryDataTableSecond extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     "1x"
-                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .text(
+                            weight: FontWeight.w500,
+                            fontColor: Colors.white,
+                            fontSize: 14)
                         .paddingOnly(bottom: 5)
                   ],
                 ),
@@ -780,7 +786,10 @@ class SummeryDataTableSecond extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     "1.5x"
-                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .text(
+                            weight: FontWeight.w500,
+                            fontColor: Colors.white,
+                            fontSize: 14)
                         .paddingOnly(bottom: 5)
                   ],
                 ),
@@ -790,12 +799,15 @@ class SummeryDataTableSecond extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     "2x"
-                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .text(
+                            weight: FontWeight.w500,
+                            fontColor: Colors.white,
+                            fontSize: 14)
                         .paddingOnly(bottom: 5)
                   ],
                 ),
               ),
-             /* DataColumn(
+              /* DataColumn(
                 label: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -810,7 +822,10 @@ class SummeryDataTableSecond extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     "MP"
-                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .text(
+                            weight: FontWeight.w500,
+                            fontColor: Colors.white,
+                            fontSize: 14)
                         .paddingOnly(bottom: 5)
                   ],
                 ),
@@ -828,9 +843,13 @@ class SummeryDataTableSecond extends StatelessWidget {
               DataColumn(
                 label: Column(
                   mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     "  Gross\n  Wages"
-                        .text(weight: FontWeight.w500, fontColor: Colors.white)
+                        .text(
+                            weight: FontWeight.w500,
+                            fontColor: Colors.white,
+                            fontSize: 14)
                         .paddingOnly(bottom: 5)
                   ],
                 ),
@@ -843,16 +862,15 @@ class SummeryDataTableSecond extends StatelessWidget {
                   var data = TableTowCalculation.calculate(e);
 
                   return _dataRow(
-                    date: data.date,
-                    color: rowCellGreyColor,
-                    oneX: data.oneX?.toString(),
-                    oneFiveX: data.oneFiveX?.toString(),
-                    twoX: data.twoX?.toString(),
-                    mp: data.mp!=0?data.mp.toString():null,
-                    paidHours:
-                        data.paidHours != 0 ? data.paidHours?.toString() : "",
-                    grossWages: data.grossWages
-                  );
+                      date: data.date,
+                      color: rowCellGreyColor,
+                      oneX: data.oneX?.toString(),
+                      oneFiveX: data.oneFiveX?.toString(),
+                      twoX: data.twoX?.toString(),
+                      mp: data.mp != 0 ? data.mp.toString() : null,
+                      paidHours:
+                          data.paidHours != 0 ? data.paidHours?.toString() : "",
+                      grossWages: data.grossWages);
                 },
               ),
             ],
@@ -893,7 +911,7 @@ class SummeryDataTableSecond extends StatelessWidget {
             children: [
               date
                   .text(
-                    fontSize: 16,
+                    fontSize: 14,
                     fontColor: textColor,
                     weight: weight,
                   )
@@ -904,7 +922,7 @@ class SummeryDataTableSecond extends StatelessWidget {
         DataCell(
           oneX
               .text(
-                fontSize: 16,
+                fontSize: 14,
                 fontColor: textColor,
                 weight: weight,
               )
@@ -913,7 +931,7 @@ class SummeryDataTableSecond extends StatelessWidget {
         DataCell(
           oneFiveX
               .text(
-                fontSize: 16,
+                fontSize: 14,
                 fontColor: textColor,
                 weight: weight,
               )
@@ -922,7 +940,7 @@ class SummeryDataTableSecond extends StatelessWidget {
         DataCell(
           twoX
               .text(
-                fontSize: 16,
+                fontSize: 14,
                 fontColor: textColor,
                 weight: weight,
               )
@@ -940,13 +958,13 @@ class SummeryDataTableSecond extends StatelessWidget {
         DataCell(
           mp
               .text(
-                fontSize: 16,
+                fontSize: 14,
                 fontColor: textColor,
                 weight: weight,
               )
               .center,
         ),
-       /* DataCell(
+        /* DataCell(
           paidHours
               .text(
                 fontSize: 16,
@@ -961,7 +979,7 @@ class SummeryDataTableSecond extends StatelessWidget {
           children: [
             grossWages
                 .text(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontColor: textColor,
                   weight: weight,
                 )

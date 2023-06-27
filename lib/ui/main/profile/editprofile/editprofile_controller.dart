@@ -9,7 +9,6 @@ import '../../../../api/repositories/quick_entry_repo.dart';
 import '../../../../globle.dart';
 import '../../../../models/job_classification_model.dart';
 import '../../../../models/sub_job_classification_model.dart';
-import '../../../../models/user_login_model.dart';
 import '../../../../utils/app_constant.dart';
 import '../../../widgets/dropdown.dart';
 import '../../navigator/main_controller.dart';
@@ -17,41 +16,22 @@ import '../account/account_controller.dart';
 import '../myprofile/myprofile_controller.dart';
 
 class EditProfileController extends GetxController {
-  late TextEditingController firstNameController;
-  late TextEditingController lastNameController;
-  late TextEditingController aboutMeController;
-
-  late TextEditingController addPhoneController;
-  late TextEditingController addEmailController;
-  late TextEditingController addUnionController;
-  late TextEditingController addPrimaryPositionController;
-  late TextEditingController addAddressController;
-  late TextEditingController addWebsiteController;
-  late TextEditingController addSocialMediaController;
-  late TextEditingController addBirthDayController;
-
-  UserModel? userModel;
+  TextEditingController firstNameController = TextEditingController();
+  late TextEditingController lastNameController = TextEditingController();
+  late TextEditingController aboutMeController = TextEditingController();
+  late TextEditingController addPhoneController = TextEditingController();
+  late TextEditingController addEmailController = TextEditingController();
+  late TextEditingController addUnionController = TextEditingController();
+  late TextEditingController addPrimaryPositionController =
+      TextEditingController();
+  late TextEditingController addAddressController = TextEditingController();
+  late TextEditingController addWebsiteController = TextEditingController();
+  late TextEditingController addSocialMediaController = TextEditingController();
+  late TextEditingController addBirthDayController = TextEditingController();
 
   @override
   void onInit() {
-    setDefaultData();
     super.onInit();
-  }
-
-  void setDefaultData() {
-    userModel = UserModel.fromJson(box.read(AppConstant.userProfile) ?? "");
-    firstNameController =
-        TextEditingController(text: userModel?.firstName ?? "");
-    lastNameController = TextEditingController(text: userModel?.lastName ?? "");
-    aboutMeController = TextEditingController();
-    addPhoneController = TextEditingController();
-    addEmailController = TextEditingController();
-    addUnionController = TextEditingController();
-    addPrimaryPositionController = TextEditingController();
-    addAddressController = TextEditingController();
-    addWebsiteController = TextEditingController();
-    addSocialMediaController = TextEditingController();
-    addBirthDayController = TextEditingController();
   }
 
   startLoading() {
@@ -63,68 +43,74 @@ class EditProfileController extends GetxController {
   }
 
   Future<void> getMyProfile() async {
+    startLoading();
     ResponseItem response = await QuickEntryRepo.myProfile();
     if (response.status) {
       UserModel responseData = UserModel.fromJson(response.data);
+      stopLoading();
       fillEditProfileData(responseData);
     } else {}
   }
 
   fillEditProfileData(UserModel user) async {
+    selectedImage = user.userProfilePhoto;
     firstNameController.text = user.firstName ?? "";
     lastNameController.text = user.lastName ?? "";
     aboutMeController.text = user.about ?? "";
     emailList.clear();
     emailList.addAll(user.email
-            ?.map((e) => TextEditingController(text: e.email ?? ""))
+            ?.map((e) => EditProfileItem(
+                e.emailId ?? -1, TextEditingController(text: e.email ?? "")))
             .toList() ??
         []);
-
     addAddress.clear();
     addAddress.addAll(user.address
-            ?.map((e) => TextEditingController(text: e.address ?? ""))
+            ?.map((e) => EditProfileItem(e.addressId ?? -1,
+                TextEditingController(text: e.address ?? "")))
             .toList() ??
         []);
-
     phoneList.clear();
     phoneList.addAll(user.mobile
-            ?.map((e) =>
-                TextEditingController(text: (e.mobileNo?.toString() ?? "")))
+            ?.map((e) => EditProfileItem(e.numberId ?? -1,
+                TextEditingController(text: (e.mobileNo?.toString() ?? ""))))
             .toList() ??
         []);
     addWebsite.clear();
     addWebsite.addAll(user.website
-            ?.map((e) =>
-                TextEditingController(text: (e.website?.toString() ?? "")))
+            ?.map((e) => EditProfileItem(e.websiteId ?? -1,
+                TextEditingController(text: (e.website?.toString() ?? ""))))
             .toList() ??
         []);
-
     birthDayList.clear();
-    birthDayList.add(TextEditingController(text: user.birthDate ?? ""));
+    if(user.birthDate!=null){
+      birthDayList.add(
+          EditProfileItem(0, TextEditingController(text: user.birthDate ?? "")));
+    }
 
-    /*socialMediaList.clear();
+    socialMediaList.clear();
     socialMediaList.addAll(user.socialMedia
         ?.map((e) =>
-        TextEditingController(text: (e.website?.toString() ?? "")))
+        EditProfileItem(e.socialMediaId ?? -1, TextEditingController(text: (e.socialMedia?.toString() ?? ""))))
         .toList() ??
-        []);*/
-
-
-    MenuItem? union = unionNonUnionList.firstWhereOrNull((element) => element.text==user.union);
-    if(union!=null){
+        []);
+    MenuItem? union = unionNonUnionList
+        .firstWhereOrNull((element) => element.text == user.union);
+    if (union != null) {
+      showUnionSelected = true;
       onUnionNonUnionDropDownTap(union);
     }
 
-    MenuItem? department = allJobClassificationList.firstWhereOrNull((element) => element.id==user.jobClassificationId);
-    if(department!=null){
+    MenuItem? department = allJobClassificationList
+        .firstWhereOrNull((element) => element.id == user.jobClassificationId);
+    if (department != null) {
+      showPrimaryPositionSelected = true;
       await onDepartmentTap(department);
-      MenuItem? position = allSubJobList.firstWhereOrNull((element) => element.id==user.subJobClassificationsId);
-      if(position!=null){
+      MenuItem? position = allSubJobList.firstWhereOrNull(
+          (element) => element.id == user.subJobClassificationsId);
+      if (position != null) {
         onPositionTap(position);
       }
     }
-
-
   }
 
   Future<void> performSaveButton(BuildContext context) async {
@@ -134,21 +120,42 @@ class EditProfileController extends GetxController {
       firstName: firstNameController.text.toString(),
       lastName: lastNameController.text.toString(),
       about: aboutMeController.text.toString(),
-      email: emailList.map((e) => e.text).toList(),
-      address: addAddress.map((e) => e.text).toList(),
-      mobile: phoneList.map((e) => e.text).toList(),
-      website: addWebsite.map((e) => e.text).toList(),
-      birthDate: birthDayList.isNotEmpty ? birthDayList[0].text : null,
+      email: json.encode(
+        emailList.map((e) => e.controller.text).toList().toJson("email"),
+      ),
+      address: json.encode(
+        addAddress.map((e) => e.controller.text).toList().toJson("address"),
+      ),
+      mobile: json.encode(
+        phoneList.map((e) => e.controller.text).toList().toJson("mobile"),
+      ),
+      website: json.encode(
+        addWebsite.map((e) => e.controller.text).toList().toJson("website"),
+      ),
+      socialMedia: json.encode(
+        socialMediaList
+            .map((e) => e.controller.text)
+            .toList()
+            .toJson("social_media"),
+      ),
+      birthDate:
+          birthDayList.isNotEmpty ? birthDayList[0].controller.text : null,
       department: selectedDepartment.id,
       position: selectedPosition.id,
       union: selectedUnion.text,
-      socialMedia: socialMediaList.map((e) => e.text).toList(),
+      removeAddress: addressRemoveList.join(","),
+      removeEmail: emailRemoveList.join(","),
+      removeMobileNumber: phoneRemoveList.join(","),
+      removeSocialMedia: socialRemoveMediaList.join(","),
+      removeWebsite: websiteRemoveList.join(","),
     );
     if (response.status) {
       UserModel responseData = UserModel.fromJson(response.data);
       await setupLoginData(responseData);
+      //await fillEditProfileData(responseData);
       stopLoading();
-      Get.toNamed(Routes.mainScreen);
+      clearAllData();
+      Navigator.of(context).pop();
     } else {
       response.message.errorSnack(context);
       stopLoading();
@@ -158,7 +165,6 @@ class EditProfileController extends GetxController {
   setupLoginData(UserModel userModel) async {
     await box.write(AppConstant.authToken, userModel.authToken);
     await box.write(AppConstant.userProfile, userModel.toJson());
-    setDefaultData();
     try {
       Get.find<MyProfileController>().onInit();
       Get.find<MyProfileController>().update();
@@ -171,24 +177,27 @@ class EditProfileController extends GetxController {
   }
 
   String? selectedImage;
-
   Future<void> pickImage() async {
     final ImagePicker _picker = ImagePicker();
     XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     if (image?.path != null) {
       selectedImage = image?.path;
+      update();
     }
   }
 
-  List<TextEditingController> phoneList = [];
-  List<TextEditingController> emailList = [];
-  List<TextEditingController> socialMediaList = [];
-  List<TextEditingController> addWebsite = [];
-  List<TextEditingController> addAddress = [];
+  List<EditProfileItem> phoneList = [];
+  List<EditProfileItem> emailList = [];
+  List<EditProfileItem> socialMediaList = [];
+  List<EditProfileItem> addWebsite = [];
+  List<EditProfileItem> addAddress = [];
+  List<EditProfileItem> birthDayList = [];
 
-  List<TextEditingController> birthDayList = [];
-
-  List<TextEditingController> primaryPosition = [];
+  List<String> phoneRemoveList = [];
+  List<String> emailRemoveList = [];
+  List<String> socialRemoveMediaList = [];
+  List<String> websiteRemoveList = [];
+  List<String> addressRemoveList = [];
 
   MenuItem selectedUnion = MenuItem(text: "Not Sure", isSelected: true);
 
@@ -218,6 +227,8 @@ class EditProfileController extends GetxController {
   bool showPrimaryPositionSelected = false;
 
   void removePrimaryPosition() {
+    selectedDepartment =  MenuItem(text: "Select Department",id: 0);
+    selectedPosition = MenuItem(text: "Select Position",id: 0);
     showPrimaryPositionSelected = false;
     update();
   }
@@ -258,7 +269,7 @@ class EditProfileController extends GetxController {
 
   MenuItem selectedDepartment = MenuItem(text: "Select Department");
 
-  Future onDepartmentTap(MenuItem item) async{
+  Future onDepartmentTap(MenuItem item) async {
     for (int i = 0; i < allJobClassificationList.length; i++) {
       if (allJobClassificationList[i].text == item.text) {
         if (allJobClassificationList[i].isSelected) {
@@ -269,7 +280,7 @@ class EditProfileController extends GetxController {
         } else {
           allJobClassificationList[i].isSelected = true;
           selectedDepartment = allJobClassificationList[i];
-          getAllSubJobList(selectedDepartment.id ?? -1);
+          await getAllSubJobList(selectedDepartment.id ?? -1);
           selectedPosition = MenuItem(text: "Select Position");
         }
       } else {
@@ -317,4 +328,23 @@ class EditProfileController extends GetxController {
     }
     update();
   }
+
+  void clearAllData() {
+    firstNameController.clear();
+    lastNameController.clear();
+    aboutMeController.clear();
+    emailList.clear();
+    addAddress.clear();
+    phoneList.clear();
+    addWebsite.clear();
+    birthDayList.clear();
+    socialMediaList.clear();
+  }
+}
+
+class EditProfileItem {
+  num id;
+  TextEditingController controller;
+
+  EditProfileItem(this.id, this.controller);
 }

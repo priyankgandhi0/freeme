@@ -59,7 +59,7 @@ class ChangePasswordController extends GetxController {
         newPasswordError = null;
       }
       if (confirmPasswordController.text.isEmpty) {
-        confirmPasswordError = "Please Enter Confirm Password";
+        confirmPasswordError = "Re-Enter password";
       } else {
         if (newPasswordController.text != confirmPasswordController.text) {
           confirmPasswordError = "Add Confirm Password Same As New Password";

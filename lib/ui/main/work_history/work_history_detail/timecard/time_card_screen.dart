@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:freeme/ui/main/work_history/work_history_detail/timecard/timecard_controller.dart';
 import 'package:freeme/ui/widgets/flutter_time_picker_spinner.dart';
 import 'package:freeme/utils/extension.dart';
 import 'package:get/get.dart';
@@ -16,7 +17,7 @@ import '../../../../widgets/app_calender.dart';
 import '../../../../widgets/fm_button.dart';
 import '../../../../widgets/fm_dialog.dart';
 import '../../../../widgets/fm_image.dart';
-import '../../../profile/timecard/timecard_controller.dart';
+
 
 class TimeCardTabScreen extends StatelessWidget {
   TimeCardTabScreen({

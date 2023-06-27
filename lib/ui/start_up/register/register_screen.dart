@@ -72,19 +72,16 @@ class RegisterScreen extends StatelessWidget {
           ],
         ),
         fmDropDown(
-          child: _industryDropDownItem(
-            guarHours,
-            hint: controller.selectedIndustry.text,
-            error: ctrl.industryError
-          ),
-          onDropDownTap: (item) {
-            controller.onSelectIndustry(item); //other industry
-          },
-          items: controller.industryList,
-          context: context,
-          width: 200
-        ),
-       /* if (controller.selectedIndustry.text == "other industry") ...[
+            child: _industryDropDownItem(guarHours,
+                hint: controller.selectedIndustry.text,
+                error: ctrl.industryError),
+            onDropDownTap: (item) {
+              controller.onSelectIndustry(item); //other industry
+            },
+            items: controller.industryList,
+            context: context,
+            width: 200),
+        /* if (controller.selectedIndustry.text == "other industry") ...[
           FmTextField(
             hint: "Please Enter Industry",
             header: "Industry (Add Manually)",
@@ -98,6 +95,8 @@ class RegisterScreen extends StatelessWidget {
           )
         ]*/
       ],
+    ).paddingOnly(
+      top: 24.sh(),
     );
   }
 

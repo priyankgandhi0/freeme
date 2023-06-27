@@ -24,9 +24,13 @@ class AccountScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    profileImage(140, 140,
-                            verticlePadding: 41, horizontalPadding: 46)
-                        .paddingOnly(
+                    ProfileImageWidget(
+                      140,
+                      140,
+                      verticlePadding: 41,
+                      horizontalPadding: 46,
+                      imageUrl: ctrl.userModel?.userProfilePhoto,
+                    ).paddingOnly(
                       top: 24.sh(),
                     )
                   ],

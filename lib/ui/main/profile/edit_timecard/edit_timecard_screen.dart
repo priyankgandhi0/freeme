@@ -40,7 +40,9 @@ class EditTimeCardScreen extends StatelessWidget {
 
   Widget _saveButton() {
     return FmButton(
-      ontap: () {},
+      ontap: () {
+        controller.saveTimeCard();
+      },
       name: save,
     ).paddingOnly(
         top: screenHPadding32.sh(),

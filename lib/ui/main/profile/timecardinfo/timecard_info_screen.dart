@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:freeme/globle.dart';
+import 'package:freeme/models/time_card_info_model.dart';
+import 'package:freeme/ui/main/profile/timecardinfo/time_card_info_controller.dart';
 
 import '../../../widgets/fm_appbar.dart';
 
 class TimeCardInfoScreen extends StatelessWidget {
-  const TimeCardInfoScreen({Key? key}) : super(key: key);
+  TimeCardInfoScreen({Key? key}) : super(key: key);
+
+  final controller = Get.put(TimeCardInfoController());
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +23,26 @@ class TimeCardInfoScreen extends StatelessWidget {
             Navigator.pushNamed(context, Routes.editTimeCardScreen);
           },
         ),
-        body: Column(
-          children: [
-            timeCard(),
-          ],
+        body: GetBuilder<TimeCardInfoController>(
+          initState: (state) {
+            controller.getTimeCardInfo();
+          },
+          builder: (ctrl) {
+            return Column(
+              children: [
+                timeCard(ctrl),
+              ],
+            );
+          },
         ),
       ),
       onWillPop: () async {
-
         return false;
       },
     );
   }
 
-  Widget timeCard() {
+  Widget timeCard(TimeCardInfoController ctrl) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -47,36 +57,37 @@ class TimeCardInfoScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          timeCardItem("First Name", "Jane").paddingOnly(
+          timeCardItem("First Name", ctrl.model?.firstName ?? "").paddingOnly(
             top: screenHPadding16.sh(),
             bottom: screenHPadding16.sh(),
           ),
-          timeCardItem("Middle", "D").paddingOnly(
+          timeCardItem("Middle", ctrl.model?.middleName ?? "").paddingOnly(
             bottom: screenHPadding16.sh(),
           ),
-          timeCardItem("Last Name", "Doe").paddingOnly(
+          timeCardItem("Last Name", ctrl.model?.lastName ?? "").paddingOnly(
             bottom: screenHPadding16.sh(),
           ),
-          timeCardItem("Union", "IATSE Local 600").paddingOnly(
+          timeCardItem("Union", ctrl.model?.union ?? "").paddingOnly(
             bottom: screenHPadding16.sh(),
           ),
-          timeCardItem("Social Security", "xxx-xx-1234").paddingOnly(
-            bottom: screenHPadding16.sh(),
-          ),
-          timeCardItem("Phone Number", "1-000-000-0000").paddingOnly(
-            bottom: screenHPadding16.sh(),
-          ),
-          timeCardItem("E-mail", "work_email@gmail.com").paddingOnly(
-            bottom: screenHPadding16.sh(),
-          ),
-          timeCardItem("Address", "1234 Street Dr.Apt 111 City, State Zip")
+          timeCardItem("Social Security", ctrl.model?.socialSecurity ?? "")
               .paddingOnly(
             bottom: screenHPadding16.sh(),
           ),
-          timeCardItem("Gender", "Prefer Not To Say").paddingOnly(
+          timeCardItem("Phone Number", ctrl.model?.mobileNo?.toString() ?? "")
+              .paddingOnly(
             bottom: screenHPadding16.sh(),
           ),
-          timeCardItem("Loan Out", "Company, LLC").paddingOnly(
+          timeCardItem("E-mail", ctrl.model?.email ?? "").paddingOnly(
+            bottom: screenHPadding16.sh(),
+          ),
+          timeCardItem("Address", _getAddress(ctrl.model)).paddingOnly(
+            bottom: screenHPadding16.sh(),
+          ),
+          timeCardItem("Gender", ctrl.model?.gender ?? "").paddingOnly(
+            bottom: screenHPadding16.sh(),
+          ),
+          timeCardItem("Loan Out", ctrl.model?.loanOut ?? "").paddingOnly(
             bottom: screenHPadding16.sh(),
           ),
         ],
@@ -86,6 +97,10 @@ class TimeCardInfoScreen extends StatelessWidget {
       left: 16.sh(),
       right: 16.sh(),
     );
+  }
+
+  String _getAddress(TimeCardInfoModel? model) {
+    return "";
   }
 
   Widget timeCardItem(String lable, String value) {

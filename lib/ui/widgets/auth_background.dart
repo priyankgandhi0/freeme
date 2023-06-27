@@ -30,7 +30,7 @@ class AuthBackGround extends StatelessWidget {
               Container(
                 decoration: BoxDecoration(
                   color: backGroundWhiteColor.withOpacity(0.5),
-                    borderRadius: BorderRadius.only(
+                    borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(30),
                       topRight: Radius.circular(30),
                     )
@@ -40,7 +40,7 @@ class AuthBackGround extends StatelessWidget {
                 right: 20.sw(),
               ),
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: backGroundWhiteColor,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(30),

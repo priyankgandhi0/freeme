@@ -80,6 +80,13 @@ extension extOnWidget on Widget {
 
 extension extOnString on String? {
 
+  bool get isHttpUrl {
+    if(this!=null && this!.isNotEmpty){
+      return this?.substring(0, 4) == "http";
+    }
+   return false;
+  }
+
   bool get isNullOrEmpty{
     if(this==null){
       return true;
@@ -93,10 +100,10 @@ extension extOnString on String? {
       Color? fontColor,
       double? fontSize,
         TextOverflow? overFlow,
-      bool underLine = false}) {
+      bool underLine = false,TextAlign? align}) {
     return Text(
       this ?? "",
-      textAlign: TextAlign.left,
+      textAlign: align ?? TextAlign.left,
       style: TextStyle(
         color: fontColor ?? Colors.black,
         fontSize: fontSize ?? 14,
@@ -125,4 +132,10 @@ String makeStringDoubleLine(String title) {
 String replaceCharAt(String oldString, int index, String newChar) {
   return oldString.substring(0, index) + newChar +
       oldString.substring(index + 1);
+}
+
+extension ToJson on List<String> {
+  Map<String, dynamic> toJson(String key) => {
+    key: List<dynamic>.from(map((x) => {"value":x})),
+  };
 }

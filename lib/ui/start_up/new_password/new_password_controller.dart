@@ -83,12 +83,12 @@ class NewPasswordController extends GetxController {
         verificationError = null;
       }
       if (passwordController.text.trim().isEmpty) {
-        passwordError = "Please Enter Password";
+        passwordError = "Enter password";
       } else {
         passwordError = null;
       }
       if (confirmPasswordController.text.trim().isEmpty) {
-        confirmPasswordError = "Please Enter Confirm Password";
+        confirmPasswordError = "Re-Enter password";
       } else {
         if (passwordController.text.trim() !=
             confirmPasswordController.text.trim()) {

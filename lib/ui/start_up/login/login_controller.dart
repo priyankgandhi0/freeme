@@ -57,16 +57,16 @@ class LoginController extends GetxController {
         passwordController.text.trim().isEmpty ||
         (!emailController.text.trim().isEmail)) {
       if (emailController.text.trim().isEmpty) {
-        emailError = "Please Enter Email";
+        emailError = "Please e-mail";
       } else {
         if (!emailController.text.trim().isEmail) {
-          emailError = "Please Enter Valid Email";
+          emailError = "Enter Valid e-mail";
         } else {
           emailError = null;
         }
       }
       if (passwordController.text.trim().isEmpty) {
-        passwordError = "Please Enter Password";
+        passwordError = "Enter password";
       } else {
         passwordError = null;
       }

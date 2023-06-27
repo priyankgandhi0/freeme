@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:freeme/utils/extension.dart';
 import 'package:mime_type/mime_type.dart';
 
 import '../api_helpers.dart';
@@ -14,11 +15,11 @@ class ProfileRepo {
     String? profile,
     String? firstName,
     String? lastName,
-    List<String>? mobile,
-    List<String>? email,
-    List<String>? address,
-    List<String>? website,
-    List<String>? socialMedia,
+    String? mobile,
+    String? email,
+    String? address,
+    String? website,
+    String? socialMedia,
     String? union,
     int? department,
     int? position,
@@ -26,10 +27,9 @@ class ProfileRepo {
     String? about,
     String? removeMobileNumber,
     String? removeAddress,
-    String? remoceSocialMedia,
+    String? removeSocialMedia,
     String? removeWebsite,
     String? removeEmail,
-
   }) async {
     ResponseItem result;
     bool status = true;
@@ -42,17 +42,12 @@ class ProfileRepo {
     };
 
     MultipartFile? multipartFile;
-    if (profile != null) {
-      /* String fileName = profile.split('/').last;
-      List<String> mimeType = mime(fileName)?.split('/') ?? [];
-    multipartFile = await MultipartFile.fromFile(profile,
-          filename: fileName, contentType: MediaType(mimeType[0], mimeType[1]));*/
-
+    if (profile != null && profile.isNotEmpty  && !profile.isHttpUrl) {
       String fileName = profile.split('/').last;
       multipartFile = await MultipartFile.fromFile(profile, filename: fileName);
     }
 
-    Map<String, dynamic> requestData =  {
+    Map<String, dynamic> requestData = {
       "first_name": firstName,
       "last_name": lastName,
       "union": union,
@@ -64,13 +59,13 @@ class ProfileRepo {
       "remove_emails":removeEmail,
       "remove_mobile_no":removeMobileNumber,
       "remove_address":removeAddress,
-      "remove_social_media":remoceSocialMedia,
+      "remove_social_media":removeSocialMedia,
       "remove_website":removeWebsite,
-      "mobile" : mobile?.join(","),
-      "email" : email?.join(","),
-      "address" : address?.join(","),
-      "website" : website?.join(","),
-      "social_media" : socialMedia?.join(",")
+      "mobile" : mobile,
+      "email" : email,
+      "address" : address,
+      "website" : website,
+      "social_media" : socialMedia
     };
 
 

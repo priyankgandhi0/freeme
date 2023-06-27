@@ -28,31 +28,14 @@ class EditProfileScreen extends StatelessWidget {
           return SingleChildScrollView(
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    profileImage(
-                      150,
-                      150,
-                      horizontalPadding: 52,
-                      verticlePadding: 49,
-                      onCameraClick: () {
-                        controller.pickImage();
-                      },
-                    ).paddingOnly(
-                      top: 24.sh(),
-                    ),
-                  ],
-                ),
-                nameCard().paddingOnly(
-                  top: screenHPadding32.sh(),
-                ),
+                _profileImage(),
+                nameCard(),
                 _addPhone(),
                 _email(),
                 _union(context, ctrl),
                 _primaryPosition(ctrl, context),
                 _addAddress(),
-                _addWebsite(),
+                _addWebsite(),//
                 _socialMedia(),
                 _addBirthDay(),
                 aboutMeCard(ctrl),
@@ -299,16 +282,19 @@ class EditProfileScreen extends StatelessWidget {
   Widget _addAddress() {
     return multiTextFieldCard(
       onItemRemove: (index) {
+        if(controller.addAddress[index].id!=-1){
+          controller.addressRemoveList.add(controller.addAddress[index].id.toString());
+        }
         controller.addAddress.removeAt(index);
         controller.update();
       },
       itemList: controller.addAddress,
       onAddItemTap: () {
         if (controller.addAddress.isEmpty) {
-          controller.addAddress.add(TextEditingController());
+          controller.addAddress.add(EditProfileItem(-1,TextEditingController()));
         }
-        if (controller.addAddress.last.text.isNotEmpty) {
-          controller.addAddress.add(TextEditingController());
+        if (controller.addAddress.last.controller.text.isNotEmpty) {
+          controller.addAddress.add(EditProfileItem(-1,TextEditingController()));
         }
         controller.update();
       },
@@ -322,16 +308,19 @@ class EditProfileScreen extends StatelessWidget {
   Widget _addWebsite() {
     return multiTextFieldCard(
       onItemRemove: (index) {
+        if(controller.addWebsite[index].id!=-1){
+          controller.websiteRemoveList.add(controller.addWebsite[index].id.toString());
+        }
         controller.addWebsite.removeAt(index);
         controller.update();
       },
       itemList: controller.addWebsite,
       onAddItemTap: () {
         if (controller.addWebsite.isEmpty) {
-          controller.addWebsite.add(TextEditingController());
+          controller.addWebsite.add(EditProfileItem(-1,TextEditingController()));
         }
-        if (controller.addWebsite.last.text.isNotEmpty) {
-          controller.addWebsite.add(TextEditingController());
+        if (controller.addWebsite.last.controller.text.isNotEmpty) {
+          controller.addWebsite.add(EditProfileItem(-1,TextEditingController()));
         }
         controller.update();
       },
@@ -345,16 +334,19 @@ class EditProfileScreen extends StatelessWidget {
   Widget _socialMedia() {
     return multiTextFieldCard(
       onItemRemove: (index) {
+        if(controller.socialMediaList[index].id!=-1){
+          controller.socialRemoveMediaList.add(controller.socialMediaList[index].id.toString());
+        }
         controller.socialMediaList.removeAt(index);
         controller.update();
       },
       itemList: controller.socialMediaList,
       onAddItemTap: () {
         if (controller.socialMediaList.isEmpty) {
-          controller.socialMediaList.add(TextEditingController());
+          controller.socialMediaList.add(EditProfileItem(-1,TextEditingController()));
         }
-        if (controller.socialMediaList.last.text.isNotEmpty) {
-          controller.socialMediaList.add(TextEditingController());
+        if (controller.socialMediaList.last.controller.text.isNotEmpty) {
+          controller.socialMediaList.add(EditProfileItem(-1,TextEditingController()));
         }
         controller.update();
       },
@@ -375,7 +367,7 @@ class EditProfileScreen extends StatelessWidget {
       onAddItemTap: () {
         if (controller.birthDayList.isEmpty &&
             controller.birthDayList.length <= 1) {
-          controller.birthDayList.add(TextEditingController());
+          controller.birthDayList.add(EditProfileItem(-1,TextEditingController()));
         }
         /*if (controller.birthDayList.last.text.isNotEmpty) {
           controller.birthDayList.add(TextEditingController());
@@ -392,16 +384,19 @@ class EditProfileScreen extends StatelessWidget {
   Widget _addPhone() {
     return multiTextFieldCard(
       onItemRemove: (index) {
+        if(controller.phoneList[index].id!=-1){
+          controller.phoneRemoveList.add(controller.phoneList[index].id.toString());
+        }
         controller.phoneList.removeAt(index);
         controller.update();
       },
       itemList: controller.phoneList,
       onAddItemTap: () {
         if (controller.phoneList.isEmpty) {
-          controller.phoneList.add(TextEditingController());
+          controller.phoneList.add(EditProfileItem(-1,TextEditingController()));
         }
-        if (controller.phoneList.last.text.isNotEmpty) {
-          controller.phoneList.add(TextEditingController());
+        if (controller.phoneList.last.controller.text.isNotEmpty) {
+          controller.phoneList.add(EditProfileItem(-1,TextEditingController()));
         }
         controller.update();
       },
@@ -415,16 +410,19 @@ class EditProfileScreen extends StatelessWidget {
   Widget _email() {
     return multiTextFieldCard(
             onItemRemove: (index) {
+              if(controller.emailList[index].id!=-1){
+                controller.emailRemoveList.add(controller.emailList[index].id.toString());
+              }
               controller.emailList.removeAt(index);
               controller.update();
             },
             itemList: controller.emailList,
             onAddItemTap: () {
               if (controller.emailList.isEmpty) {
-                controller.emailList.add(TextEditingController());
+                controller.emailList.add(EditProfileItem(-1,TextEditingController()));
               }
-              if (controller.emailList.last.text.isNotEmpty) {
-                controller.emailList.add(TextEditingController());
+              if (controller.emailList.last.controller.text.isNotEmpty) {
+                controller.emailList.add(EditProfileItem(-1,TextEditingController()));
               }
               controller.update();
             },
@@ -592,6 +590,7 @@ class EditProfileScreen extends StatelessWidget {
     ).paddingOnly(
       left: screenWPadding16.sw(),
       right: screenWPadding16.sw(),
+      top: screenHPadding32.sh(),
     );
   }
 
@@ -641,7 +640,7 @@ class EditProfileScreen extends StatelessWidget {
 
   Widget multiTextFieldCard(
       {required Function(int index) onItemRemove,
-      required List<TextEditingController> itemList,
+      required List<EditProfileItem> itemList,
       required GestureTapCallback onAddItemTap,
       String? hint,
       required String buttonName,
@@ -669,7 +668,7 @@ class EditProfileScreen extends StatelessWidget {
                 index: index,
                 hint: hint,
                 inputType: inputType,
-                textController: itemList[index],
+                textController: itemList[index].controller,
                 onRemoveClick: () {
                   onItemRemove(index);
                 },
@@ -787,6 +786,26 @@ class EditProfileScreen extends StatelessWidget {
       ],
     ).paddingOnly(
       right: screenWPadding16.sw(),
+    );
+  }
+
+  _profileImage(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ProfileImageWidget(
+          150,
+          150,
+          horizontalPadding: 52,
+          verticlePadding: 49,
+          onCameraClick: () {
+            controller.pickImage();
+          },
+          imageUrl: controller.selectedImage,
+        ).paddingOnly(
+          top: 24.sh(),
+        ),
+      ],
     );
   }
 }

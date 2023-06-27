@@ -10,7 +10,7 @@ import '../../../models/day_type.dart';
 import '../../../models/edit_timecard_request.dart';
 import '../../../models/work_history_model.dart';
 import '../navigator/main_controller.dart';
-import '../profile/timecard/timecard_controller.dart';
+
 
 class TimeCardEditController extends GetxController {
   TextEditingController l1addressl1Controller = TextEditingController();
