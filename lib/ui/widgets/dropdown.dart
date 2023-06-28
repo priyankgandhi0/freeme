@@ -8,6 +8,7 @@ Widget fmDropDown<T>(
     List<MenuItem>? items,
     required Function(MenuItem item) onDropDownTap,
     required BuildContext context,
+    bool showDash = false,
     double? width}) {
   List<DropdownMenuItem> children = [];
   children.clear();
@@ -23,7 +24,7 @@ Widget fmDropDown<T>(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              buildItem(items![i], context),
+              buildItem(items![i], context, showDash),
             ],
           ),
         ),
@@ -38,7 +39,7 @@ Widget fmDropDown<T>(
           child: Column(
             children: [
               Expanded(child: Container()),
-              buildItem(items![i], context),
+              buildItem(items![i], context, showDash),
               Expanded(child: Container()),
               Container(
                 color: borderGreyColor,
@@ -57,9 +58,9 @@ Widget fmDropDown<T>(
       customButton: child,
       items: [...children],
       onChanged: (value) {},
-
       dropdownStyleData: DropdownStyleData(
-        width: width ?? Get.width / 2,openInterval: const Interval(0.0, 0.8),
+        width: width ?? Get.width / 2,
+        openInterval: const Interval(0.0, 0.8),
         padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -82,6 +83,7 @@ Widget fmDropDown<T>(
 Widget buildItem(
   MenuItem item,
   BuildContext context,
+  bool showDash,
 ) {
   return Row(
     children: [
@@ -101,13 +103,27 @@ Widget buildItem(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (item.text?.contains("-") ?? false) ...[
-            (item.text?.split("-").first ?? "").text(
-              fontColor: Colors.black,
-              fontSize: 16,
-            ),
-            (item.text?.split("-").last ?? "").text(
-              fontColor: greyTextColor,
-            ),
+            if (showDash) ...[
+              (item.text ?? "").text(
+                fontColor: Colors.black,
+                fontSize: 16,
+              )
+            ] else ...[
+              (item.text?.split("-").first ?? "").text(
+                fontColor: Colors.black,
+                fontSize: 16,
+              ),
+              item.text
+                      ?.replaceAll((item.text?.split("-").first ?? ""), "")
+                      .replaceFirst("-", "")
+                      .text(
+                        fontColor: greyTextColor,
+                      ) ??
+                  Container(),
+              /* (item.text?.split("-").last ?? "").text(
+                fontColor: greyTextColor,
+              )*/
+            ],
           ] else ...[
             (item.text ?? "").text(
               fontColor: Colors.black,

@@ -12,7 +12,7 @@ import '../../widgets/dropdown.dart';
 class RegisterController extends GetxController {
   bool showPassword = false;
   bool showConfirmPassword = false;
-  bool isShowExpanded = false;
+
 
   void showHidePassword() {
     showPassword = !showPassword;
@@ -24,10 +24,12 @@ class RegisterController extends GetxController {
     update();
   }
 
-  bool isExpanded = false;
+
 
   ExpansionTileController expansionController = ExpansionTileController();
 
+
+  bool isExpanded = false;
   void expansionChange(bool value) {
     isExpanded = value;
     update();
@@ -73,8 +75,7 @@ class RegisterController extends GetxController {
     }
   }
 
-  MenuItem selectedIndustry =
-      MenuItem(text: "Film Industry", id: 1, isSelected: true);
+  MenuItem selectedIndustry = MenuItem(text: "Select Industry", id: -1);
 
   void onSelectIndustry(MenuItem item) {
     for (int i = 0; i < industryList.length; i++) {

@@ -118,6 +118,7 @@ class AddJobController extends GetxController {
       allTypes.addAll(typeModelFromJson(response.data)
           .map((e) => MenuItem(text: e.type, id: e.typeId, isSelected: false))
           .toList());
+      onTypeDropDownTap(MenuItem(text: "Not Sure",isSelected: true,id: 1),);
     } else {}
   }
 
@@ -130,6 +131,7 @@ class AddJobController extends GetxController {
       allTerms.addAll(termModelFromJson(response.data)
           .map((e) => MenuItem(text: e.term, id: e.termsId, isSelected: false))
           .toList());
+      onTermDropDownTap(MenuItem(text: "Not Sure",isSelected: true,id: 1));
     } else {}
   }
 
@@ -143,11 +145,11 @@ class AddJobController extends GetxController {
           .map((e) =>
               MenuItem(text: e.paidByName, id: e.paidById, isSelected: false))
           .toList());
+      onPaidByDropDownTap(MenuItem(text: "Not Sure",isSelected: true,id: 1));
     } else {}
   }
 
   List<MenuItem> allGuaranteedHour = [];
-
   Future getAllGuaranteedHour() async {
     ResponseItem response = await QuickEntryRepo.getAllGuaranteedHourList();
     if (response.status) {
@@ -158,11 +160,11 @@ class AddJobController extends GetxController {
               id: e.guaranteedHourId,
               isSelected: false))
           .toList());
+      onPerGuaranteedHourDropDownTap(MenuItem(text: "Not Sure",isSelected: true,id: 1));
     } else {}
   }
 
   List<MenuItem> allPerHour = [];
-
   Future getAllPerHour() async {
     ResponseItem response = await QuickEntryRepo.allPerHourList();
     if (response.status) {
@@ -172,14 +174,14 @@ class AddJobController extends GetxController {
             (e) => MenuItem(
                 text: e.hours,
                 id: e.hoursId,
-                isSelected: e.hours == "10 Hours" ? true : false),
+                isSelected: false),
           )
           .toList());
+      onPerHourDropDownTap(MenuItem(text: "10 hours", isSelected: true, id: 3));
     } else {}
   }
 
   List<MenuItem> allJobClassificationList = [];
-
   Future<void> getAllJobClassifications() async {
     ResponseItem response = await QuickEntryRepo.allJobClassificationsList();
     if (response.status) {
@@ -414,7 +416,8 @@ class AddJobController extends GetxController {
   ///
   ///
   ///
-  MenuItem selectedCountry = MenuItem(text: "United States", countryCode: "US");
+  MenuItem selectedCountry =
+      MenuItem(text: "United States", countryCode: "US", isSelected: true);
 
   void onCountryDropDownTap(MenuItem item) {
     for (int i = 0; i < countryList.length; i++) {
@@ -609,8 +612,7 @@ class AddJobController extends GetxController {
     hiredByController.text = jobInfo.hiredBy ?? "";
 
     selectedPerHour = allPerHour.firstWhereOrNull((element) =>
-            element.text?.toLowerCase() ==
-            jobInfo.hours?.toLowerCase()) ??
+            element.text?.toLowerCase() == jobInfo.hours?.toLowerCase()) ??
         MenuItem(text: "10 hours", isSelected: true, id: 3);
     onPerHourDropDownTap(selectedPerHour);
 
@@ -627,7 +629,8 @@ class AddJobController extends GetxController {
             element.text?.toLowerCase() == jobInfo.term?.toLowerCase()) ??
         MenuItem(text: "Not Sure");
     selectedDepartment = allJobClassificationList.firstWhere((element) =>
-        element.text?.toLowerCase() == jobInfo.jobClassificationCategory?.toLowerCase());
+        element.text?.toLowerCase() ==
+        jobInfo.jobClassificationCategory?.toLowerCase());
     selectedType = allTypes.firstWhereOrNull((element) =>
             element.text?.toLowerCase() == jobInfo.type?.toLowerCase()) ??
         MenuItem(text: "Not Sure");
@@ -644,9 +647,9 @@ class AddJobController extends GetxController {
       onDaySelect(tempDate, tempDate);
     });
 
-    selectedCountry = countryList
+    onCountryDropDownTap(countryList
             .firstWhereOrNull((element) => element.text == jobInfo.country) ??
-        MenuItem(text: "United States", countryCode: "US");
+        MenuItem(text: "United States", countryCode: "US", isSelected: true));
 
     taxedItems.clear();
     taxedItems.addAll(
@@ -679,8 +682,9 @@ class AddJobController extends GetxController {
 
     getAllSubJobList(selectedDepartment.id ?? -1).then(
       (value) {
-        selectedPosition = allSubJobList
-            .firstWhere((element) => element.text == makeStringDoubleLine(jobInfo.subJobClassificationsCategory ?? ""));
+        selectedPosition = allSubJobList.firstWhere((element) =>
+            element.text ==
+            makeStringDoubleLine(jobInfo.subJobClassificationsCategory ?? ""));
         update();
       },
     );
@@ -707,7 +711,9 @@ class AddJobController extends GetxController {
     taxedItems.clear();
     nonTaxedItems.clear();
 
-    selectedCountry = MenuItem(text: "United States", countryCode: "US");
+    onCountryDropDownTap(
+      MenuItem(text: "United States", countryCode: "US", isSelected: true),
+    );
     selectedPerHour = MenuItem(text: "10 hours", isSelected: true, id: 3);
     selectedGuaranteedHour = MenuItem(text: "Not Sure");
     selectedW2Or1099 = MenuItem(text: "Not Sure");

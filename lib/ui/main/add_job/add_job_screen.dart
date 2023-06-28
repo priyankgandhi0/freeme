@@ -261,18 +261,17 @@ class AddJobScreen extends StatelessWidget {
     var coreMonths = selectedDays.toList().map((e) => e.month);
     List<int> months = coreMonths.toSet().toList();
     months.toList().forEach((e1) {
-      generatedDate = "$generatedDate${monthList[e1]} " ;
+      generatedDate = "$generatedDate${monthList[e1]} ";
       generatedDate = generatedDate +
           selectedDays
               .toList()
               .where((element) => element.month == e1)
-              .toList().map((e) => e.day)
+              .toList()
+              .map((e) => e.day)
               .join(",");
     });
     return generatedDate;
   }
-
-
 
   Widget _discriptionCard(BuildContext context) {
     return Column(
@@ -470,6 +469,7 @@ class AddJobScreen extends StatelessWidget {
             ),
           ],
           fmDropDown(
+            showDash: true,
             child: _detailItemWithDropDown(
               unionNonUnion,
               hint: ctrl.selectedUnion.text,
@@ -982,6 +982,7 @@ class AddJobScreen extends StatelessWidget {
                   left: screenWPadding8.sw(),
                 ),
                 fmDropDown(
+                  showDash: true,
                   child: _detailItemWithDropDown(positionStar,
                       labelColor: redColor,
                       hint: controller.selectedPosition.text,
@@ -1095,7 +1096,8 @@ class AddJobScreen extends StatelessWidget {
         defaultSelectedItem: defaultItem,
         onAddClick: (TaxedNonTaxedModel model) {
           if (model.id != null) {
-            var index = controller.taxedItems.indexWhere((element) => element.id == model.id);
+            var index = controller.taxedItems
+                .indexWhere((element) => element.id == model.id);
             controller.taxedItems.removeAt(index);
             controller.taxedItems.insert(index, model);
             controller.update();

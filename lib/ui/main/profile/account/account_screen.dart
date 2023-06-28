@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:freeme/globle.dart';
+import 'package:freeme/models/user_login_model.dart';
 
 import '../../../widgets/fm_appbar.dart';
 import '../../../widgets/profile_image.dart';
@@ -40,10 +41,10 @@ class AccountScreen extends StatelessWidget {
                     .paddingOnly(
                       top: screenHPadding16.sh(),
                     ),
-                "IATSE Local 600".text(fontSize: 16).paddingOnly(
+                (ctrl.userModel?.union ?? "").text(fontSize: 16).paddingOnly(
                       top: screenHPadding8.sh(),
                     ),
-                "Primary Position"
+                getPosition(ctrl.userModel)
                     .text(fontColor: greyTextColor, fontSize: 16)
                     .paddingOnly(
                       top: screenHPadding8.sh(),
@@ -110,5 +111,20 @@ class AccountScreen extends StatelessWidget {
       left: screenWPadding16.sw(),
       right: screenWPadding16.sw(),
     );
+  }
+
+  String getPosition(UserModel? userModel) {
+    if (userModel != null) {
+      String s = "";
+      if (!userModel.subJobClassificationsCategory.isNullOrEmpty) {
+        s = s + (userModel.subJobClassificationsCategory ?? "");
+      }
+      if (!userModel.jobClassificationCategory.isNullOrEmpty) {
+        s = "$s, ${userModel.jobClassificationCategory ?? ""}";
+      }
+
+      return s;
+    }
+    return "";
   }
 }

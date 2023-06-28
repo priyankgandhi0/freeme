@@ -100,11 +100,17 @@ class TimeCardInfoScreen extends StatelessWidget {
   }
 
   String _getAddress(TimeCardInfoModel? model) {
-    return "";
+    return "${model?.addressLine1 ?? ""}"
+        "\n${model?.addressLine2 ?? ""}"
+        "\n${model?.city ?? ""}"
+        "\n${model?.state ?? ""}"
+        "\n${model?.zip ?? ""}"
+        "\n${model?.country ?? ""}";
   }
 
   Widget timeCardItem(String lable, String value) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: Row(

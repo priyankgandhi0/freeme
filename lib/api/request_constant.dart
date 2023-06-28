@@ -49,6 +49,7 @@ class MethodNames {
   static const editNotes = 'editNotes';
   static const getSummary = 'getSummary';
   static const timecardInfo = 'timecardInfo';
+  static const editTimecardInfo = 'editTimecardInfo';
 
 
 }

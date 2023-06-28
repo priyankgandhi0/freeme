@@ -4,20 +4,24 @@ import '../../../../globle.dart';
 import '../../../../models/time_card_info_model.dart';
 import '../../navigator/main_controller.dart';
 
-class TimeCardInfoController extends GetxController{
-
+class TimeCardInfoController extends GetxController {
   startLoading() {
-    Get.find<HomeController>().startLoading();
+    Future.delayed(Duration.zero, () {
+      Get.find<HomeController>().startLoading();
+    });
   }
 
   stopLoading() {
-    Get.find<HomeController>().stopLoading();
+    Future.delayed(Duration.zero, () {
+      Get.find<HomeController>().stopLoading();
+    });
   }
 
   TimeCardInfoModel? model;
+
   Future<void> getTimeCardInfo() async {
     startLoading();
-    ResponseItem response = await TimeCardInfoRepo.getTimeCardInfo( );
+    ResponseItem response = await TimeCardInfoRepo.getTimeCardInfo();
     if (response.status) {
       model = TimeCardInfoModel.fromJson(response.data);
       update();
@@ -26,5 +30,4 @@ class TimeCardInfoController extends GetxController{
       stopLoading();
     }
   }
-
 }

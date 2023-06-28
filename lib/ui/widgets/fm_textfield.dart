@@ -90,7 +90,9 @@ class _FmTextFieldState extends State<FmTextField> {
               if (widget.inputType != null &&
                   (widget.inputType == TextInputType.number ||
                       widget.inputType == TextInputType.phone)) ...[
-                FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'^\d+\.?\d*'),
+                ),
               ]
             ],
             textInputAction: widget.textInputAction,
@@ -99,6 +101,10 @@ class _FmTextFieldState extends State<FmTextField> {
             enabled: widget.enabled,
             obscureText: widget.obSecureText ?? false,
             onChanged: (text) {
+              if(text.isNotEmpty){
+                widget.error = null;
+                setState(() {});
+              }
               if (widget.onchange != null) {
                 widget.onchange!(text);
               }
@@ -118,14 +124,7 @@ class _FmTextFieldState extends State<FmTextField> {
             ),
             controller: widget.controller,
             decoration: InputDecoration(
-              //errorText: widget.error,
               counterText: "",
-              /* errorStyle: const TextStyle(
-                color: Colors.red,
-                fontFamily: sfPro,
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-              ),*/
               hintText: widget.hint,
               hintStyle: TextStyle(
                 color: widget.hintColor ?? greyTextColor,
@@ -166,13 +165,6 @@ class _FmTextFieldState extends State<FmTextField> {
             ),
           ),
         ),
-        /*  widget.error != null
-            ? Row(
-                children: [
-                  widget.error.text(fontColor: redColor),
-                ],
-              )
-            : Container()*/
       ],
     );
   }
@@ -186,7 +178,8 @@ class FmEmptyTextField extends StatelessWidget {
       this.maxLines,
       this.textInputType,
       this.controller,
-      this.onchange,this.enable = true})
+      this.onchange,
+      this.enable = true})
       : super(key: key);
 
   TextInputType? textInputType;

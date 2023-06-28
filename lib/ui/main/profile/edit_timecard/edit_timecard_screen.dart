@@ -21,15 +21,23 @@ class EditTimeCardScreen extends StatelessWidget {
             Navigator.of(context).pop();
           },
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              _userPersonalDetail(context),
-              _userAdressDetail(),
-              _genderDetail(),
-              _saveButton()
-            ],
-          ),
+        body: GetBuilder<EditTimeCardController>(
+          initState: (state) async {
+            await controller.getAllCountryFromRaw(context);
+            await controller.getTimeCardInfo();
+          },
+          builder: (ctrl) {
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  _userPersonalDetail(context),
+                  _userAdressDetail(context),
+                  _genderDetail(),
+                  _saveButton(context)
+                ],
+              ),
+            );
+          },
         ),
       ),
       onWillPop: () async {
@@ -38,10 +46,10 @@ class EditTimeCardScreen extends StatelessWidget {
     );
   }
 
-  Widget _saveButton() {
+  Widget _saveButton(BuildContext context) {
     return FmButton(
       ontap: () {
-        controller.saveTimeCard();
+        controller.saveTimeCard(context);
       },
       name: save,
     ).paddingOnly(
@@ -68,13 +76,14 @@ class EditTimeCardScreen extends StatelessWidget {
       child: Column(
         children: [
           _detailItem("First Name", controller: controller.firstNameController),
-          _detailItem("Middle"),
+          _detailItem("Middle", controller: controller.middleNameController),
           _detailItem("Last Name", controller: controller.lastNameController),
           _unionDropDown("Union", context),
           _detailItem("Social Security",
               controller: controller.socialSecurityController),
-          _detailItem("Phone Number"),
-          _detailItem("E-mail",showBorder: false),
+          _detailItem("Phone Number", controller: controller.mobileController),
+          _detailItem("E-mail",
+              showBorder: false, controller: controller.emailController),
         ],
       ),
     ).paddingOnly(
@@ -84,7 +93,7 @@ class EditTimeCardScreen extends StatelessWidget {
     );
   }
 
-  Widget _userAdressDetail() {
+  Widget _userAdressDetail(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -100,12 +109,20 @@ class EditTimeCardScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _detailItem("Address Line 1"),
-          _detailItem("Address Line 2"),
-          _detailItem("City"),
-          _detailItem("State"),
-          _detailItem("Zip"),
-          _detailItem("Country",showBorder: false),
+          _detailItem("Address Line 1", controller: controller.addressLineOne),
+          _detailItem("Address Line 2", controller: controller.addressLineTwo),
+          _detailItem("City", controller: controller.cityController),
+          _detailItem("State", controller: controller.stateController),
+          _detailItem("Zip", controller: controller.zipController),
+          fmDropDown(
+            child: countryDropDownChild(controller.selectedCountry),
+            width: 240,
+            onDropDownTap: (item) {
+              controller.onCountryDropDownTap(item);
+            },
+            items: controller.countryList,
+            context: context,
+          ),
         ],
       ),
     ).paddingOnly(
@@ -131,8 +148,9 @@ class EditTimeCardScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _detailItem("Gender"),
-          _detailItem("Loan Out",showBorder: false),
+          _detailItem("Gender", controller: controller.genderController),
+          _detailItem("Loan Out",
+              showBorder: false, controller: controller.loanOutController),
         ],
       ),
     ).paddingOnly(
@@ -198,46 +216,85 @@ class EditTimeCardScreen extends StatelessWidget {
               )
             : null,
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Row(
-              children: [
-                lable
-                    .text(
-                      fontColor: greyTextColor,
-                      fontSize: 16,
-                    )
-                    .paddingOnly(left: 20.sw())
-              ],
-            ),
+      child:fmDropDown(
+        showDash: true,
+        child: unionDropDownItem(controller.selectedUnion),
+        onDropDownTap: (item) {
+          controller.onUnionNonUnionDropDownTap(item);
+        },
+        items: controller.unionNonUnionList,
+        context: context,
+      ) ,
+    );
+  }
+
+  unionDropDownItem(MenuItem union){
+    return Row(
+      children: [
+        Expanded(
+          child: Row(
+            children: [
+              "Union"
+                  .text(
+                fontColor: greyTextColor,
+                fontSize: 16,
+              )
+                  .paddingOnly(left: 20.sw())
+            ],
           ),
-          Expanded(
-            child: fmDropDown(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  FmImage.assetImage(
-                    path: Assets.iconsDownIcon,
-                    height: 15.sh(),
-                    width: 15.sw(),
-                  )
-                ],
-              ).paddingOnly(
-                right: screenWPadding16.sw(),
+        ),
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              controller.selectedUnion.text
+                  .text(
+                fontColor: Colors.black,
+                fontSize: 16,
               ),
-              onDropDownTap: (item) {
-                // _onUnionNonUnionDropDownTap(item);
-              },
-              items: controller.unionNonUnionList,
-              context: context,
-            ),
-          )
-        ],
-      ).paddingOnly(
-        top: screenHPadding16.sh(),
-        bottom: 16.sh(),
-      ),
+              Spacer(),
+              FmImage.assetImage(
+                path: Assets.iconsDownIcon,
+                height: 15.sh(),
+                width: 15.sw(),
+              )
+            ],
+          ).paddingOnly(
+            right: screenWPadding16.sw(),
+          ),
+        )
+      ],
+    ).paddingOnly(
+      top: screenHPadding16.sh(),
+      bottom: 16.sh(),
+    );
+  }
+
+  countryDropDownChild(MenuItem selectedCountry) {
+    return Row(
+      children: [
+        Row(
+          children: [
+            selectedCountry.text
+                .text(
+                  fontColor: Colors.black,
+                  fontSize: 16,
+                )
+                .paddingOnly(left: 20.sw())
+          ],
+        ),
+        const Spacer(),
+        FmImage.assetImage(
+          path: Assets.iconsDownIcon,
+          height: 20.sh(),
+          width: 15.sw(),
+        ).paddingOnly(
+          right: 16.sw(),
+        )
+      ],
+    ).paddingOnly(
+      top: screenHPadding16.sh(),
+      bottom: 16.sh(),
     );
   }
 

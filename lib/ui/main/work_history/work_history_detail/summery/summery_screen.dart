@@ -755,105 +755,12 @@ class SummeryDataTableSecond extends StatelessWidget {
             clipBehavior: Clip.hardEdge,
             headingRowHeight: 45,
             columns: [
-              DataColumn(
-                label: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    "Date"
-                        .text(
-                            weight: FontWeight.w500,
-                            fontColor: Colors.white,
-                            fontSize: 14)
-                        .paddingOnly(bottom: 5)
-                  ],
-                ),
-              ),
-              DataColumn(
-                label: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    "1x"
-                        .text(
-                            weight: FontWeight.w500,
-                            fontColor: Colors.white,
-                            fontSize: 14)
-                        .paddingOnly(bottom: 5)
-                  ],
-                ),
-              ),
-              DataColumn(
-                label: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    "1.5x"
-                        .text(
-                            weight: FontWeight.w500,
-                            fontColor: Colors.white,
-                            fontSize: 14)
-                        .paddingOnly(bottom: 5)
-                  ],
-                ),
-              ),
-              DataColumn(
-                label: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    "2x"
-                        .text(
-                            weight: FontWeight.w500,
-                            fontColor: Colors.white,
-                            fontSize: 14)
-                        .paddingOnly(bottom: 5)
-                  ],
-                ),
-              ),
-              /* DataColumn(
-                label: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    "   "
-                        .text(weight: FontWeight.w500, fontColor: Colors.white)
-                        .paddingOnly(bottom: 5)
-                  ],
-                ),
-              ),*/
-              DataColumn(
-                label: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    "MP"
-                        .text(
-                            weight: FontWeight.w500,
-                            fontColor: Colors.white,
-                            fontSize: 14)
-                        .paddingOnly(bottom: 5)
-                  ],
-                ),
-              ),
-              /*DataColumn(
-                label: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    "Paid \nHrs"
-                        .text(weight: FontWeight.w500, fontColor: Colors.white)
-                        .paddingOnly(bottom: 5)
-                  ],
-                ),
-              ),*/
-              DataColumn(
-                label: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    "  Gross\n  Wages"
-                        .text(
-                            weight: FontWeight.w500,
-                            fontColor: Colors.white,
-                            fontSize: 14)
-                        .paddingOnly(bottom: 5)
-                  ],
-                ),
-              ),
+              myDataColumn("Date"),
+              myDataColumn("1x"),
+              myDataColumn("1.5x"),
+              myDataColumn("2x"),
+              myDataColumn("MP"),
+              myDataColumn("Gross\n  Wages"),
             ],
             dataRowHeight: 30,
             rows: [
@@ -887,6 +794,19 @@ class SummeryDataTableSecond extends StatelessWidget {
           right: screenWPadding16.sw(),
         );
       },
+    );
+  }
+  myDataColumn(String s){
+    return DataColumn(
+      label: Expanded(
+        child: s
+            .text(
+            fontSize: 14,
+            align: TextAlign.center,
+            weight: FontWeight.w500,
+            fontColor: Colors.white)
+            .paddingOnly(bottom: 5,top: 7),
+      ),
     );
   }
 
@@ -1029,90 +949,15 @@ class SummeryDataTableFirst extends StatelessWidget {
                 clipBehavior: Clip.hardEdge,
                 headingRowHeight: 43,
                 columns: [
-                  DataColumn(
-                    label: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        "Date"
-                            .text(
-                                weight: FontWeight.w500,
-                                fontColor: Colors.white)
-                            .paddingOnly(bottom: 5)
-                      ],
-                    ),
-                  ),
-                  DataColumn(
-                    label: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        "Call"
-                            .text(
-                                weight: FontWeight.w500,
-                                fontColor: Colors.white)
-                            .paddingOnly(bottom: 5)
-                      ],
-                    ),
-                  ),
-                  DataColumn(
-                    label: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        "Out"
-                            .text(
-                                weight: FontWeight.w500,
-                                fontColor: Colors.white)
-                            .paddingOnly(bottom: 5)
-                      ],
-                    ),
-                  ),
-                  DataColumn(
-                    label: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        "In"
-                            .text(
-                                weight: FontWeight.w500,
-                                fontColor: Colors.white)
-                            .paddingOnly(bottom: 5)
-                      ],
-                    ),
-                  ),
-                  DataColumn(
-                    label: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        "Out"
-                            .text(
-                                weight: FontWeight.w500,
-                                fontColor: Colors.white)
-                            .paddingOnly(bottom: 5)
-                      ],
-                    ),
-                  ),
-                  DataColumn(
-                    label: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        "In"
-                            .text(
-                                weight: FontWeight.w500,
-                                fontColor: Colors.white)
-                            .paddingOnly(bottom: 5)
-                      ],
-                    ),
-                  ),
-                  DataColumn(
-                    label: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        "Wrap"
-                            .text(
-                                weight: FontWeight.w500,
-                                fontColor: Colors.white)
-                            .paddingOnly(bottom: 5)
-                      ],
-                    ),
-                  ),
+
+                  myDataColumn("Date"),
+                  myDataColumn("Call"),
+                  myDataColumn("Out"),
+                  myDataColumn("In"),
+                  myDataColumn("Out"),
+                  myDataColumn("In"),
+                  myDataColumn("Wrap"),
+
                 ],
                 dataRowHeight: 32,
                 rows: [
@@ -1207,6 +1052,20 @@ class SummeryDataTableFirst extends StatelessWidget {
     );
   }
 
+  myDataColumn(String s){
+    return DataColumn(
+      label: Expanded(
+        child: s
+            .text(
+            fontSize: 14,
+            align: TextAlign.center,
+            weight: FontWeight.w500,
+            fontColor: Colors.white)
+            .paddingOnly(bottom: 5,top: 15),
+      ),
+    );
+  }
+
   String changeToMyFormat(HourlySummary e) {
     return "${e.date?.split("-")[1]}/${e.date?.split("-").last}";
   }
@@ -1230,7 +1089,7 @@ class SummeryDataTableFirst extends StatelessWidget {
           children: [
             date
                 .text(
-                  fontSize: 16,
+                  fontSize: 14,
                   fontColor: textColor,
                   weight: weight,
                 )
@@ -1240,7 +1099,7 @@ class SummeryDataTableFirst extends StatelessWidget {
         DataCell(
           call
               .text(
-                fontSize: 16,
+                fontSize: 14,
                 fontColor: textColor,
                 weight: weight,
               )
@@ -1249,7 +1108,7 @@ class SummeryDataTableFirst extends StatelessWidget {
         DataCell(
           outOne
               .text(
-                fontSize: 16,
+                fontSize: 14,
                 fontColor: textColor,
                 weight: weight,
               )
@@ -1258,7 +1117,7 @@ class SummeryDataTableFirst extends StatelessWidget {
         DataCell(
           inOne
               .text(
-                fontSize: 16,
+                fontSize: 14,
                 fontColor: textColor,
                 weight: weight,
               )
@@ -1267,7 +1126,7 @@ class SummeryDataTableFirst extends StatelessWidget {
         DataCell(
           outTwo
               .text(
-                fontSize: 16,
+                fontSize: 14,
                 fontColor: textColor,
                 weight: weight,
               )
@@ -1276,7 +1135,7 @@ class SummeryDataTableFirst extends StatelessWidget {
         DataCell(
           inTwo
               .text(
-                fontSize: 16,
+                fontSize: 14,
                 fontColor: textColor,
                 weight: weight,
               )
@@ -1285,7 +1144,7 @@ class SummeryDataTableFirst extends StatelessWidget {
         DataCell(
           wrap
               .text(
-                fontSize: 16,
+                fontSize: 14,
                 fontColor: textColor,
                 weight: weight,
               )

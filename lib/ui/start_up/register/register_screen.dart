@@ -62,45 +62,131 @@ class RegisterScreen extends StatelessWidget {
   }
 
   Widget industryDropDown(BuildContext context, RegisterController ctrl) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            industry.text(fontSize: 16).paddingOnly(
-                  left: screenWPadding16.sw(),
-                ),
-          ],
-        ),
-        fmDropDown(
-            child: _industryDropDownItem(guarHours,
-                hint: controller.selectedIndustry.text,
-                error: ctrl.industryError),
-            onDropDownTap: (item) {
-              controller.onSelectIndustry(item); //other industry
+    return GetBuilder<RegisterController>(
+      builder: (ctrl) {
+        var industryItemList = [];
+        for(int i=0;i<ctrl.industryList.length;i++){
+          industryItemList.add(expandedChildItem(
+            ctrl.industryList[i].text ?? "",
+            context,showBorder: i!=(ctrl.industryList.length-1)
+          ).onTap(
+                () {
+
+              ctrl.isExpanded = false;
+              ctrl.update();
+              ctrl.onSelectIndustry(ctrl.industryList[i]);
             },
-            items: controller.industryList,
-            context: context,
-            width: 200),
-        /* if (controller.selectedIndustry.text == "other industry") ...[
-          FmTextField(
-            hint: "Please Enter Industry",
-            header: "Industry (Add Manually)",
-            controller: ctrl.industryController,
-            inputType: TextInputType.text,
-            error: ctrl.industryTextFieldError,
-          ).paddingOnly(
-            left: screenHPadding16.sw(),
-            right: screenHPadding16.sw(),
-            top: 8.sh(),
-          )
-        ]*/
-      ],
-    ).paddingOnly(
-      top: 24.sh(),
+          ));
+        }
+        return Column(
+          children: [
+            Row(
+              children: [
+                "Industry".text(fontSize: 16).paddingOnly(
+                      left: screenWPadding16.sw(),
+                    ),
+              ],
+            ),
+            Container(
+              //selectedIndustry
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.all(Radius.circular(5)),
+                color: Colors.white,
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Column(
+                  children: [
+                    ListTileTheme(
+                      dense: true,
+                      key: UniqueKey(),
+                      horizontalTitleGap: 0.0,
+                      minLeadingWidth: 0,
+                      child: ExpansionTile(
+                        childrenPadding: EdgeInsets.zero,
+                        title: ctrl.selectedIndustry.text.text(
+                          fontSize: 16,
+                        ),
+                        initiallyExpanded: ctrl.isExpanded,
+                        trailing: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            controller.isExpanded
+                                ? FmImage.assetImage(
+                                    path: Assets.iconsDownIcon,
+                                    height: 20.sh(),
+                                    width: 15.sw(),
+                                  )
+                                : FmImage.assetImage(
+                                    path: Assets.iconsForwardIcon,
+                                    height: 15.sh(),
+                                    width: 8.sw(),
+                                  )
+                          ],
+                        ),
+                        onExpansionChanged: (value) {
+                          value.debugPrint;
+                          controller.expansionChange(value);
+                        },
+                        children: [
+                          Container(
+                            width: Get.width,
+                            height: 1,
+                            color: borderGreyColor,
+                          ),
+                          ...industryItemList,
+                        ],
+                      ),
+                    ),
+                    if (controller.selectedIndustry.text == "Other" &&
+                        !ctrl.isExpanded) ...[
+                      Container(
+                        width: Get.width,
+                        color: greyTextColor,
+                        height: 1,
+                      ),
+                      FmEmptyTextField(
+                        hintText: "Enter Your Industry",
+                        controller: controller.industryController,
+                        textInputType: TextInputType.text,
+                      ).paddingOnly(
+                        left: screenWPadding16.sw(),
+                        right: screenWPadding16.sw(),
+                        top: screenHPadding16.sh(),
+                        bottom: screenHPadding16.sh(),
+                      )
+                    ],
+                  ],
+                ),
+              ),
+            ).paddingOnly(
+                left: screenHPadding16.sw(),
+                right: screenHPadding16.sw(),
+                top: screenHPadding8.sh()),
+            ctrl.industryError != null
+                ? Row(
+                    children: [
+                      ctrl.industryError
+                          .text(
+                            fontColor: redColor,
+                          )
+                          .paddingOnly(
+                            left: screenWPadding16.sw(),
+                          ),
+                    ],
+                  )
+                : Container()
+          ],
+        );
+      },
     );
   }
 
-  Widget _industryDropDownItem(String lable,
+
+/*  Widget _industryDropDownItem(String lable,
       {bool showBorder = true,
       String? hint,
       bool showDownIcon = true,
@@ -166,17 +252,17 @@ class RegisterScreen extends StatelessWidget {
         left: screenHPadding16.sw(),
         right: screenHPadding16.sw(),
         top: screenHPadding8.sh());
-  }
+  }*/
 
-  Widget expandedChildItem(String name, BuildContext context) {
+  Widget expandedChildItem(String name, BuildContext context,{bool showBorder =true}) {
     return Container(
-      decoration: const BoxDecoration(
-        border: Border(
+      decoration:   BoxDecoration(
+        border: showBorder?const Border(
           bottom: BorderSide(
             color: borderGreyColor,
             width: 1,
           ),
-        ),
+        ):null,
       ),
       child: Row(
         children: [
@@ -185,7 +271,7 @@ class RegisterScreen extends StatelessWidget {
                 fontSize: 16,
               )
               .paddingOnly(
-                left: screenWPadding16.sw(),
+                left: screenWPadding32.sw(),
                 top: screenHPadding16.sw(),
                 bottom: screenHPadding16.sw(),
               ),
