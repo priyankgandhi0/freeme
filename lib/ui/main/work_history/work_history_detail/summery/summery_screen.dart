@@ -679,24 +679,6 @@ class SummeryDataTableSecond extends StatelessWidget {
 
   final controller = Get.find<SummeryController>();
 
-  DateTime findSundayDateOfTheWeek(DateTime dateTime) {
-    return dateTime.subtract(Duration(days: dateTime.weekday));
-  }
-
-  DateTime findSaturdayDateOfTheWeek(DateTime dateTime) {
-    return dateTime
-        .add(Duration(days: DateTime.daysPerWeek - (dateTime.weekday + 1)));
-  }
-
-  DateTime expandingChildItem(String e) {
-    DateTime tempDate = DateFormat("yyyy-MM-dd").parse(e.toString());
-    return findSaturdayDateOfTheWeek(tempDate);
-  }
-
-  String changeToApiFormat(DateTime date) {
-    return DateFormat('yyyy-MM-dd').format(date);
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SummeryController>(
@@ -725,6 +707,25 @@ class SummeryDataTableSecond extends StatelessWidget {
                 myDayListList.insert(i, element);
               }
             },
+          );
+        }
+
+        List<DataRow> myDayWidget = [];
+        for (int i = 0; i < myDayListList.length; i++) {
+          var data = TableTowCalculation.calculate(myDayListList[i]);
+          myDayWidget.add(
+            _dataRow(
+              date: data.date,
+              color: i%2 == 0 ? rowCellGreyColor : Colors.white,
+              oneX: data.oneX?.toString(),
+              oneFiveX: data.oneFiveX?.toString(),
+              twoX: data.twoX?.toString(),
+              mp: data.mp != 0 ? data.mp.toString() : null,
+              paidHours: data.paidHours != 0 ? data.paidHours?.toString() : "",
+              grossWages: data.grossWages != null
+                  ? "\$${data.grossWages?.toStringAsFixed(1) ?? ""}"
+                  : "",
+            ),
           );
         }
 
@@ -763,24 +764,7 @@ class SummeryDataTableSecond extends StatelessWidget {
               myDataColumn("Gross\n  Wages"),
             ],
             dataRowHeight: 30,
-            rows: [
-              ...myDayListList.map(
-                (e) {
-                  var data = TableTowCalculation.calculate(e);
-
-                  return _dataRow(
-                      date: data.date,
-                      color: rowCellGreyColor,
-                      oneX: data.oneX?.toString(),
-                      oneFiveX: data.oneFiveX?.toString(),
-                      twoX: data.twoX?.toString(),
-                      mp: data.mp != 0 ? data.mp.toString() : null,
-                      paidHours:
-                          data.paidHours != 0 ? data.paidHours?.toString() : "",
-                      grossWages: data.grossWages);
-                },
-              ),
-            ],
+            rows: myDayWidget,
           ).paddingOnly(
             left: screenWPadding8.sw(),
             right: screenWPadding8.sw(),
@@ -796,16 +780,35 @@ class SummeryDataTableSecond extends StatelessWidget {
       },
     );
   }
-  myDataColumn(String s){
+
+  DateTime findSundayDateOfTheWeek(DateTime dateTime) {
+    return dateTime.subtract(Duration(days: dateTime.weekday));
+  }
+
+  DateTime findSaturdayDateOfTheWeek(DateTime dateTime) {
+    return dateTime
+        .add(Duration(days: DateTime.daysPerWeek - (dateTime.weekday + 1)));
+  }
+
+  DateTime expandingChildItem(String e) {
+    DateTime tempDate = DateFormat("yyyy-MM-dd").parse(e.toString());
+    return findSaturdayDateOfTheWeek(tempDate);
+  }
+
+  String changeToApiFormat(DateTime date) {
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
+
+  myDataColumn(String s) {
     return DataColumn(
       label: Expanded(
         child: s
             .text(
-            fontSize: 14,
-            align: TextAlign.center,
-            weight: FontWeight.w500,
-            fontColor: Colors.white)
-            .paddingOnly(bottom: 5,top: 7),
+                fontSize: 14,
+                align: TextAlign.center,
+                weight: FontWeight.w500,
+                fontColor: Colors.white)
+            .paddingOnly(bottom: 5, top: 7),
       ),
     );
   }
@@ -949,7 +952,6 @@ class SummeryDataTableFirst extends StatelessWidget {
                 clipBehavior: Clip.hardEdge,
                 headingRowHeight: 43,
                 columns: [
-
                   myDataColumn("Date"),
                   myDataColumn("Call"),
                   myDataColumn("Out"),
@@ -957,7 +959,6 @@ class SummeryDataTableFirst extends StatelessWidget {
                   myDataColumn("Out"),
                   myDataColumn("In"),
                   myDataColumn("Wrap"),
-
                 ],
                 dataRowHeight: 32,
                 rows: [
@@ -1052,16 +1053,16 @@ class SummeryDataTableFirst extends StatelessWidget {
     );
   }
 
-  myDataColumn(String s){
+  myDataColumn(String s) {
     return DataColumn(
       label: Expanded(
         child: s
             .text(
-            fontSize: 14,
-            align: TextAlign.center,
-            weight: FontWeight.w500,
-            fontColor: Colors.white)
-            .paddingOnly(bottom: 5,top: 15),
+                fontSize: 14,
+                align: TextAlign.center,
+                weight: FontWeight.w500,
+                fontColor: Colors.white)
+            .paddingOnly(bottom: 5, top: 15),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:freeme/globle.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 
 class FmTextField extends StatefulWidget {
   TextEditingController? controller;
@@ -9,7 +10,7 @@ class FmTextField extends StatefulWidget {
   ValueChanged<String>? onchange;
   int? maxLength;
   int? maxLines;
-  FocusNode? focusNode;
+  FocusNode focusNode;
   String? hint;
   TextInputType? inputType;
   Color? fillColor;
@@ -42,7 +43,7 @@ class FmTextField extends StatefulWidget {
       this.prefixIcon,
       this.fillColor,
       this.sufixIcon,
-      this.focusNode,
+      required this.focusNode,
       this.hintColor,
       this.hintSize,
       this.fontSize,
@@ -85,86 +86,111 @@ class _FmTextFieldState extends State<FmTextField> {
             : Container(),
         SizedBox(
           height: 51.sh(),
-          child: TextField(
-            inputFormatters: <TextInputFormatter>[
-              if (widget.inputType != null &&
-                  (widget.inputType == TextInputType.number ||
-                      widget.inputType == TextInputType.phone)) ...[
-                FilteringTextInputFormatter.allow(
-                  RegExp(r'^\d+\.?\d*'),
-                ),
-              ]
-            ],
-            textInputAction: widget.textInputAction,
-            focusNode: widget.focusNode,
-            textAlign: widget.align!,
-            enabled: widget.enabled,
-            obscureText: widget.obSecureText ?? false,
-            onChanged: (text) {
-              if(text.isNotEmpty){
-                widget.error = null;
-                setState(() {});
-              }
-              if (widget.onchange != null) {
-                widget.onchange!(text);
-              }
-            },
-            maxLength: widget.maxLength,
-            cursorColor: Colors.black,
-            readOnly: widget.readOnly,
-            showCursor: widget.showCurson,
-            onEditingComplete: widget.onComplete,
-            maxLines: 1,
-            keyboardType: widget.inputType,
-            onTap: widget.ontap,
-            style: TextStyle(
-              fontSize: widget.fontSize ?? 16,
-              fontWeight: FontWeight.normal,
-              fontFamily: sfPro,
-            ),
-            controller: widget.controller,
-            decoration: InputDecoration(
-              counterText: "",
-              hintText: widget.hint,
-              hintStyle: TextStyle(
-                color: widget.hintColor ?? greyTextColor,
-                fontFamily: sfPro,
-                fontSize: widget.hintSize ?? 18,
+          child: KeyboardActions(
+            config: _buildConfig(context),
+            child: TextField(
+              inputFormatters: <TextInputFormatter>[
+                if (widget.inputType != null &&
+                    (widget.inputType == TextInputType.number ||
+                        widget.inputType == TextInputType.phone)) ...[
+                  FilteringTextInputFormatter.allow(
+                    RegExp(r'^\d+\.?\d*'),
+                  ),
+                ]
+              ],
+              textInputAction: widget.textInputAction,
+              focusNode: widget.focusNode,
+              textAlign: widget.align!,
+              enabled: widget.enabled,
+              obscureText: widget.obSecureText ?? false,
+              onChanged: (text) {
+                if (text.isNotEmpty) {
+                  widget.error = null;
+                  setState(() {});
+                }
+                if (widget.onchange != null) {
+                  widget.onchange!(text);
+                }
+              },
+              maxLength: widget.maxLength,
+              cursorColor: Colors.black,
+              readOnly: widget.readOnly,
+              showCursor: widget.showCurson,
+              onEditingComplete: widget.onComplete,
+              maxLines: 1,
+              keyboardType: widget.inputType,
+              onTap: widget.ontap,
+              style: TextStyle(
+                fontSize: widget.fontSize ?? 16,
                 fontWeight: FontWeight.normal,
+                fontFamily: sfPro,
               ),
-              border: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: widget.error != null ? redColor : Colors.black,
-                  width: 1.0,
+              controller: widget.controller,
+              decoration: InputDecoration(
+                counterText: "",
+                hintText: widget.hint,
+                hintStyle: TextStyle(
+                  color: widget.hintColor ?? greyTextColor,
+                  fontFamily: sfPro,
+                  fontSize: widget.hintSize ?? 18,
+                  fontWeight: FontWeight.normal,
                 ),
-                borderRadius: BorderRadius.circular(
-                  widget.radius ?? 5,
+                border: OutlineInputBorder(
+                  borderSide: BorderSide(
+                    color: widget.error != null ? redColor : Colors.black,
+                    width: 1.0,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                    widget.radius ?? 5,
+                  ),
                 ),
-              ),
-              enabledBorder: OutlineInputBorder(
+                enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                       color: widget.error != null ? redColor : Colors.black,
                       width: 1.0),
-                  borderRadius: BorderRadius.circular(widget.radius ?? 5)),
-              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(widget.radius ?? 5),
+                ),
+                focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                       color: widget.error != null ? redColor : Colors.black,
                       width: 1.0),
-                  borderRadius: BorderRadius.circular(widget.radius ?? 5)),
-              fillColor: Colors.white,
-              filled: true,
-              isDense: true,
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: 16.sw(), vertical: 13.sw()),
-              prefixIcon: widget.prefixIcon,
-              suffixIcon: widget.sufixIcon,
-              prefixIconConstraints:
-                  const BoxConstraints(minWidth: 0, minHeight: 0),
-              suffixIconConstraints:
-                  const BoxConstraints(minWidth: 0, minHeight: 0),
+                  borderRadius: BorderRadius.circular(widget.radius ?? 5),
+                ),
+                fillColor: Colors.white,
+                filled: true,
+                isDense: true,
+                contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16.sw(), vertical: 13.sw()),
+                prefixIcon: widget.prefixIcon,
+                suffixIcon: widget.sufixIcon,
+                prefixIconConstraints:
+                    const BoxConstraints(minWidth: 0, minHeight: 0),
+                suffixIconConstraints:
+                    const BoxConstraints(minWidth: 0, minHeight: 0),
+              ),
             ),
           ),
         ),
+      ],
+    );
+  }
+
+  /// and their focus nodes to our [FormKeyboardActions].
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    return KeyboardActionsConfig(
+      keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
+      keyboardBarColor: Colors.grey[200],
+      nextFocus: true,
+      defaultDoneWidget: _buildMyDoneWidget(),
+      actions: [KeyboardActionsItem(focusNode: widget.focusNode)],
+    );
+  }
+
+  Widget _buildMyDoneWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        "Done".text(fontSize: 16),
       ],
     );
   }
@@ -194,6 +220,7 @@ class FmEmptyTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextField(
       enabled: enable,
+      enableSuggestions: false,
       textInputAction: TextInputAction.done,
       inputFormatters: <TextInputFormatter>[
         if (textInputType != null &&

@@ -129,51 +129,82 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     _clockTimeItem(
-                        "Call Time",
-                        ctrl.historyModel!.callTime.isNullOrEmpty
-                            ? "--:-- AM/PM"
-                            : ctrl.historyModel?.callTime ?? "", onclick: () {
-                      showSelectTimeDialog(context, "Call Time");
-                    }),
+                      "Call Time",
+                      ctrl.historyModel!.callTime.isNullOrEmpty
+                          ? "--:-- AM/PM"
+                          : ctrl.historyModel?.callTime ?? "",
+                      onclick: () {
+                        showSelectTimeDialog(
+                          context,
+                          "Call Time",
+                          defaultTime: ctrl.historyModel?.callTime,
+                        );
+                      },
+                    ),
                     _clockTimeItem(
-                        "1st Meal Start:",
-                        ctrl.historyModel!.firstMealStart.isNullOrEmpty
-                            ? "--:-- AM/PM"
-                            : ctrl.historyModel?.firstMealStart ?? "",
-                        onclick: () {
-                      showSelectTimeDialog(context, "1st Meal Start");
-                    }),
+                      "1st Meal Start:",
+                      ctrl.historyModel!.firstMealStart.isNullOrEmpty
+                          ? "--:-- AM/PM"
+                          : ctrl.historyModel?.firstMealStart ?? "",
+                      onclick: () {
+                        showSelectTimeDialog(
+                          context,
+                          "1st Meal Start",
+                          defaultTime: ctrl.historyModel?.firstMealStart,
+                        );
+                      },
+                    ),
                     _clockTimeItem(
-                        "1st Meal End:",
-                        ctrl.historyModel!.firstMealEnd.isNullOrEmpty
-                            ? "--:-- AM/PM"
-                            : ctrl.historyModel?.firstMealEnd ?? "",
-                        onclick: () {
-                      showSelectTimeDialog(context, "1st Meal End");
-                    }),
+                      "1st Meal End:",
+                      ctrl.historyModel!.firstMealEnd.isNullOrEmpty
+                          ? "--:-- AM/PM"
+                          : ctrl.historyModel?.firstMealEnd ?? "",
+                      onclick: () {
+                        showSelectTimeDialog(
+                          context,
+                          "1st Meal End",
+                          defaultTime: ctrl.historyModel?.firstMealEnd,
+                        );
+                      },
+                    ),
                     _clockTimeItem(
                         "2nd Meal Start:",
                         ctrl.historyModel!.secondMealStart.isNullOrEmpty
                             ? "--:-- AM/PM"
                             : ctrl.historyModel?.secondMealStart ?? "",
                         onclick: () {
-                      showSelectTimeDialog(context, "2nd Meal Start");
+                      showSelectTimeDialog(
+                        context,
+                        "2nd Meal Start",
+                        defaultTime: ctrl.historyModel?.secondMealStart,
+                      );
                     }),
                     _clockTimeItem(
-                        "2nd Meal End:",
-                        ctrl.historyModel!.secondMealEnd.isNullOrEmpty
-                            ? "--:-- AM/PM"
-                            : ctrl.historyModel?.secondMealEnd ?? "",
-                        onclick: () {
-                      showSelectTimeDialog(context, "2nd Meal End");
-                    }),
+                      "2nd Meal End:",
+                      ctrl.historyModel!.secondMealEnd.isNullOrEmpty
+                          ? "--:-- AM/PM"
+                          : ctrl.historyModel?.secondMealEnd ?? "",
+                      onclick: () {
+                        showSelectTimeDialog(
+                          context,
+                          "2nd Meal End",
+                          defaultTime: ctrl.historyModel?.secondMealEnd,
+                        );
+                      },
+                    ),
                     _clockTimeItem(
-                        "Wrap:",
-                        ctrl.historyModel!.wrap.isNullOrEmpty
-                            ? "--:-- AM/PM"
-                            : ctrl.historyModel?.wrap ?? "", onclick: () {
-                      showSelectTimeDialog(context, "Wrap");
-                    })
+                      "Wrap:",
+                      ctrl.historyModel!.wrap.isNullOrEmpty
+                          ? "--:-- AM/PM"
+                          : ctrl.historyModel?.wrap ?? "",
+                      onclick: () {
+                        showSelectTimeDialog(
+                          context,
+                          "Wrap",
+                          defaultTime: ctrl.historyModel?.wrap
+                        );
+                      },
+                    )
                   ],
                 ),
               ).paddingOnly(
@@ -513,10 +544,8 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
   ///
   ///
 
-  showSelectTimeDialog(
-    BuildContext context,
-    String time,
-  ) {
+  showSelectTimeDialog(BuildContext context, String timeLable,
+      {required String? defaultTime}) {
     fMDialog(
       context: context,
       horizontalPadding: screenWPadding64.sw(),
@@ -566,6 +595,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                 color: bottomLineGreyColor,
               ),
               TimePickerSpinner(
+                time: convertToMyTimeFormat(defaultTime ?? "",controller.selectedDate),
                 isForce2Digits: true,
                 normalTextStyle: const TextStyle(
                   fontFamily: sfPro,
@@ -583,17 +613,17 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                   controller.clockInTime = time;
                 },
               ),
-              time == "Call Time"
+              timeLable == "Call Time"
                   ? _callTimeButton(context)
-                  : time == "1st Meal Start"
+                  : timeLable == "1st Meal Start"
                       ? _lunchStartWrapButtons(context)
-                      : time == "1st Meal End"
+                      : timeLable == "1st Meal End"
                           ? _lunchEndWrapButtons(context)
-                          : time == "2nd Meal Start"
+                          : timeLable == "2nd Meal Start"
                               ? _secondMealStartWrapButtons(context)
-                              : time == "2nd Meal End"
+                              : timeLable == "2nd Meal End"
                                   ? _secondMealEndWrapButtons(context)
-                                  : time == "Wrap"
+                                  : timeLable == "Wrap"
                                       ? _wrapWrapButtons(context)
                                       : Container(),
             ],
@@ -601,6 +631,36 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  DateTime convertToMyTimeFormat(String time, String date) {
+    if(time.isNotEmpty){
+      var now = date.split("-");
+      int hour = int.parse(time.split(":").first.toString());
+      int minute = int.parse(time.split(":").last.substring(0, 2));
+      bool isPm = time.contains("PM") ? true : false;
+      var datTime = DateTime.utc(
+          int.parse(now[0]),
+          int.parse(now[1]),
+          int.parse(now[2]),
+          isPm
+              ? hour != 12
+              ? hour + 12
+              : hour
+              : hour == 12
+              ? 0
+              : hour,
+          minute,
+          0);
+      var datTime2 = DateTime.utc(
+          int.parse(now[0]),
+          int.parse(now[1]),
+          int.parse(now[2]),
+          datTime.hour-1,minute-1,0
+      );
+      return datTime2;
+    }
+   return DateTime.now();
   }
 
   Widget _callTimeButton(BuildContext context) {

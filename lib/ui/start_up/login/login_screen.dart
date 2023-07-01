@@ -66,6 +66,7 @@ class LoginScreen extends StatelessWidget {
       controller: ctrl.emailController,
       inputType: TextInputType.emailAddress,
       error: ctrl.emailError,
+      focusNode: FocusNode(),
     ).paddingOnly(
       left: screenHPadding16.sw(),
       right: screenHPadding16.sw(),
@@ -82,6 +83,7 @@ class LoginScreen extends StatelessWidget {
       controller: controller.passwordController,
       obSecureText: !ctrl.showPassword,
       error: ctrl.passwordError,
+      focusNode: FocusNode(),
       sufixIcon: FmImage.assetImage(
         path: ctrl.showPassword ? Assets.iconsEyeOpened : Assets.iconsEyeClosed,
         width: 22,

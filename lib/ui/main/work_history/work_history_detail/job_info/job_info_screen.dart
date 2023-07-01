@@ -360,7 +360,7 @@ class JobInfoScreen extends StatelessWidget {
     BuildContext context,
     GetJobInfoModel jobInfo,
   ) {
-    num hour = (jobInfo.hours.toString().toLowerCase() ==
+    /* num hour = (jobInfo.hours.toString().toLowerCase() ==
             "10 hours".toLowerCase()
         ? 10
         : jobInfo.hours.toString().toLowerCase() == "Hourly".toLowerCase()
@@ -370,7 +370,9 @@ class JobInfoScreen extends StatelessWidget {
                 : jobInfo.hours.toString().toLowerCase() ==
                         "12 hours".toLowerCase()
                     ? 12
-                    : 0);
+                    : 0);*/
+
+    num hour = getHour(jobInfo);
     num perHourRate = int.parse(jobInfo.rate.toString()) / hour;
 
     fMDialog(
@@ -431,5 +433,35 @@ class JobInfoScreen extends StatelessWidget {
         "\n${ctrl.jobInfo?.companyAddressLine2 ?? ""}"
         "\n${ctrl.jobInfo?.city ?? ""}${ctrl.jobInfo?.state ?? ""}"
         "${ctrl.jobInfo?.zip == 0 ? "" : ctrl.jobInfo?.zip}\n${ctrl.jobInfo?.country ?? ""}";
+  }
+
+  num getHour(GetJobInfoModel jobInfo) {
+    num hour = (jobInfo.hours.toString().toLowerCase() ==
+            "10 hours".toLowerCase()
+        ? 10
+        : jobInfo.hours.toString().toLowerCase() == "Hourly".toLowerCase()
+            ? 1
+            : jobInfo.hours.toString().toLowerCase() == "8 hours".toLowerCase()
+                ? 8
+                : jobInfo.hours.toString().toLowerCase() ==
+                        "12 hours".toLowerCase()
+                    ? 12
+                    : 0);
+
+    if (hour <= 8) {
+      return hour;
+    }
+
+    if (hour > 8 && hour < 12) {
+      num moreHour = hour - 8;
+      return 8 + (moreHour * 1.5);
+    }
+
+    if (hour >= 12) {
+      num moreThan12 = hour - 12;
+      num moreThan8 = hour - (moreThan12 + 8);
+      return 8 + (moreThan12 * 2) + (moreThan8 * 1.5);
+    }
+    return hour;
   }
 }

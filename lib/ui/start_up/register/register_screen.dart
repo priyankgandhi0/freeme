@@ -43,13 +43,25 @@ class RegisterScreen extends StatelessWidget {
                         .paddingOnly(
                           top: 8.sh(),
                         ),
-                    industryDropDown(context, ctrl),
-                    _firstNameLastName(ctrl),
-                    _emailAddress(ctrl),
-                    passwordField(ctrl),
-                    _confirmPassword(ctrl),
-                    _signUpButton(context),
-                    _dontHaveAccountButton(),
+                    Stack(
+                      children: [
+                        Column(
+                          children: [
+                            _firstNameLastName(ctrl),
+                            _emailAddress(ctrl),
+                            passwordField(ctrl),
+                            _confirmPassword(ctrl),
+                            _signUpButton(context),
+                            _dontHaveAccountButton(),
+                          ],
+                        ).paddingOnly(
+                            top: controller.selectedIndustry.text == "Other" &&
+                                    !ctrl.isExpanded
+                                ? 128
+                                : 74),
+                        industryDropDown(context, ctrl),
+                      ],
+                    ),
                   ],
                 ),
               ).paddingOnly(top: 30.sh()),
@@ -65,13 +77,12 @@ class RegisterScreen extends StatelessWidget {
     return GetBuilder<RegisterController>(
       builder: (ctrl) {
         var industryItemList = [];
-        for(int i=0;i<ctrl.industryList.length;i++){
+        for (int i = 0; i < ctrl.industryList.length; i++) {
           industryItemList.add(expandedChildItem(
-            ctrl.industryList[i].text ?? "",
-            context,showBorder: i!=(ctrl.industryList.length-1)
-          ).onTap(
-                () {
-
+                  ctrl.industryList[i].text ?? "", context,
+                  showBorder: i != (ctrl.industryList.length - 1))
+              .onTap(
+            () {
               ctrl.isExpanded = false;
               ctrl.update();
               ctrl.onSelectIndustry(ctrl.industryList[i]);
@@ -185,7 +196,6 @@ class RegisterScreen extends StatelessWidget {
     );
   }
 
-
 /*  Widget _industryDropDownItem(String lable,
       {bool showBorder = true,
       String? hint,
@@ -254,15 +264,18 @@ class RegisterScreen extends StatelessWidget {
         top: screenHPadding8.sh());
   }*/
 
-  Widget expandedChildItem(String name, BuildContext context,{bool showBorder =true}) {
+  Widget expandedChildItem(String name, BuildContext context,
+      {bool showBorder = true}) {
     return Container(
-      decoration:   BoxDecoration(
-        border: showBorder?const Border(
-          bottom: BorderSide(
-            color: borderGreyColor,
-            width: 1,
-          ),
-        ):null,
+      decoration: BoxDecoration(
+        border: showBorder
+            ? const Border(
+                bottom: BorderSide(
+                  color: borderGreyColor,
+                  width: 1,
+                ),
+              )
+            : null,
       ),
       child: Row(
         children: [
@@ -285,6 +298,7 @@ class RegisterScreen extends StatelessWidget {
       children: [
         Expanded(
           child: FmTextField(
+            focusNode: FocusNode(),
             hint: firstName,
             header: firstName,
             controller: ctrl.firstNameController,
@@ -298,6 +312,7 @@ class RegisterScreen extends StatelessWidget {
         ),
         Expanded(
           child: FmTextField(
+            focusNode: FocusNode(),
             hint: lastName,
             header: lastName,
             controller: ctrl.lastNameController,
@@ -315,6 +330,7 @@ class RegisterScreen extends StatelessWidget {
 
   _emailAddress(RegisterController ctrl) {
     return FmTextField(
+      focusNode: FocusNode(),
       hint: enterEmail,
       header: email,
       controller: ctrl.emailController,
@@ -330,6 +346,7 @@ class RegisterScreen extends StatelessWidget {
 
   passwordField(RegisterController ctrl) {
     return FmTextField(
+      focusNode: FocusNode(),
       hint: enterPassword,
       header: password,
       inputType: TextInputType.visiblePassword,
@@ -355,6 +372,7 @@ class RegisterScreen extends StatelessWidget {
 
   _confirmPassword(RegisterController ctrl) {
     return FmTextField(
+        focusNode: FocusNode(),
             hint: enterConfirmPassword,
             header: confirmPassword,
             controller: ctrl.confirmPasswordController,

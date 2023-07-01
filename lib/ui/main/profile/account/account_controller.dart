@@ -13,5 +13,4 @@ class AccountController extends GetxController{
     super.onInit();
   }
 
-
 }

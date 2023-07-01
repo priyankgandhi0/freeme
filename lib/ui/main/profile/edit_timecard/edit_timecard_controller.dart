@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freeme/api/api_globle.dart';
 
 import '../../../../api/repositories/time_card_info_repo.dart';
 import '../../../../api/response_item.dart';
@@ -100,6 +101,7 @@ class EditTimeCardController extends GetxController {
       Get.find<AccountController>().onInit();
       stopLoading();
     } else {
+      response.message.errorSnack(context);
       stopLoading();
     }
   }

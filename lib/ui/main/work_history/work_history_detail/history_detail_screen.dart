@@ -174,6 +174,6 @@ class WorkHistoryDetailScreen extends StatelessWidget {
 
   String changeToUIFormat(String date) {
     DateTime tempDate = DateFormat("yyyy-MM-dd").parse(date);
-    return DateFormat('MM/dd/yy').format(tempDate);
+    return DateFormat('M/d/yy').format(tempDate);
   }
 }

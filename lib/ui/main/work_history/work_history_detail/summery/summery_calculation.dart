@@ -7,7 +7,7 @@ class TableTowCalculation {
   int? oneFiveX;
   int? twoX;
   int? paidHours;
-  String? grossWages;
+  double? grossWages;
   int mp = 0;
 
   TableTowCalculation.calculate(HourlySummary e) {
@@ -34,7 +34,7 @@ class TableTowCalculation {
         e.paymentDetails?.totalHours != 0) {
       var perHourRate =  ((e.paymentDetails?.rate ?? 0) / (e.paymentDetails?.totalHours ?? 0));
       if(paidHours!=0 && perHourRate!=0){
-        grossWages = "\$${((paidHours ?? 0)*perHourRate)} ";
+        grossWages = ((paidHours ?? 0)*perHourRate);
       }
     }
     calculateMp(e);

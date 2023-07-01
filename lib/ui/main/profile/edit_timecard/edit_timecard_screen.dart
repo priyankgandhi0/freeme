@@ -82,8 +82,12 @@ class EditTimeCardScreen extends StatelessWidget {
           _detailItem("Social Security",
               controller: controller.socialSecurityController),
           _detailItem("Phone Number", controller: controller.mobileController),
-          _detailItem("E-mail",
-              showBorder: false, controller: controller.emailController),
+          _detailItem(
+            "E-mail",
+            showBorder: false,
+            controller: controller.emailController,
+            type: TextInputType.emailAddress
+          ),
         ],
       ),
     ).paddingOnly(
@@ -161,7 +165,9 @@ class EditTimeCardScreen extends StatelessWidget {
   }
 
   Widget _detailItem(String lable,
-      {bool showBorder = true, TextEditingController? controller}) {
+      {bool showBorder = true,
+      TextEditingController? controller,
+      TextInputType? type}) {
     return Container(
       decoration: BoxDecoration(
         border: showBorder
@@ -190,6 +196,7 @@ class EditTimeCardScreen extends StatelessWidget {
           Expanded(
             child: FmEmptyTextField(
               controller: controller,
+              textInputType: type,
             ),
           )
         ],
@@ -216,7 +223,7 @@ class EditTimeCardScreen extends StatelessWidget {
               )
             : null,
       ),
-      child:fmDropDown(
+      child: fmDropDown(
         showDash: true,
         child: unionDropDownItem(controller.selectedUnion),
         onDropDownTap: (item) {
@@ -224,11 +231,11 @@ class EditTimeCardScreen extends StatelessWidget {
         },
         items: controller.unionNonUnionList,
         context: context,
-      ) ,
+      ),
     );
   }
 
-  unionDropDownItem(MenuItem union){
+  unionDropDownItem(MenuItem union) {
     return Row(
       children: [
         Expanded(
@@ -236,9 +243,9 @@ class EditTimeCardScreen extends StatelessWidget {
             children: [
               "Union"
                   .text(
-                fontColor: greyTextColor,
-                fontSize: 16,
-              )
+                    fontColor: greyTextColor,
+                    fontSize: 16,
+                  )
                   .paddingOnly(left: 20.sw())
             ],
           ),
@@ -247,8 +254,7 @@ class EditTimeCardScreen extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              controller.selectedUnion.text
-                  .text(
+              controller.selectedUnion.text.text(
                 fontColor: Colors.black,
                 fontSize: 16,
               ),

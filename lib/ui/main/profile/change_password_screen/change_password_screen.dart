@@ -30,7 +30,7 @@ class ChangePasswordScreen extends StatelessWidget {
                 _oldPassword(ctrl),
                 _newPassword(ctrl),
                 _confirmPassword(ctrl),
-                _changeButton(ctrl,context)
+                _changeButton(ctrl, context)
               ],
             ).paddingOnly(
               left: screenWPadding16.sw(),
@@ -47,6 +47,7 @@ class ChangePasswordScreen extends StatelessWidget {
 
   Widget _oldPassword(ChangePasswordController ctrl) {
     return FmTextField(
+      focusNode: FocusNode(),
       hint: oldPassword,
       inputType: TextInputType.emailAddress,
       controller: ctrl.oldPasswordController,
@@ -59,6 +60,7 @@ class ChangePasswordScreen extends StatelessWidget {
 
   Widget _newPassword(ChangePasswordController ctrl) {
     return FmTextField(
+      focusNode: FocusNode(),
       hint: newPassword,
       inputType: TextInputType.emailAddress,
       radius: 10,
@@ -71,6 +73,7 @@ class ChangePasswordScreen extends StatelessWidget {
 
   Widget _confirmPassword(ChangePasswordController ctrl) {
     return FmTextField(
+      focusNode: FocusNode(),
       hint: confirmPassword,
       inputType: TextInputType.emailAddress,
       controller: ctrl.confirmPasswordController,

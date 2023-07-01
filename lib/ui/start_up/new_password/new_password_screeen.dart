@@ -67,6 +67,7 @@ class NewPasswordScreen extends StatelessWidget {
 
   _passwordField(NewPasswordController ctrl) {
     return FmTextField(
+      focusNode: FocusNode(),
       hint: enterNewPasswordTitle,
       header: password,
       inputType: TextInputType.visiblePassword,
@@ -92,6 +93,7 @@ class NewPasswordScreen extends StatelessWidget {
 
   _confirmPassword(NewPasswordController ctrl) {
     return FmTextField(
+        focusNode: FocusNode(),
         hint: enterConfirmPassword,
         header: confirmPassword,
         controller: ctrl.confirmPasswordController,
@@ -117,6 +119,7 @@ class NewPasswordScreen extends StatelessWidget {
 
   _verificationCode(NewPasswordController ctrl) {
     return FmTextField(
+      focusNode: FocusNode(),
       hint: enterVerificationCode,
       header: verificationCode,
       controller: ctrl.verificationCodeController,

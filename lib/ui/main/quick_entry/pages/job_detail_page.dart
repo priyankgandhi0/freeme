@@ -29,6 +29,7 @@ class JobDetailPage extends StatelessWidget {
                 left: screenWPadding16.sw(),
               ),
               FmTextField(
+                focusNode: FocusNode(),
                 hint: commercialWithJoey,
                 header: descriptionStar,
                 inputType: TextInputType.text,
@@ -41,6 +42,7 @@ class JobDetailPage extends StatelessWidget {
                 right: screenHPadding16.sw(),
               ),
               FmTextField(
+                focusNode: FocusNode(),
                 hint: cardBrandJob,
                 header: productionTitle,
                 inputType: TextInputType.text,
@@ -52,6 +54,7 @@ class JobDetailPage extends StatelessWidget {
                 right: screenHPadding16.sw(),
               ),
               FmTextField(
+                focusNode: FocusNode(),
                 hint: "Jane Smith",
                 header: producer,
                 inputType: TextInputType.text,
@@ -63,6 +66,7 @@ class JobDetailPage extends StatelessWidget {
                 right: screenHPadding16.sw(),
               ),
               FmTextField(
+                focusNode: FocusNode(),
                 hint: companyLLc,
                 header: productionCompany,
                 inputType: TextInputType.text,

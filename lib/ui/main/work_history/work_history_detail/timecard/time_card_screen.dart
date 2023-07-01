@@ -750,6 +750,6 @@ class TimeCardTabScreen extends StatelessWidget {
 
   String changeToTimeCardDateFormat(String date) {
     DateTime tempDate = DateFormat("yyyy-MM-dd").parse(date);
-    return DateFormat('EEEE, MMM d, yyyy').format(tempDate);
+    return DateFormat('EEEE, MMMM d, yyyy').format(tempDate);
   }
 }

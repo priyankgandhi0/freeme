@@ -369,6 +369,7 @@ class PaymentDetailPage extends StatelessWidget {
       children: [
         Expanded(
           child: FmTextField(
+            focusNode: FocusNode(),
             hint: "\$500",
             header: rateStar,
             inputType: TextInputType.number,

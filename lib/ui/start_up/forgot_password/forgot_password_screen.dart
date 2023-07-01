@@ -38,6 +38,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                             top: 8.sh(),
                           ),
                       FmTextField(
+                        focusNode: FocusNode(),
                         hint: enterEmail,
                         header: email,
                         inputType: TextInputType.emailAddress,

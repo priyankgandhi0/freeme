@@ -61,7 +61,7 @@ fMAppBar2({
                         screenHPadding16.sh(),
                       ),
                 ],
-              ).safeArea
+              )
             : Container(
                 width: 20,
               ).paddingOnly(

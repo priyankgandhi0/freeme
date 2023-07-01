@@ -150,6 +150,7 @@ class HourlySummary {
     _paymentDetails = json['payment_details'] != null
         ? PaymentDetails.fromJson(json['payment_details'])
         : null;
+
   }
 
   num? _dayId;
@@ -257,6 +258,7 @@ class HourlySummary {
   String? get wrap => _wrap;
 
   PaymentDetails? get paymentDetails => _paymentDetails;
+
 
   HourlySummary(this._date);
 }

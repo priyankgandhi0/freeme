@@ -167,6 +167,7 @@ class AdditionalInfoPage extends StatelessWidget {
     return Column(
       children: [
         FmTextField(
+          focusNode: FocusNode(),
           hint: "Erica Chan",
           header: hiredBy,
           inputType: TextInputType.text,
@@ -185,6 +186,7 @@ class AdditionalInfoPage extends StatelessWidget {
     return Column(
       children: [
         FmTextField(
+          focusNode: FocusNode(),
           hint: "Erica Chan",
           header: recommendedBy,
           inputType: TextInputType.text,
