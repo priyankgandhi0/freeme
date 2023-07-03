@@ -42,11 +42,11 @@ class Sample3 extends StatelessWidget {
 
   /// Returns the custom [Widget] to be rendered as the *"Done"* button.
   Widget _buildMyDoneWidget() {
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text('My Done Widget'),
-        const SizedBox(width: 10.0),
+        SizedBox(width: 10.0),
         Icon(Icons.arrow_drop_down, size: 20.0),
       ],
     );

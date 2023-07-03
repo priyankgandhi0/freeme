@@ -22,21 +22,21 @@ class NewPasswordScreen extends StatelessWidget {
                       const Row(),
                       enterNewPasswordTitle
                           .text(
-                        weight: FontWeight.w500,
-                        fontSize: 24,
-                      )
+                            weight: FontWeight.w500,
+                            fontSize: 24,
+                          )
                           .paddingOnly(
-                        top: 40.sh(),
-                      ),
+                            top: 40.sh(),
+                          ),
                       addNewPasswordAndVerifyCode
                           .text(
-                        weight: FontWeight.normal,
-                        fontColor: greyTextColor,
-                        fontSize: 16,
-                      )
+                            weight: FontWeight.normal,
+                            fontColor: greyTextColor,
+                            fontSize: 16,
+                          )
                           .paddingOnly(
-                        top: 8.sh(),
-                      ),
+                            top: 8.sh(),
+                          ),
                       _verificationCode(ctrl),
                       _passwordField(ctrl),
                       _confirmPassword(ctrl),
@@ -52,6 +52,7 @@ class NewPasswordScreen extends StatelessWidget {
       },
     );
   }
+
   _signUpButton(BuildContext context) {
     return FmButton(
       ontap: () {
@@ -93,22 +94,22 @@ class NewPasswordScreen extends StatelessWidget {
 
   _confirmPassword(NewPasswordController ctrl) {
     return FmTextField(
-        focusNode: FocusNode(),
-        hint: enterConfirmPassword,
-        header: confirmPassword,
-        controller: ctrl.confirmPasswordController,
-        inputType: TextInputType.visiblePassword,
-        error: ctrl.confirmPasswordError,
-        obSecureText: !ctrl.showConfirmPassword,
-        sufixIcon: FmImage.assetImage(
-          path: ctrl.showConfirmPassword
-              ? Assets.iconsEyeOpened
-              : Assets.iconsEyeClosed,
-          width: 22,
-          height: 19,
-        ).onTap(() {
-          ctrl.showHideConfirmPassword();
-        }).paddingOnly(right: 17.sw()))
+            focusNode: FocusNode(),
+            hint: enterConfirmPassword,
+            header: confirmPassword,
+            controller: ctrl.confirmPasswordController,
+            inputType: TextInputType.visiblePassword,
+            error: ctrl.confirmPasswordError,
+            obSecureText: !ctrl.showConfirmPassword,
+            sufixIcon: FmImage.assetImage(
+              path: ctrl.showConfirmPassword
+                  ? Assets.iconsEyeOpened
+                  : Assets.iconsEyeClosed,
+              width: 22,
+              height: 19,
+            ).onTap(() {
+              ctrl.showHideConfirmPassword();
+            }).paddingOnly(right: 17.sw()))
         .paddingOnly(
       left: screenHPadding16.sw(),
       right: screenHPadding16.sw(),

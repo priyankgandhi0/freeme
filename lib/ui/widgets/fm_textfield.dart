@@ -88,6 +88,7 @@ class _FmTextFieldState extends State<FmTextField> {
           height: 51.sh(),
           child: KeyboardActions(
             config: _buildConfig(context),
+            disableScroll: true,
             child: TextField(
               inputFormatters: <TextInputFormatter>[
                 if (widget.inputType != null &&
@@ -177,20 +178,26 @@ class _FmTextFieldState extends State<FmTextField> {
 
   /// and their focus nodes to our [FormKeyboardActions].
   KeyboardActionsConfig _buildConfig(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isDarkMode = brightness == Brightness.dark;
+
     return KeyboardActionsConfig(
       keyboardActionsPlatform: KeyboardActionsPlatform.ALL,
-      keyboardBarColor: Colors.grey[200],
-      nextFocus: true,
-      defaultDoneWidget: _buildMyDoneWidget(),
-      actions: [KeyboardActionsItem(focusNode: widget.focusNode)],
+      keyboardBarColor: isDarkMode ? Colors.black : Colors.grey.shade200,
+      nextFocus: false,
+      defaultDoneWidget: _buildMyDoneWidget(isDarkMode),
+      actions: [
+        KeyboardActionsItem(focusNode: widget.focusNode),
+      ],
     );
   }
 
-  Widget _buildMyDoneWidget() {
+  Widget _buildMyDoneWidget(bool isDarkMode) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        "Done".text(fontSize: 16),
+        "Done".text(
+            fontSize: 16, fontColor: isDarkMode ? Colors.white : Colors.black),
       ],
     );
   }
