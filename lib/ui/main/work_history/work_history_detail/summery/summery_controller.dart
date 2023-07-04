@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freeme/ui/widgets/dropdown.dart';
 
 import '../../../../../api/repositories/job_repo.dart';
 import '../../../../../api/response_item.dart';
@@ -52,5 +53,29 @@ class SummeryController extends GetxController {
 
   void clearController() {
     summery = null;
+  }
+
+  List<MenuItem> viewDropDownList = [
+    MenuItem(text: "Quarters", isSelected: false),
+    MenuItem(text: "Tenths", isSelected: true),
+  ];
+
+  MenuItem selectedViewDropDownItem =
+      MenuItem(text: "Tenths", isSelected: true);
+
+  void onViewDropDownItemTap(MenuItem item) {
+    for (int i = 0; i < viewDropDownList.length; i++) {
+      if (viewDropDownList[i].text == item.text) {
+        if (viewDropDownList[i].isSelected) {
+          viewDropDownList[i].isSelected = false;
+        } else {
+          viewDropDownList[i].isSelected = true;
+          selectedViewDropDownItem = viewDropDownList[i];
+        }
+      } else {
+        viewDropDownList[i].isSelected = false;
+      }
+    }
+    update();
   }
 }

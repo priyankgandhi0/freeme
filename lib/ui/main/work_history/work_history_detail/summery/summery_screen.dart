@@ -8,7 +8,9 @@ import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../../calender_demo/utils.dart';
 import '../../../../../constant/space_constant.dart';
+import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/fm_dialog.dart';
 
 class SummeryScreen extends StatelessWidget {
@@ -716,7 +718,7 @@ class SummeryDataTableSecond extends StatelessWidget {
           myDayWidget.add(
             _dataRow(
               date: data.date,
-              color: i%2 == 0 ? rowCellGreyColor : Colors.white,
+              color: i % 2 == 0 ? rowCellGreyColor : Colors.white,
               oneX: data.oneX?.toString(),
               oneFiveX: data.oneFiveX?.toString(),
               twoX: data.twoX?.toString(),
@@ -779,24 +781,6 @@ class SummeryDataTableSecond extends StatelessWidget {
         );
       },
     );
-  }
-
-  DateTime findSundayDateOfTheWeek(DateTime dateTime) {
-    return dateTime.subtract(Duration(days: dateTime.weekday));
-  }
-
-  DateTime findSaturdayDateOfTheWeek(DateTime dateTime) {
-    return dateTime
-        .add(Duration(days: DateTime.daysPerWeek - (dateTime.weekday + 1)));
-  }
-
-  DateTime expandingChildItem(String e) {
-    DateTime tempDate = DateFormat("yyyy-MM-dd").parse(e.toString());
-    return findSaturdayDateOfTheWeek(tempDate);
-  }
-
-  String changeToApiFormat(DateTime date) {
-    return DateFormat('yyyy-MM-dd').format(date);
   }
 
   myDataColumn(String s) {
@@ -923,6 +907,47 @@ class SummeryDataTableFirst extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<SummeryController>(
       builder: (ctrl) {
+        var firstDayOfWeek = findSundayDateOfTheWeek(
+          expandingChildItem(ctrl.summery?.hourlySummary?[0].date),
+        );
+
+        List<HourlySummary> myDayListList = [];
+        for (int i = 0; i < 7; i++) {
+          myDayListList.insert(
+            i,
+            HourlySummary(
+              changeToApiFormat(
+                firstDayOfWeek.add(
+                  Duration(days: i),
+                ),
+              ),
+            ),
+          );
+          (ctrl.summery?.hourlySummary ?? []).forEach(
+            (element) {
+              if (element.date ==
+                  changeToApiFormat(firstDayOfWeek.add(Duration(days: i)))) {
+                myDayListList.removeAt(i);
+                myDayListList.insert(i, element);
+              }
+            },
+          );
+        }
+
+        List<DataRow> myTimeWidget = [];
+        for (int i = 0; i < myDayListList.length; i++) {
+          var e = myDayListList[i];
+          myTimeWidget.add(_dataRow(
+            date: changeToMyFormat(e),
+            color: i % 2 == 0 ? rowCellGreyColor : Colors.white,
+            call: changeToViewFormat(e.callTime ?? "", e.date ?? ""),
+            outOne: changeToViewFormat(e.firstMealStart ?? "", e.date ?? ""),
+            inOne: changeToViewFormat(e.firstMealEnd ?? "", e.date ?? ""),
+            outTwo: changeToViewFormat(e.secondMealStart ?? "", e.date ?? ""),
+            inTwo: changeToViewFormat(e.secondMealEnd ?? "", e.date ?? ""),
+            wrap: changeToViewFormat(e.wrap ?? "", e.date ?? ""),
+          ));
+        }
         return Container(
           height: 355,
           width: Get.width,
@@ -940,7 +965,7 @@ class SummeryDataTableFirst extends StatelessWidget {
           child: Column(
             children: [
               DataTable(
-                columnSpacing: 20,
+                columnSpacing: 17,
                 horizontalMargin: 15,
                 headingRowColor: MaterialStateProperty.all(darkGreenColor2),
                 border: TableBorder.all(
@@ -962,49 +987,7 @@ class SummeryDataTableFirst extends StatelessWidget {
                 ],
                 dataRowHeight: 32,
                 rows: [
-                  /* ...(ctrl.summery?.hourlySummary ?? []).map(
-                    (e) => _dataRow(
-                      date: changeToMyFormat(e),
-                      color: rowCellGreyColor,
-                    ),
-                  ),*/
-                  _dataRow(
-                    date: "7/17",
-                    color: rowCellGreyColor,
-                  ),
-                  _dataRow(
-                    date: "7/18",
-                  ),
-                  _dataRow(
-                    date: "7/19",
-                    color: rowCellGreyColor,
-                    call: "9.0",
-                    outOne: '15.0',
-                    inOne: '15.5',
-                    outTwo: '',
-                    inTwo: '',
-                    wrap: '21.5',
-                  ),
-                  _dataRow(
-                    date: "7/20",
-                    call: "9.0",
-                    outOne: '15.5',
-                    inOne: '16',
-                    outTwo: '',
-                    inTwo: '',
-                    wrap: '22',
-                  ),
-                  _dataRow(
-                    date: "7/21",
-                    color: rowCellGreyColor,
-                  ),
-                  _dataRow(
-                    date: "7/22",
-                  ),
-                  _dataRow(
-                    date: "7/23",
-                    color: rowCellGreyColor,
-                  ),
+                  ...myTimeWidget,
                 ],
               ).paddingOnly(
                 top: 14.sh(),
@@ -1013,29 +996,16 @@ class SummeryDataTableFirst extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   "View:".text(fontSize: 20, weight: FontWeight.w500),
-                  SizedBox(
+                  const SizedBox(
                     width: 12,
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
-                        color: Colors.black,
-                      ),
-                    ),
-                    child: Row(
-                      children: [
-                        "Tenths".text(fontSize: 16),
-                        SizedBox(
-                          width: 38,
-                        ),
-                        FmImage.assetImage(
-                          path: Assets.iconsDownIcon,
-                          height: 15.sh(),
-                          width: 15.sw(),
-                        )
-                      ],
-                    ).paddingOnly(left: 10, top: 5, bottom: 5, right: 10),
+                  fmDropDown(
+                    child: _viewDropDown(controller.selectedViewDropDownItem),
+                    onDropDownTap: (item) {
+                      controller.onViewDropDownItemTap(item);
+                    },
+                    items: controller.viewDropDownList,
+                    context: context,
                   )
                 ],
               ).paddingOnly(
@@ -1051,6 +1021,58 @@ class SummeryDataTableFirst extends StatelessWidget {
             right: screenWPadding16.sw());
       },
     );
+  }
+
+  Widget _viewDropDown(MenuItem selectedUnion) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(
+          color: Colors.black,
+        ),
+      ),
+      child: Row(
+        children: [
+          selectedUnion.text.text(fontSize: 16),
+          const SizedBox(
+            width: 38,
+          ),
+          FmImage.assetImage(
+            path: Assets.iconsDownIcon,
+            height: 15.sh(),
+            width: 15.sw(),
+          )
+        ],
+      ).paddingOnly(left: 10, top: 5, bottom: 5, right: 10),
+    );
+  }
+
+  String changeToViewFormat(String time, String date) {
+    DateTime? dateTime = convertTo24Format(time, date);
+
+    if (dateTime != null) {
+      RegExp regex = RegExp(r'([.]*0)(?!.*\d)');
+      if(controller.selectedViewDropDownItem.text == "Tenths"){
+        var newTime = timeToTenth(dateTime).toStringAsFixed(2).replaceAll(regex, '');
+        return newTime;
+      }else{
+        var newTime = timeToQuarters(dateTime).toStringAsFixed(2).replaceAll(regex, '');
+        return newTime;
+      }
+    }
+    return "";
+  }
+
+  double timeToQuarters(DateTime time) {
+    int totalMinutes = time.hour * 60 + time.minute;
+    double quarters = totalMinutes / 15;
+    return quarters.ceilToDouble() * 0.25;
+  }
+
+  double timeToTenth(DateTime time) {
+    int totalMinutes = time.hour * 60 + time.minute;
+    double quarters = totalMinutes / 6;
+    return quarters.ceilToDouble() * 0.10;
   }
 
   myDataColumn(String s) {
@@ -1154,4 +1176,27 @@ class SummeryDataTableFirst extends StatelessWidget {
       ],
     );
   }
+}
+
+///
+
+DateTime findSundayDateOfTheWeek(DateTime dateTime) {
+  return dateTime.subtract(Duration(days: dateTime.weekday));
+}
+
+DateTime findSaturdayDateOfTheWeek(DateTime dateTime) {
+  return dateTime
+      .add(Duration(days: DateTime.daysPerWeek - (dateTime.weekday + 1)));
+}
+
+DateTime expandingChildItem(String? e) {
+  if (e != null) {
+    DateTime tempDate = DateFormat("yyyy-MM-dd").parse(e.toString());
+    return findSaturdayDateOfTheWeek(tempDate);
+  }
+  return DateTime.now();
+}
+
+String changeToApiFormat(DateTime date) {
+  return DateFormat('yyyy-MM-dd').format(date);
 }

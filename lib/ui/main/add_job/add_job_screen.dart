@@ -970,7 +970,7 @@ class AddJobScreen extends StatelessWidget {
                 fmDropDown(
                   child: _detailItemWithDropDown(departmentStar,
                       labelColor: redColor,
-                      hint: ctrl.selectedDepartment.text,
+                      hint: ctrl.selectedDepartment.text?.replaceFirst("-", "/"),
                       error: controller.departmentError),
                   onDropDownTap: (item) {
                     controller.onDepartmentTap(item);
