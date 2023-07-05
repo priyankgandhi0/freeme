@@ -53,10 +53,11 @@ class EditTimeCardScreen extends StatelessWidget {
       },
       name: save,
     ).paddingOnly(
-        top: screenHPadding32.sh(),
-        bottom: screenHPadding32.sh(),
-        left: screenWPadding16.sw(),
-        right: screenWPadding16.sw());
+      top: screenHPadding32.sh(),
+      bottom: screenHPadding32.sh(),
+      left: screenWPadding16.sw(),
+      right: screenWPadding16.sw(),
+    );
   }
 
   Widget _userPersonalDetail(BuildContext context) {
@@ -82,12 +83,10 @@ class EditTimeCardScreen extends StatelessWidget {
           _detailItem("Social Security",
               controller: controller.socialSecurityController),
           _detailItem("Phone Number", controller: controller.mobileController),
-          _detailItem(
-            "E-mail",
-            showBorder: false,
-            controller: controller.emailController,
-            type: TextInputType.emailAddress
-          ),
+          _detailItem("E-mail",
+              showBorder: false,
+              controller: controller.emailController,
+              type: TextInputType.emailAddress),
         ],
       ),
     ).paddingOnly(

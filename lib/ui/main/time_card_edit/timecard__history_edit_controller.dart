@@ -11,7 +11,6 @@ import '../../../models/edit_timecard_request.dart';
 import '../../../models/work_history_model.dart';
 import '../navigator/main_controller.dart';
 
-
 class TimeCardEditController extends GetxController {
   TextEditingController l1addressl1Controller = TextEditingController();
   TextEditingController l1addressl2Controller = TextEditingController();
@@ -80,11 +79,11 @@ class TimeCardEditController extends GetxController {
       locationTwoCountry = locationTwoCountryList
           .firstWhere((element) => element.text == model.locations?[1].country);
     }
-    if (model.dayType != null &&
-        model.dayType!.isNotEmpty &&
+    if (model.dayTypeId != null &&
         dayTypeList.isNotEmpty) {
-      selectedDayType =
-          dayTypeList.firstWhere((element) => element.text == model.dayType);
+      onDayTypeSelect(
+        dayTypeList.firstWhere((element) => element.id == model.dayTypeId),
+      );
     }
   }
 
@@ -195,7 +194,7 @@ class TimeCardEditController extends GetxController {
       jobId: jobId,
       locations: locationList,
       date: date,
-      dayType: selectedDayType.text,
+      dayTypeId: selectedDayType.id,
     );
     ResponseItem response = await JobRepo.editWorkHistoryTimecard(
       request.toJson(),
@@ -213,7 +212,26 @@ class TimeCardEditController extends GetxController {
     }*/
   }
 
-  Future<void> clearAllFields() async {}
+  Future<void> clearAllFields() async {
+    dayTypeList.clear();
+    historyModel = null;
+
+    l1addressl1Controller.clear();
+    l1addressl2Controller.clear();
+    l1CityController.clear();
+    l1StateController.clear();
+    locationOneCountry = MenuItem(text: "United States", countryCode: "US");
+    l1ZipController.clear();
+
+    l2addressl1Controller.clear();
+    l2addressl2Controller.clear();
+    l2CityController.clear();
+    l2StateController.clear();
+    locationTwoCountry = MenuItem(text: "United States", countryCode: "US");
+    l2ZipController.clear();
+
+    onDayTypeSelect(MenuItem(text: "Shoot Day", id: 1));
+  }
 
   List<MenuItem> dayTypeList = [];
 

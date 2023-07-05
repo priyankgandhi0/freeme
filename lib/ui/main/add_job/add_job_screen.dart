@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../globle.dart';
 import '../../../models/taxed_nontaxed_item.dart';
@@ -566,46 +567,68 @@ class AddJobScreen extends StatelessWidget {
     );
   }
 
+  ///***
   Widget _taxedNonTaxedItem(TaxedNonTaxedModel item,
       {GestureTapCallback? onRemoveClick}) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  FmImage.assetImage(
-                    path: Assets.iconsMinusIcon,
-                    height: 20.sh(),
-                    width: 20.sw(),
-                  ).onClick(onRemoveClick ?? () {}),
-                  item.type.text(fontSize: 16).paddingOnly(
-                        left: 10.sw(),
-                      )
-                ],
+
+
+     return Slidable(
+      key: const ValueKey(0),
+      endActionPane: ActionPane(
+        motion: DrawerMotion(),
+        children: [
+          SlidableAction(
+            onPressed: (context) {
+              if(onRemoveClick!=null){
+                onRemoveClick();
+              }
+            },
+            backgroundColor: Colors.red,
+            foregroundColor: Colors.white,
+            label: 'Delete',
+          ),
+
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Row(
+                  children: [
+                    FmImage.assetImage(
+                      path: Assets.iconsMinusIcon,
+                      height: 20.sh(),
+                      width: 20.sw(),
+                    ) .onClick(onRemoveClick ?? () {}) ,
+                    item.type.text(fontSize: 16).paddingOnly(
+                      left: 10.sw(),
+                    )
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  "\$${item.amount} / ${item.timeDesc}".text(fontSize: 16),
-                ],
-              ),
-            )
-          ],
-        ).paddingOnly(
-          top: screenHPadding16.sh(),
-          bottom: screenHPadding16.sh(),
-          left: screenWPadding16.sw(),
-          right: screenWPadding16.sw(),
-        ),
-        Container(
-          height: 1,
-          width: Get.width,
-          color: borderGreyColor,
-        )
-      ],
+              Expanded(
+                child: Row(
+                  children: [
+                    "\$${item.amount} / ${item.timeDesc}".text(fontSize: 16),
+                  ],
+                ),
+              )
+            ],
+          ).paddingOnly(
+            top: screenHPadding16.sh(),
+            bottom: screenHPadding16.sh(),
+            left: screenWPadding16.sw(),
+            right: screenWPadding16.sw(),
+          ),
+          Container(
+            height: 1,
+            width: Get.width,
+            color: borderGreyColor,
+          )
+        ],
+      ),
     );
   }
 
@@ -970,7 +993,8 @@ class AddJobScreen extends StatelessWidget {
                 fmDropDown(
                   child: _detailItemWithDropDown(departmentStar,
                       labelColor: redColor,
-                      hint: ctrl.selectedDepartment.text?.replaceFirst("-", "/"),
+                      hint:
+                          ctrl.selectedDepartment.text?.replaceFirst("-", "/"),
                       error: controller.departmentError),
                   onDropDownTap: (item) {
                     controller.onDepartmentTap(item);

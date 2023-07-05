@@ -140,7 +140,7 @@ class HourlySummary {
     _notes = json['notes'];
     _workHistoryId = json['work_history_id'];
     _jobDescription = json['job_description'];
-    _dayType = json['day_type'];
+    _dayTypeId = json['day_type_id'];
     _callTime = json['call_time'];
     _firstMealStart = json['first_meal_start'];
     _firstMealEnd = json['first_meal_end'];
@@ -180,7 +180,7 @@ class HourlySummary {
   String? _notes;
   num? _workHistoryId;
   String? _jobDescription;
-  String? _dayType;
+  int? _dayTypeId;
   String? _callTime;
   String? _firstMealStart;
   String? _firstMealEnd;
@@ -243,7 +243,7 @@ class HourlySummary {
 
   String? get jobDescription => _jobDescription;
 
-  String? get dayType => _dayType;
+  int? get dayTypeId => _dayTypeId;
 
   String? get callTime => _callTime;
 

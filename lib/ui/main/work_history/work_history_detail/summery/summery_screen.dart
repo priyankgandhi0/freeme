@@ -7,7 +7,6 @@ import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_
 import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../../calender_demo/utils.dart';
 import '../../../../../constant/space_constant.dart';
 import '../../../../widgets/dropdown.dart';
@@ -167,6 +166,34 @@ class SummeryScreen extends StatelessWidget {
   }
 
   Widget _grossEnrningCard(SummeryController ctrl) {
+    var shootDays = (ctrl.summery?.hourlySummary ?? []).where((element) => element.dayTypeId==1).length;
+
+    List<Widget> grossEarningTotal = [];
+    for (int i = 0; i < (ctrl.summery?.grossEarnings ?? []).length; i++) {
+      var e = ctrl.summery?.grossEarnings?[i];
+
+      String? price;
+      if (e?.taxPerTimeCategory == "Flat") {
+        price = e?.taxtedAmount.toString();
+      } else if (e?.taxPerTimeCategory == "Day") {
+        price = ((ctrl.summery?.hourlySummary?.length ?? 0) *
+                (e?.taxtedAmount ?? 0))
+            .toString();
+      } else if (e?.taxPerTimeCategory == "Week") {
+        price = e?.taxtedAmount.toString();///
+      } else if (e?.taxPerTimeCategory == "Shoot Day") {
+        price = (shootDays * (e?.taxtedAmount ?? 0)).toString();
+      }
+
+      grossEarningTotal.add(
+        _grossEarningItem(
+          name: e?.taxedItem,
+          quantity: "${e?.taxtAmount}/${e?.taxPerTimeCategory}",
+          price: "\$$price",
+        ),
+      );
+    }
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -217,12 +244,7 @@ class SummeryScreen extends StatelessWidget {
               ],
             ).paddingAll(16),
           ),
-          ...(ctrl.summery?.grossEarnings ?? []).map(
-            (e) => _grossEarningItem(
-                name: e.taxedItem,
-                quantity: "${e.taxtAmount}/${e.taxPerTimeCategory}",
-                price: "\$250"),
-          ),
+          ...grossEarningTotal,
           Container(
             width: Get.width,
             height: 1,
@@ -965,7 +987,7 @@ class SummeryDataTableFirst extends StatelessWidget {
           child: Column(
             children: [
               DataTable(
-                columnSpacing: 17,
+                columnSpacing: 16,
                 horizontalMargin: 15,
                 headingRowColor: MaterialStateProperty.all(darkGreenColor2),
                 border: TableBorder.all(
@@ -1052,11 +1074,13 @@ class SummeryDataTableFirst extends StatelessWidget {
 
     if (dateTime != null) {
       RegExp regex = RegExp(r'([.]*0)(?!.*\d)');
-      if(controller.selectedViewDropDownItem.text == "Tenths"){
-        var newTime = timeToTenth(dateTime).toStringAsFixed(2).replaceAll(regex, '');
+      if (controller.selectedViewDropDownItem.text == "Tenths") {
+        var newTime =
+            timeToTenth(dateTime).toStringAsFixed(2).replaceAll(regex, '');
         return newTime;
-      }else{
-        var newTime = timeToQuarters(dateTime).toStringAsFixed(2).replaceAll(regex, '');
+      } else {
+        var newTime =
+            timeToQuarters(dateTime).toStringAsFixed(2).replaceAll(regex, '');
         return newTime;
       }
     }

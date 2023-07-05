@@ -6,7 +6,7 @@ class WorkHistoryModel {
     _jobId = json['job_id'];
     _jobDescription = json['job_description'];
     _date = json['date'];
-    _dayType = json['day_type'];
+    _dayTypeId = json['day_type_id'];
     _callTime = json['call_time'];
     _firstMealStart = json['first_meal_start'];
     _firstMealEnd = json['first_meal_end'];
@@ -25,7 +25,7 @@ class WorkHistoryModel {
   num? _jobId;
   String? _jobDescription;
   String? _date;
-  String? _dayType;
+  int? _dayTypeId;
   String? _callTime;
   String? _firstMealStart;
   String? _firstMealEnd;
@@ -42,7 +42,7 @@ class WorkHistoryModel {
 
   String? get date => _date;
 
-  String? get dayType => _dayType;
+  int? get dayTypeId => _dayTypeId;
 
   String? get callTime => _callTime;
 

@@ -50,6 +50,7 @@ dependencies:
   mime_type: ^1.0.0
   intl: ^0.18.1
   keyboard_actions: ^4.2.0
+  flutter_slidable: ^3.0.0
 
 
 dev_dependencies:

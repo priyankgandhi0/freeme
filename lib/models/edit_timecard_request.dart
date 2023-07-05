@@ -2,20 +2,20 @@ class EditTimecardRequest {
   EditTimecardRequest({
     num? jobId,
     String? date,
-    String? dayType,
+    int? dayTypeId,
     List<Locations>? locations,
     ClockedTimes? clockedTimes,
   }) {
     _jobId = jobId;
     _date = date;
-    _dayType = dayType;
+    _dayTypeId = dayTypeId;
     _locations = locations;
     _clockedTimes = clockedTimes;
   }
 
   num? _jobId;
   String? _date;
-  String? _dayType;
+  int? _dayTypeId;
   List<Locations>? _locations;
   ClockedTimes? _clockedTimes;
 
@@ -23,7 +23,7 @@ class EditTimecardRequest {
 
   String? get date => _date;
 
-  String? get dayType => _dayType;
+  int? get dayTypeId => _dayTypeId;
 
   List<Locations>? get locations => _locations;
 
@@ -33,7 +33,7 @@ class EditTimecardRequest {
     final map = <String, dynamic>{};
     map['job_id'] = _jobId;
     map['date'] = _date;
-    map['day_type'] = _dayType;
+    map['day_type_id'] = _dayTypeId;
     if (_locations != null) {
       map['locations'] = _locations?.map((v) => v.toJson()).toList();
     }
