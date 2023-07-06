@@ -1,14 +1,12 @@
 import 'dart:collection';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:freeme/api/repositories/quick_entry_repo.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-
 import '../../../api/api_globle.dart';
 import '../../../api/repositories/job_repo.dart';
-import '../../../calender_demo/utils.dart';
+import '../../../utils/calender_utils.dart';
 import '../../../globle.dart';
 import '../../../models/country.dart';
 import '../../../models/get_job_info_model.dart';
@@ -21,8 +19,6 @@ import '../../../models/taxed_nontaxed_item.dart';
 import '../../../models/term_model.dart';
 import '../../../models/type_model.dart';
 import '../../widgets/dropdown.dart';
-import '../../widgets/non_tax_item_dialog.dart';
-import '../../widgets/tax_item_dialog.dart';
 import '../navigator/main_controller.dart';
 import '../work_history/history/work_history_controller.dart';
 import '../work_history/work_history_detail/job_info/job_info_controller.dart';
@@ -118,7 +114,9 @@ class AddJobController extends GetxController {
       allTypes.addAll(typeModelFromJson(response.data)
           .map((e) => MenuItem(text: e.type, id: e.typeId, isSelected: false))
           .toList());
-      onTypeDropDownTap(MenuItem(text: "Not Sure",isSelected: true,id: 1),);
+      onTypeDropDownTap(
+        MenuItem(text: "Not Sure", isSelected: true, id: 1),
+      );
     } else {}
   }
 
@@ -131,7 +129,7 @@ class AddJobController extends GetxController {
       allTerms.addAll(termModelFromJson(response.data)
           .map((e) => MenuItem(text: e.term, id: e.termsId, isSelected: false))
           .toList());
-      onTermDropDownTap(MenuItem(text: "Not Sure",isSelected: true,id: 1));
+      onTermDropDownTap(MenuItem(text: "Not Sure", isSelected: true, id: 1));
     } else {}
   }
 
@@ -145,11 +143,12 @@ class AddJobController extends GetxController {
           .map((e) =>
               MenuItem(text: e.paidByName, id: e.paidById, isSelected: false))
           .toList());
-      onPaidByDropDownTap(MenuItem(text: "Not Sure",isSelected: true,id: 1));
+      onPaidByDropDownTap(MenuItem(text: "Not Sure", isSelected: true, id: 1));
     } else {}
   }
 
   List<MenuItem> allGuaranteedHour = [];
+
   Future getAllGuaranteedHour() async {
     ResponseItem response = await QuickEntryRepo.getAllGuaranteedHourList();
     if (response.status) {
@@ -160,21 +159,20 @@ class AddJobController extends GetxController {
               id: e.guaranteedHourId,
               isSelected: false))
           .toList());
-      onPerGuaranteedHourDropDownTap(MenuItem(text: "Not Sure",isSelected: true,id: 1));
+      onPerGuaranteedHourDropDownTap(
+          MenuItem(text: "Not Sure", isSelected: true, id: 1));
     } else {}
   }
 
   List<MenuItem> allPerHour = [];
+
   Future getAllPerHour() async {
     ResponseItem response = await QuickEntryRepo.allPerHourList();
     if (response.status) {
       allPerHour.clear();
       allPerHour.addAll(perHourModelFromJson(response.data)
           .map(
-            (e) => MenuItem(
-                text: e.hours,
-                id: e.hoursId,
-                isSelected: false),
+            (e) => MenuItem(text: e.hours, id: e.hoursId, isSelected: false),
           )
           .toList());
       onPerHourDropDownTap(MenuItem(text: "10 hours", isSelected: true, id: 3));
@@ -182,6 +180,7 @@ class AddJobController extends GetxController {
   }
 
   List<MenuItem> allJobClassificationList = [];
+
   Future<void> getAllJobClassifications() async {
     ResponseItem response = await QuickEntryRepo.allJobClassificationsList();
     if (response.status) {
@@ -761,6 +760,36 @@ class AddJobController extends GetxController {
 
   setUpData(GetJobInfoModel model) {
     setJobData(model);
+  }
+
+  void addDeleteButton(int index) {
+    for (int i = 0; i < taxedItems.length; i++) {
+      if (index == i) {
+       if(taxedItems[i].showDeleteButton){
+         taxedItems[i].showDeleteButton = false;
+       }else{
+         taxedItems[i].showDeleteButton = true;
+       }
+      } else {
+        taxedItems[i].showDeleteButton = false;
+      }
+    }
+    update();
+  }
+
+  void addNonTaxDeleteButton(int index) {
+    for (int i = 0; i < nonTaxedItems.length; i++) {
+      if (i == index) {
+        if(nonTaxedItems[i].showDeleteButton){
+          nonTaxedItems[i].showDeleteButton = false;
+        }else{
+          nonTaxedItems[i].showDeleteButton = true;
+        }
+      } else {
+        nonTaxedItems[i].showDeleteButton = false;
+      }
+    }
+    update();
   }
 }
 

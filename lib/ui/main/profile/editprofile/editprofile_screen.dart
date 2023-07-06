@@ -433,7 +433,7 @@ class EditProfileScreen extends StatelessWidget {
       top: screenHPadding16.sh(),
     );
   }
-
+/*
   Widget contentCard(String title, List<String> valueList,
       {GestureTapCallback? onAddClick,
       GestureTapCallback? onRemoveClick,
@@ -478,7 +478,9 @@ class EditProfileScreen extends StatelessWidget {
                     ),
                   ),
                   Expanded(
-                    child: FmEmptyTextField(),
+                    child: FmEmptyTextField(
+                      focusNode: FocusNode(),
+                    ),
                   )
                 ],
               )
@@ -521,7 +523,7 @@ class EditProfileScreen extends StatelessWidget {
       left: 16.sw(),
       right: 16.sw(),
     );
-  }
+  }*/
 
   Widget nameCard() {
     return Container(
@@ -552,6 +554,7 @@ class EditProfileScreen extends StatelessWidget {
               ),
               Expanded(
                 child: FmEmptyTextField(
+                  focusNode: FocusNode(),
                   controller: controller.firstNameController,
                   hintText: enterFirstName,
                 ),
@@ -576,6 +579,7 @@ class EditProfileScreen extends StatelessWidget {
               Expanded(
                 child: FmEmptyTextField(
                   hintText: enterLastName,
+                  focusNode: FocusNode(),
                   controller: controller.lastNameController,
                 ),
               ),
@@ -622,6 +626,7 @@ class EditProfileScreen extends StatelessWidget {
             ],
           ),
           FmEmptyTextField(
+            focusNode: FocusNode(),
             hintText: enterAboutMe,
             maxLines: 3,
             controller: ctrl.aboutMeController,
@@ -720,6 +725,7 @@ class EditProfileScreen extends StatelessWidget {
         ).onClick(onRemoveClick),
         Expanded(
           child: FmEmptyTextField(
+            focusNode: FocusNode(),
             controller: textController,
             hintText: hint,
             textInputType: inputType,

@@ -20,7 +20,8 @@ class TaxItemDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     controller.selectedTaxedItemType = controller.typeList.firstWhereOrNull(
-            (element) => element.text == defaultSelectedItem?.type) ??
+          (element) => element.text == defaultSelectedItem?.type,
+        ) ??
         MenuItem(text: "Select Type");
 
     return GetBuilder<TaxedItemDialogController>(
@@ -91,6 +92,7 @@ class TaxItemDialog extends StatelessWidget {
                           ),
                         ),
                         child: FmEmptyTextField(
+                          focusNode: FocusNode(),
                           hintText: "\$25",
                           textInputType: TextInputType.number,
                           controller: controller.amountController,
@@ -248,6 +250,7 @@ class TaxItemDialog extends StatelessWidget {
               height: 1,
             ),
             FmEmptyTextField(
+              focusNode: FocusNode(),
               hintText: "Taxed Item Note",
               textInputType: TextInputType.text,
               controller: ctrl.typeManualController,
@@ -423,9 +426,9 @@ class TaxedItemDialogController extends GetxController {
     selectedTaxedItemType =
         typeList.firstWhereOrNull((element) => element.text == item.type) ??
             MenuItem(text: "Select Type");
-    selectedPerTime =
-        perHourList.firstWhereOrNull((element) => element.text == item.timeId) ??
-            MenuItem(text: "Day", id: 1);
+    selectedPerTime = perHourList
+            .firstWhereOrNull((element) => element.id == item.timeId) ??
+        MenuItem(text: "Day", id: 1);
     amountController.text = item.amount.toString();
     update();
   }

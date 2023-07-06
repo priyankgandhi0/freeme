@@ -128,6 +128,7 @@ class PaymentDetailPage extends StatelessWidget {
               color: greyTextColor,
             ),
             FmEmptyTextField(
+              focusNode: FocusNode(),
               hintText: cardBrandJob,
               textInputType: TextInputType.text,
               controller: controller.termsManualController,
@@ -204,6 +205,7 @@ class PaymentDetailPage extends StatelessWidget {
               height: 1,
             ),
             FmEmptyTextField(
+              focusNode: FocusNode(),
               hintText: "PaidBy Note",
               textInputType: TextInputType.text,
               controller: controller.paidByManualController,

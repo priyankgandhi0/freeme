@@ -160,6 +160,8 @@ class RegisterScreen extends StatelessWidget {
                         height: 1,
                       ),
                       FmEmptyTextField(
+
+                        focusNode: FocusNode(),
                         hintText: "Enter Your Industry",
                         controller: controller.industryController,
                         textInputType: TextInputType.text,

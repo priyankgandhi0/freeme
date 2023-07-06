@@ -7,7 +7,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../../api/repositories/job_repo.dart';
 import '../../../../../api/response_item.dart';
-import '../../../../../calender_demo/utils.dart';
+import '../../../../../utils/calender_utils.dart';
 import '../../../../../globle.dart';
 import '../../../../../models/get_job_info_model.dart';
 import '../../../navigator/main_controller.dart';

@@ -176,7 +176,6 @@ class _FmTextFieldState extends State<FmTextField> {
     );
   }
 
-  /// and their focus nodes to our [FormKeyboardActions].
   KeyboardActionsConfig _buildConfig(BuildContext context) {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isDarkMode = brightness == Brightness.dark;
@@ -203,7 +202,7 @@ class _FmTextFieldState extends State<FmTextField> {
   }
 }
 
-class FmEmptyTextField extends StatelessWidget {
+class FmEmptyTextField extends StatefulWidget {
   FmEmptyTextField(
       {Key? key,
       this.hintText,
@@ -212,6 +211,7 @@ class FmEmptyTextField extends StatelessWidget {
       this.textInputType,
       this.controller,
       this.onchange,
+      required this.focusNode,
       this.enable = true})
       : super(key: key);
 
@@ -222,48 +222,91 @@ class FmEmptyTextField extends StatelessWidget {
   TextEditingController? controller;
   ValueChanged<String>? onchange;
   bool enable;
+  FocusNode focusNode;
+
+  //final FocusNode focusNode2 = FocusNode();
 
   @override
+  State<FmEmptyTextField> createState() => _FmEmptyTextFieldState();
+}
+
+class _FmEmptyTextFieldState extends State<FmEmptyTextField> {
+  @override
   Widget build(BuildContext context) {
-    return TextField(
-      enabled: enable,
-      enableSuggestions: false,
-      textInputAction: TextInputAction.done,
-      inputFormatters: <TextInputFormatter>[
-        if (textInputType != null &&
-            (textInputType == TextInputType.number ||
-                textInputType == TextInputType.phone)) ...[
-          FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d*')),
-        ]
-      ],
-      onChanged: (text) {
-        if (onchange != null) {
-          onchange!(text);
-        }
-      },
-      controller: controller,
-      maxLines: maxLines ?? 1,
-      keyboardType: textInputType,
-      style: const TextStyle(
-        fontSize: 16,
-        fontWeight: FontWeight.normal,
-        fontFamily: sfPro,
-      ),
-      decoration: InputDecoration(
-        isDense: true,
-        border: InputBorder.none,
-        hintStyle: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.normal,
-            fontFamily: sfPro,
-            color: greyTextColor),
-        hintText: hintText,
-        suffixIcon: suffixIcon,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 0,
-          vertical: 0,
+    return Column(
+      children: [
+        KeyboardActions(
+          config: _buildConfig(context),
+          disableScroll: true,
+          child: TextField(
+            enabled: widget.enable,
+            enableSuggestions: true,
+            textInputAction: TextInputAction.done,
+            inputFormatters: <TextInputFormatter>[
+              if (widget.textInputType != null &&
+                  (widget.textInputType == TextInputType.number ||
+                      widget.textInputType == TextInputType.phone)) ...[
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'^\d+\.?\d*'),
+                ),
+              ]
+            ],
+            onChanged: (text) {
+              if (widget.onchange != null) {
+                widget.onchange!(text);
+              }
+            },
+            controller: widget.controller,
+            maxLines: widget.maxLines ?? 1,
+            keyboardType: widget.textInputType,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
+              fontFamily: sfPro,
+            ),
+            decoration: InputDecoration(
+              isDense: true,
+              border: InputBorder.none,
+              hintStyle: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.normal,
+                  fontFamily: sfPro,
+                  color: greyTextColor),
+              hintText: widget.hintText,
+              suffixIcon: widget.suffixIcon,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 0,
+                vertical: 0,
+              ),
+            ),
+          ),
         ),
-      ),
+      ],
+    );
+  }
+
+  /// and their focus nodes to our [FormKeyboardActions].
+  KeyboardActionsConfig _buildConfig(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isDarkMode = brightness == Brightness.dark;
+
+    return KeyboardActionsConfig(
+      keyboardBarColor: isDarkMode ? Colors.black : Colors.grey.shade200,
+      nextFocus: false,
+      defaultDoneWidget: _buildMyDoneWidget(isDarkMode),
+      actions: [
+        KeyboardActionsItem(focusNode: widget.focusNode),
+      ],
+    );
+  }
+
+  Widget _buildMyDoneWidget(bool isDarkMode) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        "Done".text(
+            fontSize: 16, fontColor: isDarkMode ? Colors.white : Colors.black),
+      ],
     );
   }
 }

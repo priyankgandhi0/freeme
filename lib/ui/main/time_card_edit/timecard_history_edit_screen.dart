@@ -430,6 +430,7 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
         ),
       ),
       child: FmEmptyTextField(
+        focusNode: FocusNode(),
         hintText: hint,
         textInputType: inputType,
         controller: controller,

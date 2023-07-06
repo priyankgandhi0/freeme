@@ -7,7 +7,7 @@ import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_
 import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_controller.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../../../../../calender_demo/utils.dart';
+import '../../../../../utils/calender_utils.dart';
 import '../../../../../constant/space_constant.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/fm_dialog.dart';
@@ -94,6 +94,7 @@ class SummeryScreen extends StatelessWidget {
             ],
           ),
           FmEmptyTextField(
+            focusNode: FocusNode(),
             hintText: commentDescription,
             maxLines: 3,
           ).paddingOnly(

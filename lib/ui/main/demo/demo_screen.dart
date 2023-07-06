@@ -5,7 +5,7 @@ import 'package:freeme/ui/main/demo/demo_controller.dart';
 import 'package:freeme/utils/extension.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../calender_demo/utils.dart';
+import '../../../utils/calender_utils.dart';
 
 class DemoScreen extends StatelessWidget {
   DemoScreen({Key? key}) : super(key: key);

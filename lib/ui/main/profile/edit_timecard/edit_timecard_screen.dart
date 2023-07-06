@@ -194,6 +194,7 @@ class EditTimeCardScreen extends StatelessWidget {
           ),
           Expanded(
             child: FmEmptyTextField(
+              focusNode: FocusNode(),
               controller: controller,
               textInputType: type,
             ),

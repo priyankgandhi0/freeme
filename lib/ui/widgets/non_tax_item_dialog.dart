@@ -87,6 +87,7 @@ class NonTaxItemDialog extends StatelessWidget {
                           ),
                         ),
                         child: FmEmptyTextField(
+                          focusNode: FocusNode(),
                           hintText: "\$25",
                           textInputType: TextInputType.number,
                           controller: controller.amountController,
@@ -282,6 +283,7 @@ class NonTaxItemDialog extends StatelessWidget {
               width: Get.width,
             ),
             FmEmptyTextField(
+              focusNode: FocusNode(),
               textInputType: TextInputType.text,
               controller: ctrl.typeManualController,
               hintText: "Non-Taxed Item Note",

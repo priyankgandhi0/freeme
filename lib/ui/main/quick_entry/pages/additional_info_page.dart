@@ -263,6 +263,7 @@ class AdditionalInfoPage extends StatelessWidget {
             ),
             FmEmptyTextField(
               hintText: cardBrandJob,
+              focusNode: FocusNode(),
               textInputType: TextInputType.text,
               controller: controller.typeManualController,
             ).paddingOnly(

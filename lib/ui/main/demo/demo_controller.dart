@@ -2,7 +2,7 @@ import 'dart:collection';
 
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../../calender_demo/utils.dart';
+import '../../../utils/calender_utils.dart';
 import '../../../globle.dart';
 
 class DemoController extends GetxController{

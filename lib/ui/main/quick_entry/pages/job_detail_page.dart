@@ -322,6 +322,7 @@ class JobDetailPage extends StatelessWidget {
           ),
           Expanded(
             child: FmEmptyTextField(
+              focusNode: FocusNode(),
               hintText: hint,
               textInputType: type,
               controller: controller,

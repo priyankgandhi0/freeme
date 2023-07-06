@@ -6,6 +6,7 @@ class TaxedNonTaxedModel {
   String? taxedTypeNote;
   num? taxedItemId;
   String? timeDesc;
+  bool showDeleteButton = false;
 
   Map<String, dynamic> toTaxedJson() {
     final map = <String, dynamic>{};
