@@ -172,6 +172,13 @@ class _FmTextFieldState extends State<FmTextField> {
             ),
           ),
         ),
+          widget.error != null
+            ? Row(
+                children: [
+                  widget.error.text(fontColor: redColor),
+                ],
+              )
+            : Container()
       ],
     );
   }
@@ -281,6 +288,7 @@ class _FmEmptyTextFieldState extends State<FmEmptyTextField> {
             ),
           ),
         ),
+
       ],
     );
   }

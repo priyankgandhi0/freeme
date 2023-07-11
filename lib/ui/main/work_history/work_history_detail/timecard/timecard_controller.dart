@@ -56,7 +56,7 @@ class TimeCardController extends GetxController {
   WorkHistoryModel? historyModel;
 
   Future<void> getWorkHistory(num? jobId, String date) async {
-    startLoading();
+   // startLoading();
     ResponseItem response = await JobRepo.getWorkHistory(jobId ?? -1, date);
     if (response.status) {
       historyModel = WorkHistoryModel.fromJson(response.data);

@@ -431,7 +431,7 @@ class JobInfoScreen extends StatelessWidget {
   createCompanyAddress(JobInfoController ctrl) {
     return "${ctrl.jobInfo?.companyAddressLine1 ?? ""}"
         "\n${ctrl.jobInfo?.companyAddressLine2 ?? ""}"
-        "\n${ctrl.jobInfo?.city ?? ""}${ctrl.jobInfo?.state ?? ""}"
+        "\n${ctrl.jobInfo?.city ?? ""}, ${ctrl.jobInfo?.state ?? ""} "
         "${ctrl.jobInfo?.zip == 0 ? "" : ctrl.jobInfo?.zip}\n${ctrl.jobInfo?.country ?? ""}";
   }
 

@@ -13,7 +13,6 @@ class RegisterController extends GetxController {
   bool showPassword = false;
   bool showConfirmPassword = false;
 
-
   void showHidePassword() {
     showPassword = !showPassword;
     update();
@@ -24,12 +23,10 @@ class RegisterController extends GetxController {
     update();
   }
 
-
-
   ExpansionTileController expansionController = ExpansionTileController();
 
-
   bool isExpanded = false;
+
   void expansionChange(bool value) {
     isExpanded = value;
     update();
@@ -131,12 +128,24 @@ class RegisterController extends GetxController {
         confirmPasswordController.text.trim().isEmpty ||
         firstNameController.text.trim().isEmpty ||
         lastNameController.text.trim().isEmpty ||
-        selectedIndustry == null ||
+        selectedIndustry.text == "Select Industry" ||
         (confirmPasswordController.text.trim() !=
             passwordController.text.trim()) ||
-        (!emailController.text.trim().isEmail)) {
+        (!emailController.text.trim().isEmail) ||
+        (selectedIndustry.text == "Other" && industryController.text.isEmpty)) {
+
+      if (selectedIndustry.text == "Select Industry") {
+        industryError = "Select Industry";
+      } else {
+        if (selectedIndustry.text == "Other" &&
+            industryController.text.isEmpty) {
+          industryError = "Enter Industry";
+        } else {
+          industryError = null;
+        }
+      }
       if (emailController.text.trim().isEmpty) {
-        emailError = "Please e-mail";
+        emailError = "Enter e-mail";
       } else {
         if (!emailController.text.trim().isEmail) {
           emailError = "Enter Valid e-mail";
@@ -160,13 +169,6 @@ class RegisterController extends GetxController {
           confirmPasswordError = null;
         }
       }
-
-      if (selectedIndustry == null) {
-        industryError = "Select industry";
-      } else {
-        industryError = null;
-      }
-
       if (industryController.text.isEmpty) {
         industryTextFieldError = "Please Enter Industry";
       } else {

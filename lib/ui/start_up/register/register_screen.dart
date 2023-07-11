@@ -42,6 +42,7 @@ class RegisterScreen extends StatelessWidget {
                         )
                         .paddingOnly(
                           top: 8.sh(),
+                          bottom: 24.sh(),
                         ),
                     Stack(
                       children: [
@@ -57,8 +58,8 @@ class RegisterScreen extends StatelessWidget {
                         ).paddingOnly(
                             top: controller.selectedIndustry.text == "Other" &&
                                     !ctrl.isExpanded
-                                ? 128
-                                : 74),
+                                ? 136
+                                : 82),
                         industryDropDown(context, ctrl),
                       ],
                     ),
@@ -80,7 +81,8 @@ class RegisterScreen extends StatelessWidget {
         for (int i = 0; i < ctrl.industryList.length; i++) {
           industryItemList.add(expandedChildItem(
                   ctrl.industryList[i].text ?? "", context,
-                  showBorder: i != (ctrl.industryList.length - 1))
+                  showBorder: i != (ctrl.industryList.length - 1),
+                  isSelected: ctrl.industryList[i].isSelected)
               .onTap(
             () {
               ctrl.isExpanded = false;
@@ -160,7 +162,6 @@ class RegisterScreen extends StatelessWidget {
                         height: 1,
                       ),
                       FmEmptyTextField(
-
                         focusNode: FocusNode(),
                         hintText: "Enter Your Industry",
                         controller: controller.industryController,
@@ -179,7 +180,7 @@ class RegisterScreen extends StatelessWidget {
                 left: screenHPadding16.sw(),
                 right: screenHPadding16.sw(),
                 top: screenHPadding8.sh()),
-            ctrl.industryError != null
+            ctrl.industryError != null && !ctrl.isExpanded
                 ? Row(
                     children: [
                       ctrl.industryError
@@ -188,6 +189,7 @@ class RegisterScreen extends StatelessWidget {
                           )
                           .paddingOnly(
                             left: screenWPadding16.sw(),
+                            top: 4.sh(),
                           ),
                     ],
                   )
@@ -198,76 +200,8 @@ class RegisterScreen extends StatelessWidget {
     );
   }
 
-/*  Widget _industryDropDownItem(String lable,
-      {bool showBorder = true,
-      String? hint,
-      bool showDownIcon = true,
-      Color labelColor = Colors.black,
-      Widget? customSuffix,
-      String? error}) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: error != null ? redColor : Colors.black,
-        ),
-        borderRadius: BorderRadius.circular(5),
-        color: Colors.white,
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              hint
-                  .text(
-                    fontColor: Colors.black,
-                    fontSize: 16,
-                    overFlow: TextOverflow.ellipsis,
-                  )
-                  .paddingOnly(left: 16),
-              showDownIcon
-                  ? customSuffix ??
-                      FmImage.assetImage(
-                        path: Assets.iconsDownIcon,
-                        height: 15.sh(),
-                        width: 15.sw(),
-                        color: Colors.black,
-                      ).paddingOnly(
-                        right: screenWPadding16.sw(),
-                      )
-                  : Container()
-            ],
-          ).paddingOnly(
-            top: screenHPadding16.sh(),
-            bottom: 16.sh(),
-          ),
-          if (controller.selectedIndustry.text == "Other") ...[
-            Container(
-              width: Get.width,
-              color: greyTextColor,
-              height: 1,
-            ),
-            FmEmptyTextField(
-              hintText: "Enter Your Industry",
-              controller: controller.industryController,
-              textInputType: TextInputType.text,
-            ).paddingOnly(
-              left: screenWPadding16.sw(),
-              right: screenWPadding16.sw(),
-              top: screenHPadding16.sh(),
-              bottom: screenHPadding16.sh(),
-            )
-          ]
-        ],
-      ),
-    ).paddingOnly(
-        left: screenHPadding16.sw(),
-        right: screenHPadding16.sw(),
-        top: screenHPadding8.sh());
-  }*/
-
   Widget expandedChildItem(String name, BuildContext context,
-      {bool showBorder = true}) {
+      {bool showBorder = true, bool? isSelected}) {
     return Container(
       decoration: BoxDecoration(
         border: showBorder
@@ -281,12 +215,28 @@ class RegisterScreen extends StatelessWidget {
       ),
       child: Row(
         children: [
+          (isSelected ?? false)
+              ? FmImage.assetImage(
+                  path: Assets.iconsTrueIcon,
+                  height: 20.sh(),
+                  width: 20.sw(),
+                ).paddingOnly(
+                  left: screenWPadding8.sw(),
+                  right: screenWPadding8.sw(),
+                )
+              : Container(
+                  height: 20.sh(),
+                  width: 20.sw(),
+                ).paddingOnly(
+                  left: screenWPadding8.sw(),
+                  right: screenWPadding8.sw(),
+                ),
           name
               .text(
                 fontSize: 16,
               )
               .paddingOnly(
-                left: screenWPadding32.sw(),
+                left: screenWPadding8.sw(),
                 top: screenHPadding16.sw(),
                 bottom: screenHPadding16.sw(),
               ),
@@ -374,7 +324,7 @@ class RegisterScreen extends StatelessWidget {
 
   _confirmPassword(RegisterController ctrl) {
     return FmTextField(
-        focusNode: FocusNode(),
+            focusNode: FocusNode(),
             hint: enterConfirmPassword,
             header: confirmPassword,
             controller: ctrl.confirmPasswordController,

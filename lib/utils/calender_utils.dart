@@ -41,3 +41,15 @@ DateTime? convertTo24Format(String time, String date) {
   return null;
  /* return DateTime.now();*/
 }
+
+String removeZeroFromAhed(String? time){
+  if(time!=null && time.isNotEmpty){
+    if(time[0]=="0"){
+      return time.substring(1,time.length);
+    }else{
+      return time;
+    }
+  }else{
+    return "";
+  }
+}

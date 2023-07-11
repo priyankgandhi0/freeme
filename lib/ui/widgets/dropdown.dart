@@ -68,7 +68,7 @@ Widget fmDropDown<T>(
         ),
         maxHeight: 400,
         elevation: 3,
-        offset: Offset(Get.width - (33 + (width ?? Get.width / 2)), 8),
+        offset: Offset(Get.width - (33 + (width ?? Get.width / 2))-10, 8),
         scrollPadding: const EdgeInsets.only(right: 0),
         scrollbarTheme: const ScrollbarThemeData(
           radius: Radius.circular(50),

@@ -12,12 +12,11 @@ import '../../../../../constant/space_constant.dart';
 import '../../../../../generated/assets.dart';
 import '../../../../../models/edit_timecard_request.dart';
 import '../../../../../theme/app_colors.dart';
-import '../../../../../utils/route_manager.dart';
+import '../../../../../utils/calender_utils.dart';
 import '../../../../widgets/app_calender.dart';
 import '../../../../widgets/fm_button.dart';
 import '../../../../widgets/fm_dialog.dart';
 import '../../../../widgets/fm_image.dart';
-
 
 class TimeCardTabScreen extends StatelessWidget {
   TimeCardTabScreen({
@@ -44,17 +43,14 @@ class TimeCardTabScreen extends StatelessWidget {
           controller.selectedDate = date;
           Future.delayed(Duration.zero, () {
             controller.getWorkHistory(jobId, controller.selectedDate);
-            controller.getJobInfo(
-              jobId: jobId.toInt(),
-                endDate:endDate
-            );
+            controller.getJobInfo(jobId: jobId.toInt(), endDate: endDate);
           });
         },
         builder: (ctrl) {
           return Column(
             children: [
               _timeAddressCard(controller.selectedDate),
-              dataTableCard(),
+               dataTableCard(),
               _duplicateTimeButton(context).paddingOnly(bottom: 124.sh()),
               _buttons(context, ctrl),
             ],
@@ -223,6 +219,9 @@ class TimeCardTabScreen extends StatelessWidget {
               ),
               TimePickerSpinner(
                 isForce2Digits: true,
+                time: DateTime.now().subtract(
+                  const Duration(hours: 1,minutes: 1),
+                ),
                 normalTextStyle: const TextStyle(
                   fontFamily: sfPro,
                   fontSize: 18,
@@ -726,7 +725,7 @@ class TimeCardTabScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           data.title.text(fontSize: 16),
-          data.time.text(fontSize: 16),
+          removeZeroFromAhed(data.time).text(fontSize: 16),
         ],
       ).paddingOnly(
         top: screenHPadding16.sh(),

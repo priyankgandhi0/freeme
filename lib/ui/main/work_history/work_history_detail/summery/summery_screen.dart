@@ -1,14 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:freeme/globle.dart';
 import 'package:freeme/models/summery_model.dart';
 import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_calculation.dart';
 import 'package:freeme/ui/main/work_history/work_history_detail/summery/summery_controller.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../../../utils/calender_utils.dart';
-import '../../../../../constant/space_constant.dart';
 import '../../../../widgets/dropdown.dart';
 import '../../../../widgets/fm_dialog.dart';
 
@@ -72,10 +69,11 @@ class SummeryScreen extends StatelessWidget {
         )
       ],
     ).paddingOnly(
-        left: screenWPadding16.sw(),
-        right: screenWPadding16.sw(),
-        top: 24.sh(),
-        bottom: screenWPadding32.sh());
+      left: screenWPadding16.sw(),
+      right: screenWPadding16.sw(),
+      top: 24.sh(),
+      bottom: screenWPadding32.sh(),
+    );
   }
 
   Widget _comments() {
@@ -167,7 +165,9 @@ class SummeryScreen extends StatelessWidget {
   }
 
   Widget _grossEnrningCard(SummeryController ctrl) {
-    var shootDays = (ctrl.summery?.hourlySummary ?? []).where((element) => element.dayTypeId==1).length;
+    var shootDays = (ctrl.summery?.hourlySummary ?? [])
+        .where((element) => element.dayTypeId == 1)
+        .length;
 
     List<Widget> grossEarningTotal = [];
     for (int i = 0; i < (ctrl.summery?.grossEarnings ?? []).length; i++) {
@@ -181,7 +181,9 @@ class SummeryScreen extends StatelessWidget {
                 (e?.taxtedAmount ?? 0))
             .toString();
       } else if (e?.taxPerTimeCategory == "Week") {
-        price = e?.taxtedAmount.toString();///
+        price = e?.taxtedAmount.toString();
+
+        ///
       } else if (e?.taxPerTimeCategory == "Shoot Day") {
         price = (shootDays * (e?.taxtedAmount ?? 0)).toString();
       }
@@ -325,65 +327,70 @@ class SummeryScreen extends StatelessWidget {
     fMDialog(
       context: context,
       horizontalPadding: screenWPadding16.sw(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
+      child: GetBuilder<SummeryController>(
+        id: "ExportTimeCardDialog",
+        builder: (ctrl) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Stack(
                 children: [
-                  exportTimecard
-                      .text(
-                        fontSize: 18,
-                        weight: FontWeight.w500,
-                      )
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      exportTimecard
+                          .text(
+                            fontSize: 18,
+                            weight: FontWeight.w500,
+                          )
+                          .paddingOnly(
+                            top: screenHPadding16.sh(),
+                            bottom: screenHPadding8.sh(),
+                          ),
+                    ],
+                  ),
+                  FmImage.assetImage(
+                    path: Assets.iconsCloseIcon,
+                    fit: BoxFit.fill,
+                    size: 12,
+                  )
                       .paddingOnly(
-                        top: screenHPadding16.sh(),
-                        bottom: screenHPadding8.sh(),
-                      ),
+                    top: 20.sh(),
+                    right: screenWPadding16.sw(),
+                    left: 20.sw(),
+                    bottom: 20.sw(),
+                  )
+                      .onTap(
+                    () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                  ).positioned(right: 0)
                 ],
               ),
-              FmImage.assetImage(
-                path: Assets.iconsCloseIcon,
-                fit: BoxFit.fill,
-                size: 12,
+              Container(
+                color: bottomLineGreyColor,
+                width: Get.width,
+                height: 1,
+              ),
+              _timeCardDialogItem(),
+              _maxOutGuarHrs(),
+              _incrementCard(context),
+              FmButton(
+                ontap: () {},
+                name: export,
+              ).paddingOnly(
+                left: 24.sw(),
+                right: 24.sw(),
+                bottom: 24.sw(),
               )
-                  .paddingOnly(
-                top: 20.sh(),
-                right: screenWPadding16.sw(),
-                left: 20.sw(),
-                bottom: 20.sw(),
-              )
-                  .onTap(
-                () {
-                  Navigator.of(context, rootNavigator: true).pop();
-                },
-              ).positioned(right: 0)
             ],
-          ),
-          Container(
-            color: bottomLineGreyColor,
-            width: Get.width,
-            height: 1,
-          ),
-          _timeCardDialogItem(),
-          _maxOutGuarHrs(),
-          _incrementCard(),
-          FmButton(
-            ontap: () {},
-            name: export,
-          ).paddingOnly(
-            left: 24.sw(),
-            right: 24.sw(),
-            bottom: 24.sw(),
-          )
-        ],
+          );
+        },
       ),
     );
   }
 
-  Widget _incrementCard() {
+  Widget _incrementCard(BuildContext context) {
     return _dialogCardDesign(
       child: Row(
         children: [
@@ -391,30 +398,13 @@ class SummeryScreen extends StatelessWidget {
           Expanded(
             child: Container(),
           ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.black),
-            ),
-            child: Row(
-              children: [
-                "Tenths".text(),
-                SizedBox(
-                  width: 38,
-                ),
-                FmImage.assetImage(
-                  path: Assets.iconsDownIcon,
-                  height: 15.sh(),
-                  width: 15.sw(),
-                )
-              ],
-            ).paddingOnly(
-              top: 5.sh(),
-              bottom: 5.sh(),
-              left: 10.sw(),
-              right: 10.sw(),
-            ),
-          )
+          fmDropDown(
+              child: _incrementDropDownItem(controller.selectedIncrementType),
+              onDropDownTap: (item) {
+                controller.onIncrementDropDownTap(item);
+              },
+              context: context,
+              items: controller.incrementDropDownList)
         ],
       ).paddingOnly(
           left: screenWPadding16.sw(),
@@ -426,6 +416,33 @@ class SummeryScreen extends StatelessWidget {
       right: 24.sw(),
       top: screenHPadding16.sh(),
       bottom: 24.sh(),
+    );
+  }
+
+  Widget _incrementDropDownItem(MenuItem selected) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.black),
+      ),
+      child: Row(
+        children: [
+          selected.text.text(),
+          const SizedBox(
+            width: 38,
+          ),
+          FmImage.assetImage(
+            path: Assets.iconsDownIcon,
+            height: 15.sh(),
+            width: 15.sw(),
+          )
+        ],
+      ).paddingOnly(
+        top: 5.sh(),
+        bottom: 5.sh(),
+        left: 10.sw(),
+        right: 10.sw(),
+      ),
     );
   }
 
@@ -514,60 +531,65 @@ class SummeryScreen extends StatelessWidget {
     fMDialog(
       context: context,
       horizontalPadding: screenWPadding16.sw(),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Stack(
+      child: GetBuilder<SummeryController>(
+        id: "ExportInvoiceDialog",
+        builder: (ctrl) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              Stack(
                 children: [
-                  exportInvoice
-                      .text(
-                        fontSize: 18,
-                        weight: FontWeight.w500,
-                      )
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      exportInvoice
+                          .text(
+                            fontSize: 18,
+                            weight: FontWeight.w500,
+                          )
+                          .paddingOnly(
+                            top: screenHPadding16.sh(),
+                            bottom: screenHPadding8.sh(),
+                          ),
+                    ],
+                  ),
+                  FmImage.assetImage(
+                    path: Assets.iconsCloseIcon,
+                    fit: BoxFit.fill,
+                    size: 12,
+                  )
                       .paddingOnly(
-                        top: screenHPadding16.sh(),
-                        bottom: screenHPadding8.sh(),
-                      ),
+                    top: 20.sh(),
+                    right: screenWPadding16.sw(),
+                    left: screenWPadding16.sw(),
+                    bottom: screenWPadding16.sw(),
+                  )
+                      .onTap(
+                    () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                  ).positioned(right: 0)
                 ],
               ),
-              FmImage.assetImage(
-                path: Assets.iconsCloseIcon,
-                fit: BoxFit.fill,
-                size: 12,
+              Container(
+                color: bottomLineGreyColor,
+                width: Get.width,
+                height: 1,
+              ),
+              _startEndDate(),
+              _maxOutGuarHrsInvoice(),
+              _incrementInvoiceCard(context),
+              FmButton(
+                ontap: () {},
+                name: export,
+              ).paddingOnly(
+                left: 24.sw(),
+                right: 24.sw(),
+                bottom: 24.sw(),
               )
-                  .paddingOnly(
-                top: 20.sh(),
-                right: screenWPadding16.sw(),
-                left: screenWPadding16.sw(),
-                bottom: screenWPadding16.sw(),
-              )
-                  .onTap(
-                () {
-                  Navigator.of(context, rootNavigator: true).pop();
-                },
-              ).positioned(right: 0)
             ],
-          ),
-          Container(
-            color: bottomLineGreyColor,
-            width: Get.width,
-            height: 1,
-          ),
-          _startEndDate(),
-          _maxOutGuarHrsInvoice(),
-          _incrementInvoiceCard(),
-          FmButton(
-            ontap: () {},
-            name: export,
-          ).paddingOnly(
-            left: 24.sw(),
-            right: 24.sw(),
-            bottom: 24.sw(),
-          )
-        ],
+          );
+        },
       ),
     );
   }
@@ -624,7 +646,7 @@ class SummeryScreen extends StatelessWidget {
     ).paddingOnly(left: 24.sw(), right: 24.sw(), top: screenHPadding16.sh());
   }
 
-  Widget _incrementInvoiceCard() {
+  Widget _incrementInvoiceCard(BuildContext context) {
     return _dialogCardDesign(
       child: Row(
         children: [
@@ -632,25 +654,13 @@ class SummeryScreen extends StatelessWidget {
           Expanded(
             child: Container(),
           ),
-          Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: Colors.black)),
-            child: Row(
-              children: [
-                "Tenths".text(),
-                FmImage.assetImage(
-                  path: Assets.iconsDownIcon,
-                  height: 15.sh(),
-                  width: 15.sw(),
-                )
-              ],
-            ).paddingOnly(
-              top: 5.sh(),
-              bottom: 5.sh(),
-              left: 10.sw(),
-              right: 10.sw(),
-            ),
+          fmDropDown(
+            child: _incrementDropdownItem(),
+            onDropDownTap: (item) {
+              controller.onExportInvoiceIncreamentTap(item);
+            },
+            items: controller.exportIncrementDropDownList,
+            context: context,
           )
         ],
       ).paddingOnly(
@@ -663,6 +673,32 @@ class SummeryScreen extends StatelessWidget {
       right: 24.sw(),
       top: screenHPadding16.sh(),
       bottom: screenHPadding16.sh(),
+    );
+  }
+
+  Widget _incrementDropdownItem() {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(color: Colors.black)),
+      child: Row(
+        children: [
+          "Tenths".text(),
+          const SizedBox(
+            width: 38,
+          ),
+          FmImage.assetImage(
+            path: Assets.iconsDownIcon,
+            height: 15.sh(),
+            width: 15.sw(),
+          )
+        ],
+      ).paddingOnly(
+        top: 5.sh(),
+        bottom: 5.sh(),
+        left: 10.sw(),
+        right: 10.sw(),
+      ),
     );
   }
 
@@ -988,8 +1024,8 @@ class SummeryDataTableFirst extends StatelessWidget {
           child: Column(
             children: [
               DataTable(
-                columnSpacing: 16,
-                horizontalMargin: 15,
+                columnSpacing: 11,
+                horizontalMargin: 8,
                 headingRowColor: MaterialStateProperty.all(darkGreenColor2),
                 border: TableBorder.all(
                   width: 1.0,
@@ -1077,11 +1113,11 @@ class SummeryDataTableFirst extends StatelessWidget {
       RegExp regex = RegExp(r'([.]*0)(?!.*\d)');
       if (controller.selectedViewDropDownItem.text == "Tenths") {
         var newTime =
-            timeToTenth(dateTime).toStringAsFixed(2).replaceAll(regex, '');
+            timeToTenth(dateTime).toStringAsFixed(2)/*.replaceAll(regex, '')*/;
         return newTime;
       } else {
         var newTime =
-            timeToQuarters(dateTime).toStringAsFixed(2).replaceAll(regex, '');
+            timeToQuarters(dateTime).toStringAsFixed(2)/*.replaceAll(regex, '')*/;
         return newTime;
       }
     }

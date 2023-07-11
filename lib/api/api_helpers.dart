@@ -12,6 +12,7 @@ import '../utils/app_utils.dart';
 import 'response_item.dart';
 
 class BaseApiHelper {
+
   static Future<ResponseItem> getRequest({
     required String requestUrl,
     required Map<String, dynamic> queryParam,

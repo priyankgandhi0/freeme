@@ -78,4 +78,57 @@ class SummeryController extends GetxController {
     }
     update();
   }
+
+  List<MenuItem> incrementDropDownList = [
+    MenuItem(text: "Quarters", isSelected: true),
+    MenuItem(text: "Tenths", isSelected: false),
+    MenuItem(text: "Other", isSelected: false),
+  ];
+
+
+  MenuItem selectedIncrementType = MenuItem(text: "Quarters");
+
+  void onIncrementDropDownTap(MenuItem item) {
+    for (int i = 0; i < incrementDropDownList.length; i++) {
+      if (incrementDropDownList[i].text == item.text) {
+        if (incrementDropDownList[i].isSelected) {
+          /* allTypes[i].isSelected = false;
+          selectedType = MenuItem(text: "Not Sure");*/
+        } else {
+          incrementDropDownList[i].isSelected = true;
+          selectedIncrementType = incrementDropDownList[i];
+        }
+      } else {
+        incrementDropDownList[i].isSelected = false;
+      }
+    }
+    update(["ExportTimeCardDialog"]);
+  }
+
+
+  List<MenuItem> exportIncrementDropDownList = [
+    MenuItem(text: "Quarters", isSelected: true),
+    MenuItem(text: "Tenths", isSelected: false),
+    MenuItem(text: "Other", isSelected: false),
+  ];
+
+
+  MenuItem selectedExportIncrementDropdown = MenuItem(text: "Quarters");
+
+  void onExportInvoiceIncreamentTap(MenuItem item) {
+    for (int i = 0; i < exportIncrementDropDownList.length; i++) {
+      if (exportIncrementDropDownList[i].text == item.text) {
+        if (exportIncrementDropDownList[i].isSelected) {
+          /* allTypes[i].isSelected = false;
+          selectedType = MenuItem(text: "Not Sure");*/
+        } else {
+          exportIncrementDropDownList[i].isSelected = true;
+          selectedIncrementType = exportIncrementDropDownList[i];
+        }
+      } else {
+        exportIncrementDropDownList[i].isSelected = false;
+      }
+    }
+    update(["ExportInvoiceDialog"]);
+  }
 }
