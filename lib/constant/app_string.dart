@@ -99,6 +99,7 @@ const String productionCompany = "Production Company";
 const String companyAddress = "Company Address";
 const String back = "Back";
 const String rateStar = "Rate*";
+const String rate = "Rate";
 const String perHowManyHours = "Per how many hours?*";
 const String entertainmentPartners = "Entertainment Partners";
 const String departmentStar = "Department*";
@@ -158,6 +159,8 @@ const String lunchEndMustBeginAfterLunchStart= "LunchEnd Must Begin After LunchS
 const String secondMealEndMustBeginAfterSecondMealStart= "SecondMeal End Must Begin After SecondMeal Start";
 const String secondMealStartMustBeginAfterFirstMealEnd= "SecondMeal Start Must Begin After FirstMeal End";
 const String pleaseAddCallTimeFirst= "Please Add CallTime First";
+const String keepEditing= "Keep Editing";
+const String discardChanges= "Discard Changes";
 
 
 

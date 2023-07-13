@@ -7,6 +7,7 @@ import '../../widgets/dropdown.dart';
 import '../../widgets/flutter_time_picker_spinner.dart';
 import '../../widgets/fm_appbar.dart';
 import '../../widgets/fm_dialog.dart';
+import '../navigator/work_history_navigator.dart';
 
 class TimeCardEditHistoryScreen extends StatelessWidget {
   TimeCardEditHistoryScreen({
@@ -58,7 +59,9 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      _dateCard(date),
+                      _dateCard(date).onClick(() {
+
+                      }),
                       _dayTypeField(context, ctrl),
                       _addressLocationOne(context, ctrl),
                       _addressLocationTwo(context, ctrl),
@@ -73,10 +76,15 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
         }),
       ),
       onWillPop: () async {
-        return false;
+        await showExitDialog(context);
+        return true;
       },
     );
   }
+
+
+
+
 
   Widget _bottomButtons(BuildContext context) {
     return Row(
@@ -198,11 +206,8 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                           ? "--:-- AM/PM"
                           : ctrl.historyModel?.wrap ?? "",
                       onclick: () {
-                        showSelectTimeDialog(
-                          context,
-                          "Wrap",
-                          defaultTime: ctrl.historyModel?.wrap
-                        );
+                        showSelectTimeDialog(context, "Wrap",
+                            defaultTime: ctrl.historyModel?.wrap);
                       },
                     )
                   ],
@@ -596,7 +601,8 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                 color: bottomLineGreyColor,
               ),
               TimePickerSpinner(
-                time: convertToMyTimeFormat(defaultTime ?? "",controller.selectedDate),
+                time: convertToMyTimeFormat(
+                    defaultTime ?? "", controller.selectedDate),
                 isForce2Digits: true,
                 normalTextStyle: const TextStyle(
                   fontFamily: sfPro,
@@ -635,33 +641,38 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
   }
 
   DateTime convertToMyTimeFormat(String time, String date) {
-    if(time.isNotEmpty){
+    if (time.isNotEmpty) {
       var now = date.split("-");
       int hour = int.parse(time.split(":").first.toString());
       int minute = int.parse(time.split(":").last.substring(0, 2));
       bool isPm = time.contains("PM") ? true : false;
       var datTime = DateTime.utc(
-          int.parse(now[0]),
-          int.parse(now[1]),
-          int.parse(now[2]),
-          isPm
-              ? hour != 12
-              ? hour + 12
-              : hour
-              : hour == 12
-              ? 0
-              : hour,
-          minute,
-          0);
+        int.parse(now[0]),
+        int.parse(now[1]),
+        int.parse(now[2]),
+        isPm
+            ? hour != 12
+                ? hour + 12
+                : hour
+            : hour == 12
+                ? 0
+                : hour,
+        minute,
+        0,
+      );
       var datTime2 = DateTime.utc(
-          int.parse(now[0]),
-          int.parse(now[1]),
-          int.parse(now[2]),
-          datTime.hour-1,minute-1,0
+        int.parse(now[0]),
+        int.parse(now[1]),
+        int.parse(now[2]),
+        (datTime.hour - 1) < 0 ? 11 : (datTime.hour - 1),
+        (minute - 1) < 0 ? 59 : (minute - 1),
+        0,
       );
       return datTime2;
     }
-   return DateTime.now();
+    return DateTime.now().subtract(
+      const Duration(hours: 1, minutes: 1),
+    );
   }
 
   Widget _callTimeButton(BuildContext context) {
@@ -911,5 +922,80 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
     }
     String formattedDate = DateFormat('hh:mm aa').format(clockInTime);
     return formattedDate;
+  }
+
+
+  showExitDialog(BuildContext context) {
+    return fMDialog(
+      context: context,
+      horizontalPadding: screenWPadding16.sw(),
+      child: GetBuilder<TimeCardEditController>(
+        id: "ExitDialog",
+        builder: (ctrl) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      "Are you sure you want to\ndiscard your changes?"
+                          .text(
+                        fontSize: 18,
+                        weight: FontWeight.w600,
+                      )
+                          .paddingOnly(
+                        top: screenHPadding16.sh(),
+                        bottom: screenHPadding8.sh(),
+                      ),
+                    ],
+                  ),
+                  FmImage.assetImage(
+                    path: Assets.iconsCloseIcon,
+                    fit: BoxFit.fill,color: Colors.black,
+                    size: 12,
+                  )
+                      .paddingOnly(
+                    top: 20.sh(),
+                    right: screenWPadding16.sw(),
+                    left: screenWPadding16.sw(),
+                    bottom: screenWPadding16.sw(),
+                  )
+                      .onTap(
+                        () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                  ).positioned(right: 0)
+                ],
+              ),
+              Container(
+                color: bottomLineGreyColor,
+                width: Get.width,
+                height: 1,
+              ),
+              FmButton(
+                type : ButtonType.delete,
+                ontap: () {},
+                name: discardChanges,
+              ).paddingOnly(
+                left: 24.sw(),
+                right: 24.sw(),
+                top: 16.sw(),
+                bottom: 16.sw(),
+              ),
+              FmButton(
+                ontap: () {},
+                name: keepEditing,
+              ).paddingOnly(
+                left: 24.sw(),
+                right: 24.sw(),
+                bottom: 24.sw(),
+              )
+            ],
+          );
+        },
+      ),
+    );
   }
 }

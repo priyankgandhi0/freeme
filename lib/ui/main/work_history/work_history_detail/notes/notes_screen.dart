@@ -57,7 +57,7 @@ class NotesScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: FmEmptyTextField(
-                            focusNode: FocusNode(),
+                            focusNode: FocusNode(),textInputAction: TextInputAction.newline,
                             controller: ctrl.noteController,
                             hintText: "Click anywhere to start taking notes!",
                             maxLines: 18,

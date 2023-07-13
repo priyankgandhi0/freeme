@@ -141,7 +141,7 @@ class GetJobInfoModel {
   List<NonTaxes>? get nonTaxes => _nonTaxes;
   List<Days>? get days => _days;
 
-
+  GetJobInfoModel();
 }
 
 class Days {

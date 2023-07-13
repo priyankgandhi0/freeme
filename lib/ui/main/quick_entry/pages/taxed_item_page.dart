@@ -15,42 +15,61 @@ class TaxedItemPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: GetBuilder<QuickEntryController>(builder: (ctrl) {
-        return Column(
-          children: [
-            Row(
-              children: [
-                "Taxed Items".text(fontSize: 18),
-              ],
-            ).paddingOnly(
-              left: screenWPadding16.sw(),
-              bottom: screenHPadding8.sh(),
-            ),
-            _taxedItemTable(context, ctrl),
-            Row(
-              children: [
-                "Non-Tax Items".text(fontSize: 18),
-              ],
-            ).paddingOnly(
-              left: screenWPadding16.sw(),
-              bottom: screenHPadding8.sh(),
-              top: screenHPadding16.sh(),
-            ),
-            _nonTaxedItems(context, ctrl),
-            FmButton(
-              ontap: () {
-                controller.finishButtonClick(context);
-              },
-              name: finish,
-            )
-                .paddingOnly(
-                  left: screenWPadding16.sw(),
-                  right: screenWPadding16.sw(),
-                )
-                .paddingOnly(top: 60)
-          ],
-        );
-      }),
+      child: GetBuilder<QuickEntryController>(
+        builder: (ctrl) {
+          return Column(
+            children: [
+              Row(
+                children: [
+                  "Taxed Items".text(fontSize: 18),
+                ],
+              ).paddingOnly(
+                left: screenWPadding16.sw(),
+                bottom: screenHPadding8.sh(),
+              ),
+              _taxedItemTable(context, ctrl),
+              Row(
+                children: [
+                  "Non-Tax Items".text(fontSize: 18),
+                ],
+              ).paddingOnly(
+                left: screenWPadding16.sw(),
+                bottom: screenHPadding8.sh(),
+                top: screenHPadding16.sh(),
+              ),
+              _nonTaxedItems(context, ctrl),
+              _backNextButton(context),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _backNextButton(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        FmButton(
+          ontap: () {
+            controller.pageController.jumpToPage(4);
+          },
+          width: 120,
+          name: back,
+        ),
+        FmButton(
+          ontap: () {
+            controller.finishButtonClick(context);
+          },
+          width: 120,
+          name: finish,
+        )
+      ],
+    ).paddingOnly(
+      top: screenHPadding16.sw(),
+      bottom: screenHPadding16.sw(),
+      left: screenWPadding16.sw(),
+      right: screenWPadding16.sw(),
     );
   }
 
@@ -107,10 +126,15 @@ class TaxedItemPage extends StatelessWidget {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   var item = ctrl.nonTaxedItems[index];
-                  return _childItem(
-                    item.type,
-                    item.amount,
-                    item.timeId.toString(),
+                  return _taxedNonTaxedItem(
+                    item: item,
+                    onDeleteButtonClick: () {
+                      controller
+                          .removeNonTaxedItem(controller.nonTaxedItems[index]);
+                    },
+                    onRemoveIconClick: () {
+                      controller.addNonTaxDeleteButton(index);
+                    },
                   );
                 },
               ),
@@ -183,10 +207,14 @@ class TaxedItemPage extends StatelessWidget {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   var item = ctrl.taxedItems[index];
-                  return _childItem(
-                    item.type,
-                    item.amount,
-                    item.timeId.toString(),
+                  return _taxedNonTaxedItem(
+                    item: item,
+                    onDeleteButtonClick: () {
+                      controller.removeTaxedItem(controller.taxedItems[index]);
+                    },
+                    onRemoveIconClick: () {
+                      controller.addTaxDeleteButton(index);
+                    },
                   );
                 },
               ),
@@ -233,40 +261,85 @@ class TaxedItemPage extends StatelessWidget {
     );
   }
 
-  Widget _childItem(
-    String? type,
-    String? amount,
-    String? per, {
-    bool showBottomLine = true,
+  Widget _taxedNonTaxedItem({
+    TaxedNonTaxedModel? item,
+    GestureTapCallback? onRemoveIconClick,
+    required GestureTapCallback? onDeleteButtonClick,
   }) {
     return Column(
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            type.text(
-              fontSize: 16,
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  FmImage.assetImage(
+                    path: Assets.iconsMinusIcon,
+                    height: 20.sh(),
+                    width: 20.sw(),
+                  )
+                      .paddingOnly(
+                        top: screenHPadding16.sh(),
+                        bottom: screenHPadding16.sh(),
+                        left: screenWPadding16.sw(),
+                        right: screenWPadding16.sw(),
+                      )
+                      .onClick(onRemoveIconClick ?? () {}),
+                  Expanded(
+                    child: item?.type.text(
+                            fontSize: 16, overFlow: TextOverflow.ellipsis) ??
+                        Container(),
+                  )
+                ],
+              ),
             ),
-            amount.text(
-              fontSize: 16,
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  "\$${item?.amount ?? "-"}".text(
+                    fontSize: 16,
+                  ),
+                ],
+              ),
             ),
-            per.text(
-              fontSize: 16,
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  (item?.timeDesc ?? "-").text(
+                    fontSize: 16,
+                  ),
+                ],
+              ).paddingOnly(right: 15),
             ),
+
+            /*(item?.showDeleteButton ?? false)
+                ? Container(
+                    width: 100,
+                    height: 52,
+                    decoration: const BoxDecoration(
+                      color: Colors.red,
+                    ),
+                    child: "DELETE"
+                        .text(fontColor: Colors.white, fontSize: 14)
+                        .center,
+                  ).onClick(
+                    () {
+                      if (onDeleteButtonClick != null) {
+                        onDeleteButtonClick();
+                      }
+                    },
+                  )
+                : Container()*/
           ],
-        ).paddingOnly(
-          left: screenWPadding16.sw(),
-          right: screenWPadding16.sw(),
-          top: screenHPadding16.sw(),
-          bottom: screenHPadding16.sw(),
         ),
-        showBottomLine
-            ? Container(
-                width: Get.width,
-                height: 1,
-                color: borderGreyColor,
-              )
-            : Container()
+        Container(
+          height: 1,
+          width: Get.width,
+          color: borderGreyColor,
+        )
       ],
     );
   }

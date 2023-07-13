@@ -701,4 +701,53 @@ class QuickEntryController extends GetxController {
 
   List<TaxedNonTaxedModel> taxedItems = [];
   List<TaxedNonTaxedModel> nonTaxedItems = [];
+
+
+  void removeTaxedItem(TaxedNonTaxedModel item) {
+    if (item.id != null) {
+       taxedItems.remove(item);
+    } else {
+      taxedItems.remove(item);
+    }
+    update();
+  }
+
+  void removeNonTaxedItem(TaxedNonTaxedModel item) {
+    if (item.id != null) {
+      nonTaxedItems.remove(item);
+    } else {
+      nonTaxedItems.remove(item);
+    }
+    update();
+  }
+
+  void addTaxDeleteButton(int index) {
+    for (int i = 0; i < taxedItems.length; i++) {
+      if (index == i) {
+        if(taxedItems[i].showDeleteButton){
+          taxedItems[i].showDeleteButton = false;
+        }else{
+          taxedItems[i].showDeleteButton = true;
+        }
+      } else {
+        taxedItems[i].showDeleteButton = false;
+      }
+    }
+    update();
+  }
+
+  void addNonTaxDeleteButton(int index) {
+    for (int i = 0; i < nonTaxedItems.length; i++) {
+      if (i == index) {
+        if(nonTaxedItems[i].showDeleteButton){
+          nonTaxedItems[i].showDeleteButton = false;
+        }else{
+          nonTaxedItems[i].showDeleteButton = true;
+        }
+      } else {
+        nonTaxedItems[i].showDeleteButton = false;
+      }
+    }
+    update();
+  }
 }

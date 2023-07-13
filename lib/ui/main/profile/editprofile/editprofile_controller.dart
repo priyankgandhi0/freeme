@@ -9,6 +9,7 @@ import '../../../../api/repositories/quick_entry_repo.dart';
 import '../../../../globle.dart';
 import '../../../../models/job_classification_model.dart';
 import '../../../../models/sub_job_classification_model.dart';
+import '../../../../models/union_trade_model.dart';
 import '../../../../utils/app_constant.dart';
 import '../../../widgets/dropdown.dart';
 import '../../navigator/main_controller.dart';
@@ -28,6 +29,12 @@ class EditProfileController extends GetxController {
   late TextEditingController addWebsiteController = TextEditingController();
   late TextEditingController addSocialMediaController = TextEditingController();
   late TextEditingController addBirthDayController = TextEditingController();
+
+  late TextEditingController addressLineOneController = TextEditingController();
+  late TextEditingController addressLineTwoController = TextEditingController();
+  late TextEditingController cityController = TextEditingController();
+  late TextEditingController stateController = TextEditingController();
+  late TextEditingController countryController = TextEditingController();
 
   @override
   void onInit() {
@@ -93,11 +100,11 @@ class EditProfileController extends GetxController {
         EditProfileItem(e.socialMediaId ?? -1, TextEditingController(text: (e.socialMedia?.toString() ?? ""))))
         .toList() ??
         []);
-    MenuItem? union = unionNonUnionList
+    MenuItem? union = allUnionTradeList
         .firstWhereOrNull((element) => element.text == user.union);
     if (union != null) {
       showUnionSelected = true;
-      onUnionNonUnionDropDownTap(union);
+      onUnionTradeDropDownTap(union);
     }
 
     MenuItem? department = allJobClassificationList
@@ -201,23 +208,18 @@ class EditProfileController extends GetxController {
 
   MenuItem selectedUnion = MenuItem(text: "Not Sure", isSelected: true);
 
-  List<MenuItem> unionNonUnionList = [
-    MenuItem(text: "Not Sure", isSelected: true),
-    MenuItem(text: "Non-Union", isSelected: false),
-    MenuItem(text: "Union", isSelected: false),
-  ];
 
-  void onUnionNonUnionDropDownTap(MenuItem item) {
-    for (int i = 0; i < unionNonUnionList.length; i++) {
-      if (unionNonUnionList[i].text == item.text) {
-        if (unionNonUnionList[i].isSelected) {
-          unionNonUnionList[i].isSelected = false;
+  void onUnionTradeDropDownTap(MenuItem item) {
+    for (int i = 0; i < allUnionTradeList.length; i++) {
+      if (allUnionTradeList[i].text == item.text) {
+        if (allUnionTradeList[i].isSelected) {
+          allUnionTradeList[i].isSelected = false;
         } else {
-          unionNonUnionList[i].isSelected = true;
-          selectedUnion = unionNonUnionList[i];
+          allUnionTradeList[i].isSelected = true;
+          selectedUnion = allUnionTradeList[i];
         }
       } else {
-        unionNonUnionList[i].isSelected = false;
+        allUnionTradeList[i].isSelected = false;
       }
     }
     update();
@@ -264,6 +266,26 @@ class EditProfileController extends GetxController {
                 ),
               )
               .toList());
+    } else {}
+  }
+
+
+  List<MenuItem> allUnionTradeList = [];
+
+  Future<void> getAllUnionTrade() async {
+    ResponseItem response = await QuickEntryRepo.getAllUnionTradeOrg();
+    if (response.status) {
+      allUnionTradeList.clear();
+      allUnionTradeList
+          .addAll(unionTradeModelFromJson(response.data)
+          .map(
+            (e) => MenuItem(
+          text: e.unionTradeTitle,
+          id: e.unionTradeId?.toInt() ?? -1,
+          isSelected: false,
+        ),
+      )
+          .toList());
     } else {}
   }
 

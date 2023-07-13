@@ -348,6 +348,7 @@ class AddJobController extends GetxController {
   MenuItem selectedDepartment = MenuItem(text: "Select Department");
 
   void onDepartmentTap(MenuItem item) {
+     departmentError= null;
     for (int i = 0; i < allJobClassificationList.length; i++) {
       if (allJobClassificationList[i].text == item.text) {
         if (allJobClassificationList[i].isSelected) {
@@ -371,6 +372,7 @@ class AddJobController extends GetxController {
   MenuItem selectedPosition = MenuItem(text: "Select Position");
 
   void onPositionTap(MenuItem item) {
+    positionError = null;
     for (int i = 0; i < allSubJobList.length; i++) {
       if (allSubJobList[i].text == item.text) {
         if (allSubJobList[i].isSelected) {

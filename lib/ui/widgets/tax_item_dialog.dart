@@ -181,7 +181,9 @@ class TaxItemDialog extends StatelessWidget {
                 if (controller.isValidate()) {
                   onAddClick(
                     TaxedNonTaxedModel(
-                      type: controller.selectedTaxedItemType.text,
+                      type: controller.selectedTaxedItemType.text == "Other"
+                          ? controller.typeManualController.text
+                          : controller.selectedTaxedItemType.text,
                       timeId: controller.selectedPerTime.id,
                       timeDesc: controller.selectedPerTime.text,
                       amount: controller.amountController.text,
@@ -416,8 +418,8 @@ class TaxedItemDialogController extends GetxController {
   }
 
   void whenDialogClose() {
-    selectedTaxedItemType = MenuItem(text: "Select Type");
-    selectedPerTime = MenuItem(text: "Day", id: 1);
+    onTypeListDropDownTap(MenuItem(text: "Select Type"));
+    onPerHourListDropDownTap(MenuItem(text: "Day", id: 1));
     amountController.clear();
     update();
   }
@@ -426,9 +428,9 @@ class TaxedItemDialogController extends GetxController {
     selectedTaxedItemType =
         typeList.firstWhereOrNull((element) => element.text == item.type) ??
             MenuItem(text: "Select Type");
-    selectedPerTime = perHourList
-            .firstWhereOrNull((element) => element.id == item.timeId) ??
-        MenuItem(text: "Day", id: 1);
+    selectedPerTime =
+        perHourList.firstWhereOrNull((element) => element.id == item.timeId) ??
+            MenuItem(text: "Day", id: 1);
     amountController.text = item.amount.toString();
     update();
   }

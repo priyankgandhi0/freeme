@@ -118,6 +118,7 @@ class SummeryScreen extends StatelessWidget {
       height: 400,
       width: Get.width,
       child: PageView.builder(
+        padEnds: false,
         controller: controller.pageController,
         itemCount: 2,
         onPageChanged: (int page) {
@@ -202,20 +203,18 @@ class SummeryScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
           color: Colors.black,
+          width: 1
         ),
       ),
       child: Column(
         children: [
           Container(
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.only(
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10),
                 topRight: Radius.circular(10),
               ),
               color: darkGreenColor2,
-              border: Border.all(
-                color: Colors.black,
-              ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -265,7 +264,10 @@ class SummeryScreen extends StatelessWidget {
   Widget _totalEarningItem(SummeryController ctrl) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(10),
+          bottomRight: Radius.circular(10),
+        ),
         color: darkGreenColor2.withOpacity(0.2),
       ),
       child: Row(
@@ -1009,7 +1011,7 @@ class SummeryDataTableFirst extends StatelessWidget {
         }
         return Container(
           height: 355,
-          width: Get.width,
+          /*width: Get.width,*/
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(8),
@@ -1077,7 +1079,7 @@ class SummeryDataTableFirst extends StatelessWidget {
             top: screenHPadding16.sh(),
             bottom: screenHPadding16.sh(),
             left: screenWPadding16.sw(),
-            right: screenWPadding16.sw());
+            /*right: screenWPadding16.sw()*/);
       },
     );
   }
@@ -1251,7 +1253,7 @@ DateTime findSaturdayDateOfTheWeek(DateTime dateTime) {
 }
 
 DateTime expandingChildItem(String? e) {
-  if (e != null) {
+  if (e != null && e.isNotEmpty) {
     DateTime tempDate = DateFormat("yyyy-MM-dd").parse(e.toString());
     return findSaturdayDateOfTheWeek(tempDate);
   }

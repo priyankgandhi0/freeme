@@ -32,6 +32,7 @@ class AddJobScreen extends StatelessWidget {
         appBar: fMAppBar(
           isForEdit ? editJob : addJob,
           onBackClick: () {
+            controller.clearAllData();
             Navigator.of(context).pop();
           },
         ),
@@ -101,9 +102,11 @@ class AddJobScreen extends StatelessWidget {
   }
 
   Widget _daysDropdownButton(BuildContext context, AddJobController ctrl) {
-    return _daysCard().onClick(() {
-      showCalenderDropDown(context, ctrl);
-    });
+    return _daysCard().onClick(
+      () {
+        showCalenderDropDown(context, ctrl);
+      },
+    );
   }
 
   showCalenderDropDown(BuildContext context, AddJobController ctrl) {
@@ -191,6 +194,9 @@ class AddJobScreen extends StatelessWidget {
         },
       ),
     ).whenComplete(() {
+      if(ctrl.selectedDays.isNotEmpty){
+        controller.daysError = null;
+      }
       controller.update();
     });
   }
@@ -263,6 +269,7 @@ class AddJobScreen extends StatelessWidget {
   }
 
   String getDaysMonthWise(Set<DateTime> selectedDays) {
+
     String generatedDate = "";
     var coreMonths = selectedDays.toList().map((e) => e.month);
     List<int> months = coreMonths.toSet().toList();
@@ -274,7 +281,7 @@ class AddJobScreen extends StatelessWidget {
               .where((element) => element.month == e1)
               .toList()
               .map((e) => e.day)
-              .join(",");
+              .join(", ");
     });
     return generatedDate;
   }
@@ -297,12 +304,20 @@ class AddJobScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _detailItem(descriptionStar,
-                  hint: "Commercial with Joey",
-                  color: redTextColor,
-                  controller: controller.descriptionController,
-                  error: controller.descriptionError,
-                  focusNode: FocusNode()),
+              _detailItem(
+                descriptionStar,
+                hint: "Commercial with Joey",
+                color: redTextColor,
+                controller: controller.descriptionController,
+                error: controller.descriptionError,
+                focusNode: FocusNode(),
+                onChange: (value) {
+                  if (value.isNotEmpty) {
+                    controller.descriptionError = null;
+                    controller.update();
+                  }
+                },
+              ),
               _detailItem(title,
                   hint: "Commercial#1234",
                   controller: controller.productionTitleController,
@@ -351,13 +366,21 @@ class AddJobScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _detailItem("Rate*",
-              hint: "\$750",
-              controller: controller.rateTextController,
-              color: redColor,
-              textInputType: TextInputType.number,
-              error: controller.rateError,
-              focusNode: FocusNode()),
+          _detailItem(
+            "Rate*",
+            hint: "\$750",
+            controller: controller.rateTextController,
+            color: redColor,
+            textInputType: TextInputType.number,
+            error: controller.rateError,
+            focusNode: FocusNode(),
+            onChange: (value) {
+              if (value.isNotEmpty) {
+                controller.rateError = null;
+                controller.update();
+              }
+            },
+          ),
           fmDropDown(
             child: _detailItemWithDropDown(
               perStar,
@@ -678,10 +701,12 @@ class AddJobScreen extends StatelessWidget {
                       controller
                           .removeNonTaxedItem(controller.nonTaxedItems[index]);
                     },
-                  ).onClick(() {
-                    showNonTaxItems(context,
-                        defaultItem: controller.nonTaxedItems[index]);
-                  });
+                  ).onClick(
+                    () {
+                      showNonTaxItems(context,
+                          defaultItem: controller.nonTaxedItems[index]);
+                    },
+                  );
                 },
               ),
               _iconTextButton(
@@ -752,6 +777,7 @@ class AddJobScreen extends StatelessWidget {
       Color? color = Colors.black,
       TextInputType? textInputType,
       required FocusNode focusNode,
+      ValueChanged<String>? onChange,
       TextEditingController? controller}) {
     return Container(
       decoration: BoxDecoration(
@@ -788,6 +814,7 @@ class AddJobScreen extends StatelessWidget {
           ),
           Expanded(
             child: FmEmptyTextField(
+              onchange: onChange,
               hintText: hint,
               focusNode: focusNode,
               textInputType: textInputType,
@@ -852,7 +879,7 @@ class AddJobScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: hint.text(
-                      fontColor: Colors.black,
+                      fontColor: greyTextColor, //Colors.black,
                       fontSize: 16,
                       overFlow: TextOverflow.ellipsis),
                 ),
@@ -1071,7 +1098,7 @@ class AddJobScreen extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              (selectedCountry).text(fontSize: 16),
+              (selectedCountry).text(fontSize: 16, fontColor: greyTextColor),
               FmImage.assetImage(
                 path: Assets.iconsDownIcon,
                 height: 15.sh(),

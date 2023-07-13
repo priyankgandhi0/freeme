@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:freeme/utils/extension.dart';
 
 import '../../../utils/route_manager.dart';
 import '../add_job/add_job_screen.dart';
@@ -17,12 +18,15 @@ class WorkHistoryNavigator extends StatefulWidget {
 
 GlobalKey<NavigatorState> workHistoryNavigatorKey = GlobalKey<NavigatorState>();
 
-
 class _WorkHistoryNavigatorState extends State<WorkHistoryNavigator> {
   @override
   Widget build(BuildContext context) {
     return Navigator(
       key: workHistoryNavigatorKey,
+      onPopPage: (route, result) {
+        "back".debugPrint;
+        return true;
+      },
       onGenerateRoute: (RouteSettings settings) {
         return MaterialPageRoute(
           settings: settings,
@@ -38,7 +42,6 @@ class _WorkHistoryNavigatorState extends State<WorkHistoryNavigator> {
                 return AddJobScreen();
               case Routes.quickEntryScreen:
                 return QuickEntryScreen();
-
             }
             return Container();
           },

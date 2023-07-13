@@ -148,13 +148,13 @@ class _FmTextFieldState extends State<FmTextField> {
                 enabledBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                       color: widget.error != null ? redColor : Colors.black,
-                      width: 1.0),
+                      width: widget.error != null?2:1.0),
                   borderRadius: BorderRadius.circular(widget.radius ?? 5),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(
                       color: widget.error != null ? redColor : Colors.black,
-                      width: 1.0),
+                      width: widget.error != null?2:1.0),
                   borderRadius: BorderRadius.circular(widget.radius ?? 5),
                 ),
                 fillColor: Colors.white,
@@ -217,7 +217,7 @@ class FmEmptyTextField extends StatefulWidget {
       this.maxLines,
       this.textInputType,
       this.controller,
-      this.onchange,
+      this.onchange,this.textInputAction,
       required this.focusNode,
       this.enable = true})
       : super(key: key);
@@ -230,6 +230,7 @@ class FmEmptyTextField extends StatefulWidget {
   ValueChanged<String>? onchange;
   bool enable;
   FocusNode focusNode;
+  TextInputAction? textInputAction;
 
   //final FocusNode focusNode2 = FocusNode();
 
@@ -248,7 +249,7 @@ class _FmEmptyTextFieldState extends State<FmEmptyTextField> {
           child: TextField(
             enabled: widget.enable,
             enableSuggestions: true,
-            textInputAction: TextInputAction.done,
+            textInputAction:widget.textInputAction ?? TextInputAction.done,
             inputFormatters: <TextInputFormatter>[
               if (widget.textInputType != null &&
                   (widget.textInputType == TextInputType.number ||

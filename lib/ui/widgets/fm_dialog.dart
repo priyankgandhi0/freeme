@@ -5,10 +5,12 @@ Future fMDialog({
   required BuildContext context,
   required Widget child,
   double? horizontalPadding,
-  Border? border
+  Border? border,
+  Color? barrierColor
 }) {
   return showDialog(
     context: context,
+    barrierColor: barrierColor ?? Colors.black54,
     builder: (_) => Dialog(
       backgroundColor: Colors.transparent,
       elevation: 0.0,

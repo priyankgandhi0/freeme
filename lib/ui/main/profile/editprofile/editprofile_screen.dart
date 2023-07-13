@@ -4,6 +4,7 @@ import '../../../../globle.dart';
 import '../../../widgets/dropdown.dart';
 import '../../../widgets/fm_appbar.dart';
 import '../../../widgets/profile_image.dart';
+import 'add_address.dart';
 import 'editprofile_controller.dart';
 
 class EditProfileScreen extends StatelessWidget {
@@ -23,6 +24,7 @@ class EditProfileScreen extends StatelessWidget {
         ),
         body: GetBuilder<EditProfileController>(initState: (initState) async {
           await controller.getAllJobClassifications();
+          await controller.getAllUnionTrade();
           await controller.getMyProfile();
         }, builder: (ctrl) {
           return SingleChildScrollView(
@@ -34,9 +36,9 @@ class EditProfileScreen extends StatelessWidget {
                 _email(),
                 _union(context, ctrl),
                 _primaryPosition(ctrl, context),
-                _addAddress(),
-                _addWebsite(),//
-                _socialMedia(),
+                AddAdress(),
+                _addWebsite(), //
+                //_socialMedia(),
                 _addBirthDay(),
                 aboutMeCard(ctrl),
                 FmButton(
@@ -220,7 +222,7 @@ class EditProfileScreen extends StatelessWidget {
                           ).onClick(() {
                             controller.removeUnionSelection();
                           }),
-                          "Union"
+                          "Union/Trade Org."
                               .text(
                                 fontColor: greyTextColor,
                                 fontSize: 16,
@@ -233,10 +235,10 @@ class EditProfileScreen extends StatelessWidget {
                       child: fmDropDown(
                         child: _unionDropDownItem(ctrl),
                         onDropDownTap: (item) {
-                          ctrl.onUnionNonUnionDropDownTap(item);
+                          ctrl.onUnionTradeDropDownTap(item);
                         },
-                        items: ctrl.unionNonUnionList,
-                        width: 150,
+                        items: ctrl.allUnionTradeList,
+                        width: 200,
                         context: context,
                       ),
                     )
@@ -279,37 +281,12 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _addAddress() {
-    return multiTextFieldCard(
-      onItemRemove: (index) {
-        if(controller.addAddress[index].id!=-1){
-          controller.addressRemoveList.add(controller.addAddress[index].id.toString());
-        }
-        controller.addAddress.removeAt(index);
-        controller.update();
-      },
-      itemList: controller.addAddress,
-      onAddItemTap: () {
-        if (controller.addAddress.isEmpty) {
-          controller.addAddress.add(EditProfileItem(-1,TextEditingController()));
-        }
-        if (controller.addAddress.last.controller.text.isNotEmpty) {
-          controller.addAddress.add(EditProfileItem(-1,TextEditingController()));
-        }
-        controller.update();
-      },
-      hint: "Add Address",
-      buttonName: "Add Address",
-    ).paddingOnly(
-      top: screenHPadding16.sh(),
-    );
-  }
-
   Widget _addWebsite() {
     return multiTextFieldCard(
       onItemRemove: (index) {
-        if(controller.addWebsite[index].id!=-1){
-          controller.websiteRemoveList.add(controller.addWebsite[index].id.toString());
+        if (controller.addWebsite[index].id != -1) {
+          controller.websiteRemoveList
+              .add(controller.addWebsite[index].id.toString());
         }
         controller.addWebsite.removeAt(index);
         controller.update();
@@ -317,10 +294,12 @@ class EditProfileScreen extends StatelessWidget {
       itemList: controller.addWebsite,
       onAddItemTap: () {
         if (controller.addWebsite.isEmpty) {
-          controller.addWebsite.add(EditProfileItem(-1,TextEditingController()));
+          controller.addWebsite
+              .add(EditProfileItem(-1, TextEditingController()));
         }
         if (controller.addWebsite.last.controller.text.isNotEmpty) {
-          controller.addWebsite.add(EditProfileItem(-1,TextEditingController()));
+          controller.addWebsite
+              .add(EditProfileItem(-1, TextEditingController()));
         }
         controller.update();
       },
@@ -334,8 +313,9 @@ class EditProfileScreen extends StatelessWidget {
   Widget _socialMedia() {
     return multiTextFieldCard(
       onItemRemove: (index) {
-        if(controller.socialMediaList[index].id!=-1){
-          controller.socialRemoveMediaList.add(controller.socialMediaList[index].id.toString());
+        if (controller.socialMediaList[index].id != -1) {
+          controller.socialRemoveMediaList
+              .add(controller.socialMediaList[index].id.toString());
         }
         controller.socialMediaList.removeAt(index);
         controller.update();
@@ -343,10 +323,12 @@ class EditProfileScreen extends StatelessWidget {
       itemList: controller.socialMediaList,
       onAddItemTap: () {
         if (controller.socialMediaList.isEmpty) {
-          controller.socialMediaList.add(EditProfileItem(-1,TextEditingController()));
+          controller.socialMediaList
+              .add(EditProfileItem(-1, TextEditingController()));
         }
         if (controller.socialMediaList.last.controller.text.isNotEmpty) {
-          controller.socialMediaList.add(EditProfileItem(-1,TextEditingController()));
+          controller.socialMediaList
+              .add(EditProfileItem(-1, TextEditingController()));
         }
         controller.update();
       },
@@ -367,15 +349,16 @@ class EditProfileScreen extends StatelessWidget {
       onAddItemTap: () {
         if (controller.birthDayList.isEmpty &&
             controller.birthDayList.length <= 1) {
-          controller.birthDayList.add(EditProfileItem(-1,TextEditingController()));
+          controller.birthDayList
+              .add(EditProfileItem(-1, TextEditingController()));
         }
         /*if (controller.birthDayList.last.text.isNotEmpty) {
           controller.birthDayList.add(TextEditingController());
         }*/
         controller.update();
       },
-      hint: "Add BirthDay",
-      buttonName: "Add BirthDay",
+      hint: "Add Birthday",
+      buttonName: "Add Birthday",
     ).paddingOnly(
       top: screenHPadding16.sh(),
     );
@@ -383,26 +366,30 @@ class EditProfileScreen extends StatelessWidget {
 
   Widget _addPhone() {
     return multiTextFieldCard(
-      onItemRemove: (index) {
-        if(controller.phoneList[index].id!=-1){
-          controller.phoneRemoveList.add(controller.phoneList[index].id.toString());
-        }
-        controller.phoneList.removeAt(index);
-        controller.update();
-      },
-      itemList: controller.phoneList,
-      onAddItemTap: () {
-        if (controller.phoneList.isEmpty) {
-          controller.phoneList.add(EditProfileItem(-1,TextEditingController()));
-        }
-        if (controller.phoneList.last.controller.text.isNotEmpty) {
-          controller.phoneList.add(EditProfileItem(-1,TextEditingController()));
-        }
-        controller.update();
-      },
-      hint: "Add Phone",
-      buttonName: "Add Phone",
-    ).paddingOnly(
+            onItemRemove: (index) {
+              if (controller.phoneList[index].id != -1) {
+                controller.phoneRemoveList
+                    .add(controller.phoneList[index].id.toString());
+              }
+              controller.phoneList.removeAt(index);
+              controller.update();
+            },
+            itemList: controller.phoneList,
+            onAddItemTap: () {
+              if (controller.phoneList.isEmpty) {
+                controller.phoneList
+                    .add(EditProfileItem(-1, TextEditingController()));
+              }
+              if (controller.phoneList.last.controller.text.isNotEmpty) {
+                controller.phoneList
+                    .add(EditProfileItem(-1, TextEditingController()));
+              }
+              controller.update();
+            },
+            hint: "Add Phone",
+            buttonName: "Add Phone",
+            inputType: TextInputType.phone)
+        .paddingOnly(
       top: screenHPadding16.sh(),
     );
   }
@@ -410,8 +397,9 @@ class EditProfileScreen extends StatelessWidget {
   Widget _email() {
     return multiTextFieldCard(
             onItemRemove: (index) {
-              if(controller.emailList[index].id!=-1){
-                controller.emailRemoveList.add(controller.emailList[index].id.toString());
+              if (controller.emailList[index].id != -1) {
+                controller.emailRemoveList
+                    .add(controller.emailList[index].id.toString());
               }
               controller.emailList.removeAt(index);
               controller.update();
@@ -419,10 +407,12 @@ class EditProfileScreen extends StatelessWidget {
             itemList: controller.emailList,
             onAddItemTap: () {
               if (controller.emailList.isEmpty) {
-                controller.emailList.add(EditProfileItem(-1,TextEditingController()));
+                controller.emailList
+                    .add(EditProfileItem(-1, TextEditingController()));
               }
               if (controller.emailList.last.controller.text.isNotEmpty) {
-                controller.emailList.add(EditProfileItem(-1,TextEditingController()));
+                controller.emailList
+                    .add(EditProfileItem(-1, TextEditingController()));
               }
               controller.update();
             },
@@ -433,6 +423,7 @@ class EditProfileScreen extends StatelessWidget {
       top: screenHPadding16.sh(),
     );
   }
+
 /*
   Widget contentCard(String title, List<String> valueList,
       {GestureTapCallback? onAddClick,
@@ -627,7 +618,7 @@ class EditProfileScreen extends StatelessWidget {
           ),
           FmEmptyTextField(
             focusNode: FocusNode(),
-            hintText: enterAboutMe,
+            //hintText: enterAboutMe,
             maxLines: 3,
             controller: ctrl.aboutMeController,
           )
@@ -718,16 +709,25 @@ class EditProfileScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        FmImage.assetImage(
-          path: Assets.iconsMinusIcon,
-          height: 20.sh(),
-          width: 20.sw(),
-        ).onClick(onRemoveClick),
+        Expanded(
+          child: Row(
+            children: [
+              FmImage.assetImage(
+                path: Assets.iconsMinusIcon,
+                height: 20.sh(),
+                width: 20.sw(),
+              ).onClick(onRemoveClick),
+              hint.text(fontColor: greyTextColor, fontSize: 16).paddingOnly(
+                    left: screenWPadding8.sw(),
+                  ),
+            ],
+          ),
+        ),
         Expanded(
           child: FmEmptyTextField(
             focusNode: FocusNode(),
             controller: textController,
-            hintText: hint,
+            /*  hintText: hint,*/
             textInputType: inputType,
           ).paddingOnly(left: 10.sw()),
         )
@@ -743,10 +743,11 @@ class EditProfileScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        ctrl.selectedUnion.text.text(
+        Expanded(child: ctrl.selectedUnion.text.text(
           fontColor: Colors.black,
           fontSize: 16,
-        ),
+          overFlow: TextOverflow.ellipsis
+        )),
         FmImage.assetImage(
           path: Assets.iconsDownIcon,
           height: 20.sh(),
@@ -795,7 +796,7 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  _profileImage(){
+  _profileImage() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

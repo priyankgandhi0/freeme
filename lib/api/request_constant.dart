@@ -50,6 +50,7 @@ class MethodNames {
   static const getSummary = 'getSummary';
   static const timecardInfo = 'timecardInfo';
   static const editTimecardInfo = 'editTimecardInfo';
+  static const getAllUniontradeOrg = 'getAllUniontradeOrg';
 
 
 }

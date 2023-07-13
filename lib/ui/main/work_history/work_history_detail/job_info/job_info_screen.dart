@@ -151,6 +151,7 @@ class JobInfoScreen extends StatelessWidget {
   }
 
   Widget _jobClassificationCard(JobInfoController ctrl) {
+    var data = ctrl.jobInfo ?? GetJobInfoModel();
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -162,7 +163,7 @@ class JobInfoScreen extends StatelessWidget {
           detailItem(
             title: jobClassification,
             desc:
-                "${ctrl.jobInfo?.jobClassificationCategory}/${ctrl.jobInfo?.subJobClassificationsCategory}",
+                "${data.jobClassificationCategory.isNullOrEmpty ? "--" : data.jobClassificationCategory}/${data.subJobClassificationsCategory.isNullOrEmpty ? "--" : data.subJobClassificationsCategory}",
             titleColor: redTextColor,
           ).paddingOnly(
             top: screenHPadding16.sh(),
@@ -170,28 +171,28 @@ class JobInfoScreen extends StatelessWidget {
           ),
           detailItem(
             title: type,
-            desc: ctrl.jobInfo?.type,
+            desc: data.type.isNullOrEmpty ? "--" : data.type,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: unionNonUnion,
-            desc: ctrl.jobInfo?.unionNonunion,
+            desc: data.unionNonunion.isNullOrEmpty ? "--" : data.unionNonunion,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: recommendedBy,
-            desc: ctrl.jobInfo?.recommendedBy,
+            desc: data.recommendedBy.isNullOrEmpty ? "--" : data.recommendedBy,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: hiredBy,
-            desc: ctrl.jobInfo?.hiredBy,
+            desc: data.hiredBy.isNullOrEmpty ? "--" : data.hiredBy,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding16.sh(),
@@ -206,6 +207,7 @@ class JobInfoScreen extends StatelessWidget {
   }
 
   Widget _rateCard(BuildContext context, JobInfoController ctrl) {
+    var data = ctrl.jobInfo ?? GetJobInfoModel();
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -214,41 +216,44 @@ class JobInfoScreen extends StatelessWidget {
       child: Column(
         children: [
           detailItem(
-              title: rateStar,
-              desc: "\$${ctrl.jobInfo?.rate}/${ctrl.jobInfo?.hours}",
-              titleColor: redTextColor,
-              onIbuttonClick: () {
-                if (ctrl.jobInfo != null) {
-                  showDialogOnIButtonClick(context, ctrl.jobInfo!);
-                }
-              }).paddingOnly(
+            title: rateStar,
+            desc:
+                "\$${data.rate}/${data.hours.isNullOrEmpty ? "--" : data.hours}",
+            titleColor: redTextColor,
+            onIbuttonClick: () {
+              if (ctrl.jobInfo != null) {
+                showDialogOnIButtonClick(context, ctrl.jobInfo!);
+              }
+            },
+          ).paddingOnly(
             top: screenHPadding16.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: guarHours,
-            desc: ctrl.jobInfo?.guaranteedHour.toString(),
+            desc:
+                data.guaranteedHour.isNullOrEmpty ? "--" : data.guaranteedHour,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: w21099,
-            desc: ctrl.jobInfo?.w21099.toString(),
+            desc: data.w21099.isNullOrEmpty ? "--" : data.w21099,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: paidBy,
-            desc: ctrl.jobInfo?.paidByName.toString(),
+            desc: data.paidByName.isNullOrEmpty ? "--" : data.paidByName,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: terms,
-            desc: ctrl.jobInfo?.term.toString(),
+            desc: data.term.isNullOrEmpty ? "--" : data.term,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding16.sh(),
@@ -263,6 +268,8 @@ class JobInfoScreen extends StatelessWidget {
   }
 
   Widget _descriptionCard(JobInfoController ctrl) {
+    var data = ctrl.jobInfo ?? GetJobInfoModel();
+
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -273,7 +280,8 @@ class JobInfoScreen extends StatelessWidget {
         children: [
           detailItem(
                   title: descriptionStar,
-                  desc: ctrl.jobInfo?.description,
+                  desc:
+                      data.description.isNullOrEmpty ? "--" : data.description,
                   titleColor: redTextColor)
               .paddingOnly(
             top: screenHPadding16.sh(),
@@ -281,21 +289,25 @@ class JobInfoScreen extends StatelessWidget {
           ),
           detailItem(
             title: title,
-            desc: ctrl.jobInfo?.productionTitle,
+            desc: data.productionTitle.isNullOrEmpty
+                ? "--"
+                : data.productionTitle,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: producer,
-            desc: ctrl.jobInfo?.producer,
+            desc: data.producer.isNullOrEmpty ? "--" : data.producer,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
           detailItem(
             title: prodCompany,
-            desc: ctrl.jobInfo?.productionCompany,
+            desc: data.productionCompany.isNullOrEmpty
+                ? "--"
+                : data.productionCompany,
           ).paddingOnly(
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
@@ -311,6 +323,36 @@ class JobInfoScreen extends StatelessWidget {
       ),
     ).paddingOnly(
       top: 24.sh(),
+      left: screenWPadding16.sw(),
+      right: screenWPadding16.sw(),
+    );
+  }
+
+  Widget rateDialogItem(
+      {String? title,
+      String? desc,
+      Color titleColor = Colors.black,
+      GestureTapCallback? onIbuttonClick}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: title.text(
+            fontSize: 16,
+            fontColor: titleColor,
+          ),
+        ),
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              desc.text(fontSize: 16),
+            ],
+          ),
+        ),
+      ],
+    ).paddingOnly(
       left: screenWPadding16.sw(),
       right: screenWPadding16.sw(),
     );
@@ -335,7 +377,10 @@ class JobInfoScreen extends StatelessWidget {
             ? Expanded(
                 child: Row(
                   children: [
-                    desc.text(fontSize: 16),
+                    desc.text(
+                      fontSize: 16,
+                      fontColor: desc == "--" ? greyTextColor : Colors.black,
+                    ),
                     FmImage.assetImage(
                       path: Assets.iconsErrorIcon,
                       height: 15.sh(),
@@ -347,7 +392,10 @@ class JobInfoScreen extends StatelessWidget {
                 ),
               )
             : Expanded(
-                child: desc.text(fontSize: 16),
+                child: desc.text(
+                  fontSize: 16,
+                  fontColor: desc == "--" ? greyTextColor : Colors.black,
+                ),
               ),
       ],
     ).paddingOnly(
@@ -360,7 +408,7 @@ class JobInfoScreen extends StatelessWidget {
     BuildContext context,
     GetJobInfoModel jobInfo,
   ) {
-    /* num hour = (jobInfo.hours.toString().toLowerCase() ==
+    var rowHours = (jobInfo.hours.toString().toLowerCase() ==
             "10 hours".toLowerCase()
         ? 10
         : jobInfo.hours.toString().toLowerCase() == "Hourly".toLowerCase()
@@ -370,14 +418,15 @@ class JobInfoScreen extends StatelessWidget {
                 : jobInfo.hours.toString().toLowerCase() ==
                         "12 hours".toLowerCase()
                     ? 12
-                    : 0);*/
+                    : 0);
 
-    num hour = getHour(jobInfo);
+    num hour = getHour(rowHours);
     num perHourRate = int.parse(jobInfo.rate.toString()) / hour;
 
     fMDialog(
       context: context,
       horizontalPadding: 48,
+      barrierColor: Colors.black.withOpacity(0.4),
       border: Border.all(
         color: Colors.black,
         width: 2,
@@ -385,9 +434,9 @@ class JobInfoScreen extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          detailItem(
-            title: rateStar,
-            desc: "\$${jobInfo.rate}/$hour",
+          rateDialogItem(
+            title: rate,
+            desc: "\$${jobInfo.rate}/$rowHours",
           ).paddingOnly(
             top: screenHPadding16.sh(),
             bottom: screenHPadding16.sh(),
@@ -397,14 +446,14 @@ class JobInfoScreen extends StatelessWidget {
             height: 1,
             color: Colors.black,
           ),
-          detailItem(
+          rateDialogItem(
             title: hourly,
             desc: perHourRate.isNaN ? "-" : perHourRate.toStringAsFixed(2),
           ).paddingOnly(
             top: screenHPadding16.sh(),
             bottom: screenHPadding8.sh(),
           ),
-          detailItem(
+          rateDialogItem(
             title: hourlyX15,
             desc: perHourRate.isNaN
                 ? "-"
@@ -413,7 +462,7 @@ class JobInfoScreen extends StatelessWidget {
             top: screenHPadding8.sh(),
             bottom: screenHPadding8.sh(),
           ),
-          detailItem(
+          rateDialogItem(
             title: Hourly20,
             desc:
                 perHourRate.isNaN ? "-" : (perHourRate * 2).toStringAsFixed(2),
@@ -429,25 +478,39 @@ class JobInfoScreen extends StatelessWidget {
   calculateAmount(int amount, String perHowManyHours) {}
 
   createCompanyAddress(JobInfoController ctrl) {
-    return "${ctrl.jobInfo?.companyAddressLine1 ?? ""}"
-        "\n${ctrl.jobInfo?.companyAddressLine2 ?? ""}"
-        "\n${ctrl.jobInfo?.city ?? ""}, ${ctrl.jobInfo?.state ?? ""} "
-        "${ctrl.jobInfo?.zip == 0 ? "" : ctrl.jobInfo?.zip}\n${ctrl.jobInfo?.country ?? ""}";
+    if (ctrl.jobInfo != null) {
+      String address = "";
+      if (!ctrl.jobInfo!.companyAddressLine1.isNullOrEmpty) {
+        address = "$address${ctrl.jobInfo?.companyAddressLine1 ?? ""}";
+      }
+      if (!ctrl.jobInfo!.companyAddressLine2.isNullOrEmpty) {
+        address = "$address\n${ctrl.jobInfo?.companyAddressLine2 ?? ""}";
+      }
+      if (!ctrl.jobInfo!.city.isNullOrEmpty) {
+        address = "$address\n${ctrl.jobInfo?.city ?? ""},";
+      }
+
+      if (!ctrl.jobInfo!.state.isNullOrEmpty) {
+        address = "$address ${ctrl.jobInfo?.state ?? ""} ";
+      }
+
+      if (ctrl.jobInfo!.zip != null &&
+          ctrl.jobInfo!.zip.toString().isNotEmpty &&
+          ctrl.jobInfo?.zip != 0) {
+        address = "$address${ctrl.jobInfo?.zip}\n";
+      }
+
+      if (!ctrl.jobInfo!.country.isNullOrEmpty) {
+        address = "$address${ctrl.jobInfo?.country ?? ""}";
+      }
+
+      return address;
+    } else {
+      return "--";
+    }
   }
 
-  num getHour(GetJobInfoModel jobInfo) {
-    num hour = (jobInfo.hours.toString().toLowerCase() ==
-            "10 hours".toLowerCase()
-        ? 10
-        : jobInfo.hours.toString().toLowerCase() == "Hourly".toLowerCase()
-            ? 1
-            : jobInfo.hours.toString().toLowerCase() == "8 hours".toLowerCase()
-                ? 8
-                : jobInfo.hours.toString().toLowerCase() ==
-                        "12 hours".toLowerCase()
-                    ? 12
-                    : 0);
-
+  num getHour(int hour) {
     if (hour <= 8) {
       return hour;
     }

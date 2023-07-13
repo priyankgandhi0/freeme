@@ -9,7 +9,7 @@ import '../../../../../models/summery_model.dart';
 import '../../../navigator/main_controller.dart';
 
 class SummeryController extends GetxController {
-  PageController pageController = PageController(initialPage: 0);
+  PageController pageController = PageController(initialPage: 0,viewportFraction: 0.93);
   int activatePage = 0;
 
   void onPageChange(int page) {
