@@ -41,9 +41,13 @@ class AccountScreen extends StatelessWidget {
                     .paddingOnly(
                       top: screenHPadding16.sh(),
                     ),
-                (ctrl.userModel?.union ?? "").text(fontSize: 16).paddingOnly(
-                      top: screenHPadding8.sh(),
-                    ),
+                (ctrl.userModel?.union?[0])
+                        ?.unionTradeTitle
+                        .text(fontSize: 16)
+                        .paddingOnly(
+                          top: screenHPadding8.sh(),
+                        ) ??
+                    Container(),
                 getPosition(ctrl.userModel)
                     .text(fontColor: greyTextColor, fontSize: 16)
                     .paddingOnly(
@@ -122,7 +126,6 @@ class AccountScreen extends StatelessWidget {
       if (!userModel.jobClassificationCategory.isNullOrEmpty) {
         s = "$s, ${userModel.jobClassificationCategory ?? ""}";
       }
-
       return s;
     }
     return "";

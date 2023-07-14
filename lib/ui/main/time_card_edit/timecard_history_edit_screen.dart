@@ -51,8 +51,8 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                 description: "Week Ending 7/23/2022",
                 context: context,
                 onBackClick: () {
-                  FocusScope.of(context).unfocus();
-                  Navigator.of(context).pop();
+                  showExitDialog(context);
+
                 },
               ),
               Expanded(
@@ -976,7 +976,12 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
               ),
               FmButton(
                 type : ButtonType.delete,
-                ontap: () {},
+                ontap: () {
+                  controller.clearAllFields();
+                  FocusScope.of(context).unfocus();
+                  Navigator.of(context,rootNavigator: true).pop();
+                  Navigator.of(context).pop();
+                },
                 name: discardChanges,
               ).paddingOnly(
                 left: 24.sw(),
@@ -985,7 +990,9 @@ class TimeCardEditHistoryScreen extends StatelessWidget {
                 bottom: 16.sw(),
               ),
               FmButton(
-                ontap: () {},
+                ontap: () {
+                   Navigator.of(context,rootNavigator: true).pop();
+                },
                 name: keepEditing,
               ).paddingOnly(
                 left: 24.sw(),

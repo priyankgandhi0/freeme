@@ -7,6 +7,8 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../api/repositories/profile_repo.dart';
 import '../../../../api/repositories/quick_entry_repo.dart';
 import '../../../../globle.dart';
+import '../../../../models/address_request_model.dart';
+import '../../../../models/country.dart';
 import '../../../../models/job_classification_model.dart';
 import '../../../../models/sub_job_classification_model.dart';
 import '../../../../models/union_trade_model.dart';
@@ -29,12 +31,6 @@ class EditProfileController extends GetxController {
   late TextEditingController addWebsiteController = TextEditingController();
   late TextEditingController addSocialMediaController = TextEditingController();
   late TextEditingController addBirthDayController = TextEditingController();
-
-  late TextEditingController addressLineOneController = TextEditingController();
-  late TextEditingController addressLineTwoController = TextEditingController();
-  late TextEditingController cityController = TextEditingController();
-  late TextEditingController stateController = TextEditingController();
-  late TextEditingController countryController = TextEditingController();
 
   @override
   void onInit() {
@@ -70,12 +66,10 @@ class EditProfileController extends GetxController {
                 e.emailId ?? -1, TextEditingController(text: e.email ?? "")))
             .toList() ??
         []);
-    addAddress.clear();
-    addAddress.addAll(user.address
-            ?.map((e) => EditProfileItem(e.addressId ?? -1,
-                TextEditingController(text: e.address ?? "")))
-            .toList() ??
-        []);
+
+    addressControllerList.clear();
+    setAddress(user.address ?? []);
+
     phoneList.clear();
     phoneList.addAll(user.mobile
             ?.map((e) => EditProfileItem(e.numberId ?? -1,
@@ -89,23 +83,43 @@ class EditProfileController extends GetxController {
             .toList() ??
         []);
     birthDayList.clear();
-    if(user.birthDate!=null){
-      birthDayList.add(
-          EditProfileItem(0, TextEditingController(text: user.birthDate ?? "")));
+    if (user.birthDate != null) {
+      birthDayList.add(EditProfileItem(
+          0, TextEditingController(text: user.birthDate ?? "")));
     }
 
     socialMediaList.clear();
     socialMediaList.addAll(user.socialMedia
-        ?.map((e) =>
-        EditProfileItem(e.socialMediaId ?? -1, TextEditingController(text: (e.socialMedia?.toString() ?? ""))))
-        .toList() ??
+            ?.map((e) => EditProfileItem(e.socialMediaId ?? -1,
+                TextEditingController(text: (e.socialMedia?.toString() ?? ""))))
+            .toList() ??
         []);
-    MenuItem? union = allUnionTradeList
+
+    unionList.addAll((user.union ?? []).map(
+      (e) {
+        var model = UnionUiModel();
+        model.id = e.unionId;
+        for (int i = 0; i < allUnionTradeList.length; i++) {
+          if (allUnionTradeList[i].text == e.unionTradeTitle) {
+            if (allUnionTradeList[i].isSelected) {
+              allUnionTradeList[i].isSelected = false;
+            } else {
+              allUnionTradeList[i].isSelected = true;
+              model.selectedUnion = allUnionTradeList[i];
+            }
+          } else {
+            allUnionTradeList[i].isSelected = false;
+          }
+        }
+        return model;
+      },
+    ));
+
+    /*MenuItem? union = allUnionTradeList
         .firstWhereOrNull((element) => element.text == user.union);
     if (union != null) {
-      showUnionSelected = true;
       onUnionTradeDropDownTap(union);
-    }
+    }*/
 
     MenuItem? department = allJobClassificationList
         .firstWhereOrNull((element) => element.id == user.jobClassificationId);
@@ -118,6 +132,8 @@ class EditProfileController extends GetxController {
         onPositionTap(position);
       }
     }
+
+    update();
   }
 
   Future<void> performSaveButton(BuildContext context) async {
@@ -130,9 +146,7 @@ class EditProfileController extends GetxController {
       email: json.encode(
         emailList.map((e) => e.controller.text).toList().toJson("email"),
       ),
-      address: json.encode(
-        addAddress.map((e) => e.controller.text).toList().toJson("address"),
-      ),
+      address: json.encode(getAddressJson(addressControllerList)),
       mobile: json.encode(
         phoneList.map((e) => e.controller.text).toList().toJson("mobile"),
       ),
@@ -149,12 +163,18 @@ class EditProfileController extends GetxController {
           birthDayList.isNotEmpty ? birthDayList[0].controller.text : null,
       department: selectedDepartment.id,
       position: selectedPosition.id,
-      union: selectedUnion.text,
+      union: json.encode(
+        unionList
+            .map((e) => e.selectedUnion.id.toString() ?? "")
+            .toList()
+            .toJson("union"),
+      ),
       removeAddress: addressRemoveList.join(","),
       removeEmail: emailRemoveList.join(","),
       removeMobileNumber: phoneRemoveList.join(","),
       removeSocialMedia: socialRemoveMediaList.join(","),
       removeWebsite: websiteRemoveList.join(","),
+      removeUnion: unionRemoveList.join(","),
     );
     if (response.status) {
       UserModel responseData = UserModel.fromJson(response.data);
@@ -184,6 +204,7 @@ class EditProfileController extends GetxController {
   }
 
   String? selectedImage;
+
   Future<void> pickImage() async {
     final ImagePicker _picker = ImagePicker();
     XFile? image = await _picker.pickImage(source: ImageSource.gallery);
@@ -195,9 +216,10 @@ class EditProfileController extends GetxController {
 
   List<EditProfileItem> phoneList = [];
   List<EditProfileItem> emailList = [];
+  List<UnionUiModel> unionList = [];
   List<EditProfileItem> socialMediaList = [];
   List<EditProfileItem> addWebsite = [];
-  List<EditProfileItem> addAddress = [];
+
   List<EditProfileItem> birthDayList = [];
 
   List<String> phoneRemoveList = [];
@@ -205,11 +227,9 @@ class EditProfileController extends GetxController {
   List<String> socialRemoveMediaList = [];
   List<String> websiteRemoveList = [];
   List<String> addressRemoveList = [];
+  List<String> unionRemoveList = [];
 
-  MenuItem selectedUnion = MenuItem(text: "Not Sure", isSelected: true);
-
-
-  void onUnionTradeDropDownTap(MenuItem item) {
+/*  void onUnionTradeDropDownTap(MenuItem item) {
     for (int i = 0; i < allUnionTradeList.length; i++) {
       if (allUnionTradeList[i].text == item.text) {
         if (allUnionTradeList[i].isSelected) {
@@ -223,30 +243,19 @@ class EditProfileController extends GetxController {
       }
     }
     update();
-  }
+  }*/
 
-  bool showUnionSelected = false;
   bool showPrimaryPositionSelected = false;
 
   void removePrimaryPosition() {
-    selectedDepartment =  MenuItem(text: "Select Department",id: 0);
-    selectedPosition = MenuItem(text: "Select Position",id: 0);
+    selectedDepartment = MenuItem(text: "Select Department", id: 0);
+    selectedPosition = MenuItem(text: "Select Position", id: 0);
     showPrimaryPositionSelected = false;
     update();
   }
 
   void addPrimaryPosition() {
     showPrimaryPositionSelected = true;
-    update();
-  }
-
-  void removeUnionSelection() {
-    showUnionSelected = false;
-    update();
-  }
-
-  void addUnionSelection() {
-    showUnionSelected = true;
     update();
   }
 
@@ -269,22 +278,20 @@ class EditProfileController extends GetxController {
     } else {}
   }
 
-
   List<MenuItem> allUnionTradeList = [];
 
   Future<void> getAllUnionTrade() async {
     ResponseItem response = await QuickEntryRepo.getAllUnionTradeOrg();
     if (response.status) {
       allUnionTradeList.clear();
-      allUnionTradeList
-          .addAll(unionTradeModelFromJson(response.data)
+      allUnionTradeList.addAll(unionTradeModelFromJson(response.data)
           .map(
             (e) => MenuItem(
-          text: e.unionTradeTitle,
-          id: e.unionTradeId?.toInt() ?? -1,
-          isSelected: false,
-        ),
-      )
+              text: e.unionTradeTitle,
+              id: e.unionTradeId?.toInt() ?? -1,
+              isSelected: false,
+            ),
+          )
           .toList());
     } else {}
   }
@@ -356,17 +363,108 @@ class EditProfileController extends GetxController {
     lastNameController.clear();
     aboutMeController.clear();
     emailList.clear();
-    addAddress.clear();
+    addressControllerList.clear();
     phoneList.clear();
     addWebsite.clear();
     birthDayList.clear();
     socialMediaList.clear();
+    unionList.clear();
   }
+
+  ///
+  ///
+  ///
+  ///
+
+  List<MenuItem> countryList = [];
+
+  getAllCountryFromRaw(BuildContext context) async {
+    countryList.clear();
+    List<Country> list = await getCountries(context);
+    countryList.addAll(list
+        .map(
+          (e) => MenuItem(
+              text: e.name.toString(),
+              isSelected: false,
+              countryCode: e.countryCode),
+        )
+        .toList());
+    update(["AddAddressBuilder"]);
+  }
+
+  List<AddressUiModel> addressControllerList = [];
+
+  Map<String, dynamic> getAddressJson(List<AddressUiModel> addressList) {
+    var address = AddressRequestModel(
+      address: addressList
+          .map(
+            (e) => AddressData(
+              addressId: e.id,
+              addressLine1: e.addressLineOneController.text,
+              addressLine2: e.addressLineTwoController.text,
+              city: e.cityController.text,
+              state: e.stateController.text,
+              zip: e.zipCodeController.text,
+              country: e.selectedCountry.text,
+            ),
+          )
+          .toList(),
+    ).toJson();
+    return address;
+  }
+
+  void setAddress(List<Address> address) {
+    addressControllerList.addAll(address.map(
+          (e) {
+            var model = AddressUiModel();
+            model.id = e.addressId ?? -1;
+            model.addressLineOneController.text = e.addressLine1 ?? "";
+            model.addressLineTwoController.text = e.addressLine2 ?? "";
+            model.cityController.text = e.city ?? "";
+            model.stateController.text = e.state ?? "";
+            model.zipCodeController.text = e.zip.toString();
+
+            for (int i = 0; i < countryList.length; i++) {
+              if (countryList[i].text == e.country) {
+                if (countryList[i].isSelected) {
+                  countryList[i].isSelected = false;
+                } else {
+                  countryList[i].isSelected = true;
+                  model.selectedCountry = countryList[i];
+                }
+              } else {
+                countryList[i].isSelected = false;
+              }
+            }
+
+            return model;
+          },
+        ).toList() ??
+        []);
+  }
+}
+
+class AddressUiModel {
+  num id = -1;
+  late TextEditingController addressLineOneController = TextEditingController();
+  late TextEditingController addressLineTwoController = TextEditingController();
+  late TextEditingController cityController = TextEditingController();
+  late TextEditingController stateController = TextEditingController();
+  late TextEditingController zipCodeController = TextEditingController();
+  MenuItem selectedCountry =
+      MenuItem(text: "United States", countryCode: "US", isSelected: true);
+}
+
+class UnionUiModel {
+  num? id;
+
+  MenuItem selectedUnion = MenuItem(text: "Not Sure", isSelected: true);
 }
 
 class EditProfileItem {
   num id;
+  String? text;
   TextEditingController controller;
 
-  EditProfileItem(this.id, this.controller);
+  EditProfileItem(this.id, this.controller, {this.text});
 }

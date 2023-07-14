@@ -4,50 +4,63 @@ import 'package:get/get.dart';
 
 import '../../../../constant/space_constant.dart';
 import '../../../../theme/app_colors.dart';
+import '../../../widgets/dropdown.dart';
 import '../../../widgets/fm_image.dart';
 import 'editprofile_controller.dart';
 
 class AddAdress extends StatelessWidget {
-    AddAdress({Key? key}) : super(key: key);
+  AddAdress({Key? key}) : super(key: key);
 
   final controller = Get.find<EditProfileController>();
+
   @override
   Widget build(BuildContext context) {
-    return addressMultiFieldCard(
-      onItemRemove: (index) {
-        if (controller.addAddress[index].id != -1) {
-          controller.addressRemoveList
-              .add(controller.addAddress[index].id.toString());
-        }
-        controller.addAddress.removeAt(index);
-        controller.update();
+    return GetBuilder<EditProfileController>(
+      id: "AddAddressBuilder",
+      initState: (state) {
+        controller.getAllCountryFromRaw(context);
       },
-      itemList: controller.addAddress,
-      onAddItemTap: () {
-        if (controller.addAddress.isEmpty) {
-          controller.addAddress
-              .add(EditProfileItem(-1, TextEditingController()));
-        }
-        if (controller.addAddress.last.controller.text.isNotEmpty) {
-          controller.addAddress
-              .add(EditProfileItem(-1, TextEditingController()));
-        }
-        controller.update();
+      builder: (ctrl) {
+        return addressMultiFieldCard(
+          onItemRemove: (index) {
+            if (controller.addressControllerList[index].id != -1) {
+              controller.addressRemoveList
+                  .add(controller.addressControllerList[index].id.toString());
+            }
+            controller.addressControllerList.removeAt(index);
+            controller.update();
+          },
+          itemList: controller.addressControllerList,
+          onAddItemTap: () {
+
+            if (controller.addressControllerList.isEmpty) {
+              controller.addressControllerList
+                  .add(AddressUiModel());
+              controller.update();
+              return;
+            }
+            if (controller.addressControllerList.last.addressLineOneController.text.isNotEmpty) {
+              controller.addressControllerList
+                  .add(AddressUiModel());
+            }
+            controller.update();
+          },
+          hint: "Address",
+          buttonName: "Add Address",
+        ).paddingOnly(
+          top: screenHPadding16.sh(),
+        );
       },
-      hint: "Address",
-      buttonName: "Add Address",
-    ).paddingOnly(
-      top: screenHPadding16.sh(),
     );
   }
 
   Widget addressMultiFieldCard(
       {required Function(int index) onItemRemove,
-        required List<EditProfileItem> itemList,
-        required GestureTapCallback onAddItemTap,
-        String? hint,
-        required String buttonName,
-        TextInputType? inputType}) {
+      required List<AddressUiModel> itemList,
+      required GestureTapCallback onAddItemTap,
+      String? hint,
+      required String buttonName,
+      TextInputType? inputType}) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -55,7 +68,7 @@ class AddAdress extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
-            offset: Offset(2, 3),
+            offset: const Offset(2, 3),
             blurRadius: 10.0,
           ),
         ],
@@ -64,14 +77,15 @@ class AddAdress extends StatelessWidget {
         children: [
           ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: itemList.length,
             itemBuilder: (context, index) {
               return addressChildItem(
                 index: index,
                 hint: hint,
                 inputType: inputType,
-                textController: itemList[index].controller,
+                context: context,
+                addressItem: itemList[index],
                 onRemoveClick: () {
                   onItemRemove(index);
                 },
@@ -87,17 +101,17 @@ class AddAdress extends StatelessWidget {
               ),
               buttonName
                   .text(
-                fontColor: greyTextColor,
-                fontSize: 16,
-              )
+                    fontColor: greyTextColor,
+                    fontSize: 16,
+                  )
                   .paddingOnly(left: 10.sw())
             ],
           )
               .paddingOnly(
-            left: screenWPadding16.sw(),
-            top: screenHPadding16,
-            bottom: screenHPadding16,
-          )
+                left: screenWPadding16.sw(),
+                top: screenHPadding16,
+                bottom: screenHPadding16,
+              )
               .onTap(onAddItemTap)
         ],
       ),
@@ -107,13 +121,13 @@ class AddAdress extends StatelessWidget {
     );
   }
 
-
   addressChildItem(
       {required int index,
-        required TextEditingController textController,
-        required GestureTapCallback onRemoveClick,
-        String? hint,
-        TextInputType? inputType}) {
+      required AddressUiModel addressItem,
+      required GestureTapCallback onRemoveClick,
+      String? hint,
+      TextInputType? inputType,
+      required BuildContext context}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -127,8 +141,8 @@ class AddAdress extends StatelessWidget {
                 width: 20.sw(),
               ).onClick(onRemoveClick),
               hint.text(fontColor: greyTextColor, fontSize: 16).paddingOnly(
-                left: screenWPadding8.sw(),
-              ),
+                    left: screenWPadding8.sw(),
+                  ),
             ],
           ),
         ),
@@ -137,7 +151,7 @@ class AddAdress extends StatelessWidget {
             children: [
               FmEmptyTextField(
                 focusNode: FocusNode(),
-                controller: textController,
+                controller: addressItem.addressLineOneController,
                 hintText: addressLineOne,
                 textInputType: inputType,
               ).paddingOnly(
@@ -146,7 +160,7 @@ class AddAdress extends StatelessWidget {
               ),
               FmEmptyTextField(
                 focusNode: FocusNode(),
-                controller: textController,
+                controller: addressItem.addressLineTwoController,
                 hintText: addressLineTwo,
                 textInputType: inputType,
               ).paddingOnly(
@@ -156,7 +170,7 @@ class AddAdress extends StatelessWidget {
               ),
               FmEmptyTextField(
                 focusNode: FocusNode(),
-                controller: textController,
+                controller: addressItem.cityController,
                 hintText: city,
                 textInputType: inputType,
               ).paddingOnly(
@@ -166,7 +180,7 @@ class AddAdress extends StatelessWidget {
               ),
               FmEmptyTextField(
                 focusNode: FocusNode(),
-                controller: textController,
+                controller: addressItem.stateController,
                 hintText: state,
                 textInputType: inputType,
               ).paddingOnly(
@@ -176,14 +190,36 @@ class AddAdress extends StatelessWidget {
               ),
               FmEmptyTextField(
                 focusNode: FocusNode(),
-                controller: textController,
-                hintText: country,
+                controller: addressItem.zipCodeController,
+                hintText: zip,
                 textInputType: inputType,
               ).paddingOnly(
                 left: 10.sw(),
                 top: 6,
                 bottom: 6,
               ),
+              fmDropDown(
+                child: countryItemWithDropDown(
+                    addressItem.selectedCountry.text ?? ""),
+                width: 240,
+                onDropDownTap: (item) {
+                  for (int i = 0; i < controller.countryList.length; i++) {
+                    if (controller.countryList[i].text == item.text) {
+                      if (controller.countryList[i].isSelected) {
+                        controller.countryList[i].isSelected = false;
+                      } else {
+                        controller.countryList[i].isSelected = true;
+                        addressItem.selectedCountry = controller.countryList[i];
+                      }
+                    } else {
+                      controller.countryList[i].isSelected = false;
+                    }
+                  }
+                  controller.update(["AddAddressBuilder"]);
+                },
+                items: controller.countryList,
+                context: context,
+              )
             ],
           ),
         )
@@ -193,5 +229,27 @@ class AddAdress extends StatelessWidget {
       top: screenHPadding16,
       bottom: screenHPadding16,
     );
+  }
+
+  Widget countryItemWithDropDown(String selectedCountry) {
+    return Row(
+      children: [
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              (selectedCountry).text(fontSize: 16, fontColor: greyTextColor),
+              FmImage.assetImage(
+                path: Assets.iconsDownIcon,
+                height: 15.sh(),
+                width: 15.sw(),
+              ).paddingOnly(
+                right: screenWPadding16.sw(),
+              )
+            ],
+          ),
+        ),
+      ],
+    ).paddingAll(8);
   }
 }

@@ -79,8 +79,8 @@ class MyProfileScreen extends StatelessWidget {
                             textColor: blueTextColor)
                         .paddingOnly(top: 16)
                     : Container(),
-                (ctrl.userModel?.email ?? []).isNotEmpty
-                    ? contentCard("Website", ctrl.userModel?.email?[0].email ?? "",
+                (ctrl.userModel?.website ?? []).isNotEmpty
+                    ? contentCard("Website", ctrl.userModel?.website?[0].website ?? "",
                         textColor: blueTextColor).paddingOnly(top: 16)
                     : Container(),
                 contentCard(

@@ -468,7 +468,7 @@ class AddJobController extends GetxController {
   }
 
   Future<void> addJobButtonClick(BuildContext context, {int? jobId}) async {
-    if (_isValidate(context)) {
+    if (isValidate(context)) {
       startLoading();
       /* try {*/
       ResponseItem response = await QuickEntryRepo.addJobSubmit(
@@ -538,14 +538,14 @@ class AddJobController extends GetxController {
   String? positionError;
   String? daysError;
 
-  bool _isValidate(BuildContext context) {
+  bool isValidate(BuildContext context) {
     if (descriptionController.text.isEmpty ||
         rateTextController.text.isEmpty ||
         selectedDepartment.id == null ||
         selectedPosition.id == null ||
         selectedDays.isEmpty) {
       if (descriptionController.text.isEmpty) {
-        descriptionError = "";
+        descriptionError = "Please fill out required fields";
       } else {
         descriptionError = null;
       }

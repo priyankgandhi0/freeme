@@ -195,89 +195,31 @@ class EditProfileScreen extends StatelessWidget {
   }
 
   Widget _union(BuildContext context, EditProfileController ctrl) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            offset: Offset(2, 3),
-            blurRadius: 10.0,
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          ctrl.showUnionSelected
-              ? Row(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        children: [
-                          FmImage.assetImage(
-                            path: Assets.iconsMinusIcon,
-                            height: 20.sh(),
-                            width: 20.sw(),
-                          ).onClick(() {
-                            controller.removeUnionSelection();
-                          }),
-                          "Union/Trade Org."
-                              .text(
-                                fontColor: greyTextColor,
-                                fontSize: 16,
-                              )
-                              .paddingOnly(left: 10.sw())
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: fmDropDown(
-                        child: _unionDropDownItem(ctrl),
-                        onDropDownTap: (item) {
-                          ctrl.onUnionTradeDropDownTap(item);
-                        },
-                        items: ctrl.allUnionTradeList,
-                        width: 200,
-                        context: context,
-                      ),
-                    )
-                  ],
-                ).paddingOnly(
-                  left: screenWPadding16.sw(),
-                  top: screenHPadding16,
-                  bottom: screenHPadding16,
-                )
-              : Container(),
-          Row(
-            children: [
-              FmImage.assetImage(
-                path: Assets.iconsPlusicon,
-                height: 20.sh(),
-                width: 20.sw(),
-              ),
-              "Add Union"
-                  .text(
-                    fontColor: greyTextColor,
-                    fontSize: 16,
-                  )
-                  .paddingOnly(left: 10.sw())
-            ],
-          )
-              .paddingOnly(
-            left: screenWPadding16.sw(),
-            top: screenHPadding16,
-            bottom: screenHPadding16,
-          )
-              .onTap(() {
-            controller.addUnionSelection();
-          })
-        ],
-      ),
-    ).paddingOnly(
-      left: 16.sw(),
-      right: 16.sw(),
-      top: 16.sw(),
+    return unionSelectionCard(
+            ctrl: ctrl,
+            onItemRemove: (index) {
+              if (controller.unionList[index].id != -1) {
+                controller.unionRemoveList
+                    .add(controller.unionList[index].id.toString());
+              }
+              controller.unionList.removeAt(index);
+              controller.update();
+            },
+
+            onAddItemTap: () {
+              if (controller.unionList.isEmpty) {
+                controller.unionList.add(UnionUiModel());
+                controller.update();
+                return;
+              }
+              controller.unionList.add(UnionUiModel());
+              controller.update();
+            },
+            hint: unionTrade,
+            buttonName: addUnion,
+            inputType: TextInputType.emailAddress)
+        .paddingOnly(
+      top: screenHPadding16.sh(),
     );
   }
 
@@ -700,6 +642,115 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
+  Widget unionSelectionCard(
+      {required Function(int index) onItemRemove,
+
+      required EditProfileController ctrl,
+      required GestureTapCallback onAddItemTap,
+      String? hint,
+      required String buttonName,
+      TextInputType? inputType}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            offset: Offset(2, 3),
+            blurRadius: 10.0,
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: controller.unionList.length,
+            itemBuilder: (context, index) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        FmImage.assetImage(
+                          path: Assets.iconsMinusIcon,
+                          height: 20.sh(),
+                          width: 20.sw(),
+                        ).onClick(() {
+                          onItemRemove(index);
+                        }),
+                        hint
+                            .text(fontColor: greyTextColor, fontSize: 16)
+                            .paddingOnly(
+                              left: screenWPadding8.sw(),
+                            ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: fmDropDown(
+                      child: _unionDropDownItem(controller.unionList[index]),
+                      onDropDownTap: (item) {
+                        for (int i = 0; i < controller.allUnionTradeList.length; i++) {
+                          if (controller.allUnionTradeList[i].text == item.text) {
+                            if (controller.allUnionTradeList[i].isSelected) {
+                              controller.allUnionTradeList[i].isSelected = false;
+                            } else {
+                              controller.allUnionTradeList[i].isSelected = true;
+                              controller.unionList[index].selectedUnion = controller.allUnionTradeList[i];
+                            }
+                          } else {
+                            controller.allUnionTradeList[i].isSelected = false;
+                          }
+                        }
+                        controller.update();
+                        //ctrl.onUnionTradeDropDownTap(item);
+                      },
+                      items: ctrl.allUnionTradeList,
+                      width: 200,
+                      context: context,
+                    ),
+                  )
+                ],
+              ).paddingOnly(
+                left: screenWPadding16.sw(),
+                top: screenHPadding16,
+                bottom: screenHPadding16,
+              );
+            },
+          ),
+          Row(
+            children: [
+              FmImage.assetImage(
+                path: Assets.iconsPlusicon,
+                height: 20.sh(),
+                width: 20.sw(),
+              ),
+              buttonName
+                  .text(
+                    fontColor: greyTextColor,
+                    fontSize: 16,
+                  )
+                  .paddingOnly(left: 10.sw())
+            ],
+          )
+              .paddingOnly(
+                left: screenWPadding16.sw(),
+                top: screenHPadding16,
+                bottom: screenHPadding16,
+              )
+              .onTap(onAddItemTap)
+        ],
+      ),
+    ).paddingOnly(
+      left: 16.sw(),
+      right: 16.sw(),
+    );
+  }
+
   childItem(
       {required int index,
       required TextEditingController textController,
@@ -739,15 +790,15 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  _unionDropDownItem(EditProfileController ctrl) {
+  _unionDropDownItem(UnionUiModel item) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(child: ctrl.selectedUnion.text.text(
-          fontColor: Colors.black,
-          fontSize: 16,
-          overFlow: TextOverflow.ellipsis
-        )),
+        Expanded(
+            child: item.selectedUnion.text.text(
+                fontColor: Colors.black,
+                fontSize: 16,
+                overFlow: TextOverflow.ellipsis)),
         FmImage.assetImage(
           path: Assets.iconsDownIcon,
           height: 20.sh(),

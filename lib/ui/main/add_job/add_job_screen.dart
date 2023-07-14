@@ -90,7 +90,11 @@ class AddJobScreen extends StatelessWidget {
   Widget _saveButton(BuildContext context) {
     return FmButton(
       ontap: () {
-        controller.addJobButtonClick(context, jobId: jobId);
+        if (controller.isValidate(context)) {
+          controller.addJobButtonClick(context, jobId: jobId);
+        } else {
+          showErrorDialog(context);
+        }
       },
       name: save,
     ).paddingOnly(
@@ -194,7 +198,7 @@ class AddJobScreen extends StatelessWidget {
         },
       ),
     ).whenComplete(() {
-      if(ctrl.selectedDays.isNotEmpty){
+      if (ctrl.selectedDays.isNotEmpty) {
         controller.daysError = null;
       }
       controller.update();
@@ -269,7 +273,6 @@ class AddJobScreen extends StatelessWidget {
   }
 
   String getDaysMonthWise(Set<DateTime> selectedDays) {
-
     String generatedDate = "";
     var coreMonths = selectedDays.toList().map((e) => e.month);
     List<int> months = coreMonths.toSet().toList();
@@ -757,7 +760,11 @@ class AddJobScreen extends StatelessWidget {
   Widget _addJobButton(BuildContext context) {
     return FmButton(
       ontap: () {
-        controller.addJobButtonClick(context);
+        if (controller.isValidate(context)) {
+          controller.addJobButtonClick(context);
+        } else {
+          showErrorDialog(context);
+        }
       },
       name: addJob,
     ).paddingOnly(
@@ -1182,5 +1189,83 @@ class AddJobScreen extends StatelessWidget {
         Get.find<TaxedItemDialogController>().typeManualController.clear();
       },
     );
+  }
+
+  void showErrorDialog(BuildContext context) {
+    fMDialog(
+      context: context,
+      horizontalPadding: 16,
+      child: GetBuilder<AddJobController>(
+        id: "errorDialog",
+        builder: (ctrl) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      "Error Message"
+                          .text(
+                            fontSize: 18,
+                            weight: FontWeight.w500,
+                          )
+                          .paddingOnly(
+                            top: screenHPadding16.sh(),
+                            bottom: screenHPadding8.sh(),
+                          ),
+                    ],
+                  ),
+                  FmImage.assetImage(
+                    path: Assets.iconsCloseIcon,
+                    fit: BoxFit.fill,
+                    size: 12,
+                  )
+                      .paddingOnly(
+                    top: 20.sh(),
+                    right: screenWPadding16.sw(),
+                    left: screenWPadding16.sw(),
+                    bottom: screenWPadding16.sw(),
+                  )
+                      .onTap(
+                    () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                    },
+                  ).positioned(right: 0)
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FmImage.assetImage(
+                    path: Assets.iconsErrorIcon,
+                    height: 15.sh(),
+                    width: 15.sw(),
+                    color: redColor,
+                  ),
+                  ctrl.descriptionError
+                      .text(fontColor: redColor, fontSize: 16)
+                      .paddingOnly(
+                        top: screenWPadding16.sw(),
+                        bottom: screenHPadding16.sh(),
+                        left: screenWPadding8.sh(),
+                      )
+                ],
+              ),
+              /*  ctrl.rateError.text(),
+              ctrl.departmentError.text(),
+              ctrl.positionError.text(),
+              ctrl.daysError.text()*/
+            ],
+          );
+        },
+      ),
+    ).whenComplete(() {
+      /*if(ctrl.selectedDays.isNotEmpty){
+        controller.daysError = null;
+      }
+      controller.update();*/
+    });
   }
 }

@@ -152,4 +152,5 @@ class MenuItem {
     this.countryCode,
     this.isSelected = false,
   });
+
 }
